@@ -1,0 +1,653 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Styleguide | {{ site_name }}{% endblock %}
+{% block meta_description %}Living design system reference for {{ site_name }}{% endblock %}
+
+{# Dev-only page — no locale redirect, no sidebar #}
+{% block locale_redirect %}{% endblock %}
+{% block sidebar_top %}{% endblock %}
+{% block sidebar_bottom %}{% endblock %}
+
+{% block body %}
+<div class="styleguide">
+
+    <header class="page-header">
+        <h1>Styleguide</h1>
+        <p>Living reference for the {{ site_name }} design system. Dev-only.</p>
+    </header>
+
+    {# ── 1. COLORS ───────────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Colors</h2>
+
+        <h3>Brand & semantic palette</h3>
+        <div class="sg-swatches">
+            <div class="sg-swatch" style="background:#2d8a4e">
+                <span class="sg-swatch__label">$color-primary<br>#2d8a4e</span>
+            </div>
+            <div class="sg-swatch" style="background:#1f6b3a">
+                <span class="sg-swatch__label">$color-primary-dark<br>#1f6b3a</span>
+            </div>
+            <div class="sg-swatch" style="background:#6c757d">
+                <span class="sg-swatch__label">$color-secondary<br>#6c757d</span>
+            </div>
+            <div class="sg-swatch" style="background:#198754">
+                <span class="sg-swatch__label">$color-success<br>#198754</span>
+            </div>
+            <div class="sg-swatch" style="background:#dc3545">
+                <span class="sg-swatch__label">$color-danger<br>#dc3545</span>
+            </div>
+            <div class="sg-swatch" style="background:#ffc107">
+                <span class="sg-swatch__label sg-swatch__label--dark">$color-warning<br>#ffc107</span>
+            </div>
+            <div class="sg-swatch" style="background:#f8f9fa;border:1px solid #dee2e6">
+                <span class="sg-swatch__label sg-swatch__label--dark">$color-light<br>#f8f9fa</span>
+            </div>
+            <div class="sg-swatch" style="background:#212529">
+                <span class="sg-swatch__label">$color-dark<br>#212529</span>
+            </div>
+        </div>
+
+        <h3>Semantic aliases</h3>
+        <div class="sg-swatches">
+            <div class="sg-swatch" style="background:#ffffff;border:1px solid #dee2e6">
+                <span class="sg-swatch__label sg-swatch__label--dark">$color-body-bg<br>#ffffff</span>
+            </div>
+            <div class="sg-swatch" style="background:#212529">
+                <span class="sg-swatch__label">$color-body<br>#212529</span>
+            </div>
+            <div class="sg-swatch" style="background:#6c757d">
+                <span class="sg-swatch__label">$color-muted<br>#6c757d</span>
+            </div>
+            <div class="sg-swatch" style="background:#dee2e6;border:1px solid #dee2e6">
+                <span class="sg-swatch__label sg-swatch__label--dark">$color-border<br>#dee2e6</span>
+            </div>
+            <div class="sg-swatch" style="background:#2d8a4e">
+                <span class="sg-swatch__label">$color-link<br>#2d8a4e</span>
+            </div>
+        </div>
+
+        <h3>Code block palette</h3>
+        <div class="sg-swatches">
+            <div class="sg-swatch" style="background:#f8f9fa;border:1px solid #dee2e6">
+                <span class="sg-swatch__label sg-swatch__label--dark">$color-code-bg<br>#f8f9fa</span>
+            </div>
+            <div class="sg-swatch" style="background:rgba(175,184,193,.2);border:1px solid #dee2e6">
+                <span class="sg-swatch__label sg-swatch__label--dark">$color-code-inline-bg<br>rgba(175,184,193,.2)</span>
+            </div>
+        </div>
+    </section>
+
+    {# ── 2. TYPOGRAPHY ───────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Typography</h2>
+
+        <h3>Font family</h3>
+        <p style="font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif">
+            System UI (primary) &mdash; The quick brown fox jumps over the lazy dog. 0123456789
+        </p>
+        <p style="font-family:'SFMono-Regular',Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace">
+            Mono (code) &mdash; The quick brown fox jumps over the lazy dog. 0123456789
+        </p>
+
+        <h3>Font size scale</h3>
+        <div class="sg-type-scale">
+            <div class="sg-type-specimen" style="font-size:0.875rem">$fs-sm (14px) &mdash; Small text, labels</div>
+            <div class="sg-type-specimen" style="font-size:1rem">$fs-base (16px) &mdash; Body text</div>
+            <div class="sg-type-specimen" style="font-size:1.125rem">$fs-lg (18px) &mdash; Larger body text</div>
+            <div class="sg-type-specimen" style="font-size:1.25rem">$fs-xl (20px) &mdash; Heading medium</div>
+            <div class="sg-type-specimen" style="font-size:1.5rem">$fs-xxl (24px) &mdash; Heading large</div>
+        </div>
+
+        <h3>Heading hierarchy</h3>
+        <h1>Heading 1 (h1)</h1>
+        <h2>Heading 2 (h2)</h2>
+        <h3>Heading 3 (h3)</h3>
+        <h4>Heading 4 (h4)</h4>
+        <h5>Heading 5 (h5)</h5>
+        <h6>Heading 6 (h6)</h6>
+    </section>
+
+    {# ── 3. SPACING ──────────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Spacing Scale</h2>
+        <div class="sg-spacing-scale">
+            <div class="sg-spacing-item">
+                <div class="sg-spacing-bar sg-spacing-bar--1"></div>
+                <span class="sg-spacing-label">$sp-1 = 0.25rem (4px)</span>
+            </div>
+            <div class="sg-spacing-item">
+                <div class="sg-spacing-bar sg-spacing-bar--2"></div>
+                <span class="sg-spacing-label">$sp-2 = 0.5rem (8px)</span>
+            </div>
+            <div class="sg-spacing-item">
+                <div class="sg-spacing-bar sg-spacing-bar--3"></div>
+                <span class="sg-spacing-label">$sp-3 = 1rem (16px)</span>
+            </div>
+            <div class="sg-spacing-item">
+                <div class="sg-spacing-bar sg-spacing-bar--4"></div>
+                <span class="sg-spacing-label">$sp-4 = 1.5rem (24px)</span>
+            </div>
+            <div class="sg-spacing-item">
+                <div class="sg-spacing-bar sg-spacing-bar--5"></div>
+                <span class="sg-spacing-label">$sp-5 = 3rem (48px)</span>
+            </div>
+        </div>
+
+        <h3>Responsive breakpoints</h3>
+        <ul>
+            <li><code>$bp-md: 768px</code> &mdash; tablet portrait, reduced padding</li>
+            <li><code>$bp-lg: 992px</code> &mdash; two-column layout with sidebar activated</li>
+        </ul>
+    </section>
+
+    {# ── 4. BUTTONS ──────────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Buttons</h2>
+        <div class="sg-button-row">
+            <button type="button" class="btn btn-primary">btn-primary</button>
+            <button type="button" class="btn btn-primary" disabled>Primary Disabled</button>
+            <button type="button" class="btn btn-outline-secondary">btn-outline-secondary</button>
+            <button type="button" class="btn btn-sm btn-primary">btn-sm</button>
+            <a href="#" class="read-more" onclick="return false">Read more &rarr;</a>
+        </div>
+    </section>
+
+    {# ── 5. BADGES ───────────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Badges</h2>
+        <p>
+            <span class="badge bg-primary">primary</span>
+            <span class="badge bg-secondary text-white">secondary</span>
+            <span class="badge bg-success">success</span>
+            <span class="badge bg-danger">danger</span>
+            <span class="badge bg-warning text-dark">warning</span>
+        </p>
+        <h3>Post card badges</h3>
+        <p class="sg-section__desc">Priority order: DRAFT suppresses all → PLANNED suppresses all → PINNED stacks with NEW or RECENTLY UPDATED.</p>
+        <div style="padding: 0.5rem 0;">
+            <span class="post-card-badge">[PINNED]</span>
+            <span class="post-card-badge post-card-badge--draft">[DRAFT]</span>
+            <span class="post-card-badge post-card-badge--planned">[PLANNED]</span>
+            <span class="post-card-badge post-card-badge--new">[NEW]</span>
+            <span class="post-card-badge post-card-badge--updated">[RECENTLY UPDATED]</span>
+        </div>
+    </section>
+
+    {# ── 6. ALERTS ───────────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Alerts</h2>
+        <div class="alert alert-success">Success: Your message has been sent.</div>
+        <div class="alert alert-danger">Error: Something went wrong. Please try again.</div>
+        <div class="alert alert-warning">Warning: Please review your input.</div>
+        <div class="alert alert-info">Info: This is an informational note.</div>
+    </section>
+
+    {# ── 7. FORM ELEMENTS ────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Form Elements</h2>
+        <div class="mb-3">
+            <label class="form-label">Text Input</label>
+            <input type="text" class="form-control" placeholder="Placeholder text...">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email Input</label>
+            <input type="email" class="form-control" value="user@example.com">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Textarea</label>
+            <textarea class="form-control" placeholder="Write your message..."></textarea>
+        </div>
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary">Submit</button>
+        </div>
+    </section>
+
+    {# ── 8. CODE & BLOCKQUOTE ────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Code &amp; Blockquote</h2>
+
+        <p>Inline code: <code>$variable = 'value';</code></p>
+
+        <pre><code>// Code block
+function greet(string $name): string
+{
+    return sprintf('Hello, %s!', $name);
+}</code></pre>
+
+        <blockquote>
+            This is a blockquote. It demonstrates the left-border style, muted color, and italic font.
+        </blockquote>
+    </section>
+
+    {# ── 9. TABLE ────────────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Table</h2>
+        <table>
+            <thead>
+                <tr><th>Variable</th><th>Value</th><th>Usage</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>$color-body-bg</td><td>#ffffff</td><td>Page background</td></tr>
+                <tr><td>$color-body</td><td>#212529</td><td>Primary text</td></tr>
+                <tr><td>$color-muted</td><td>#6c757d</td><td>Secondary text</td></tr>
+                <tr><td>$color-border</td><td>#dee2e6</td><td>Borders, dividers</td></tr>
+                <tr><td>$color-primary</td><td>#0d6efd</td><td>Links, buttons, accents</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Horizontal rule</h3>
+        <hr>
+    </section>
+
+    {# ── 10. NAVIGATION COMPONENT ────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Navigation</h2>
+        <nav class="site-nav" aria-label="Styleguide navigation demo">
+            {{ include('components/navigation.html.twig') }}
+        </nav>
+    </section>
+
+    {# ── 10a. SKIP LINK ───────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Skip Link (accessibility)</h2>
+        <p class="sg-section__desc">Visually hidden by default, appears on keyboard focus. Shown here with forced visibility for reference.</p>
+        <a href="#main-content" class="skip-link" style="position:static;left:auto;clip:auto;width:auto;height:auto">Skip to content</a>
+    </section>
+
+    {# ── 11. LANGUAGE SWITCHER COMPONENT ─────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Language Switcher</h2>
+        {{ include('components/language_switcher.html.twig') }}
+    </section>
+
+    {# ── 12. POST CARD COMPONENT ─────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Post Card</h2>
+
+        <h3>Standard card (with image)</h3>
+        {% with { post: dummyPosts[0], featured: true, lcp: true } %}
+            {{ include('components/post_card.html.twig') }}
+        {% endwith %}
+
+        <h3>Card without image</h3>
+        {% with { post: dummyPosts[1] } %}
+            {{ include('components/post_card.html.twig') }}
+        {% endwith %}
+    </section>
+
+    {# ── 13. PAGINATION COMPONENT ────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Pagination</h2>
+        <h3>First page (prev disabled)</h3>
+        {{ include('components/pagination.html.twig', {
+            base_url: path('blog_list_en'),
+            paginated_route: 'blog_list_paginated_en',
+            current_page: 1,
+            total_pages: 7
+        }) }}
+        <h3>Middle page (both active)</h3>
+        {{ include('components/pagination.html.twig', {
+            base_url: path('blog_list_en'),
+            paginated_route: 'blog_list_paginated_en',
+            current_page: 3,
+            total_pages: 7
+        }) }}
+        <h3>Last page (next disabled)</h3>
+        {{ include('components/pagination.html.twig', {
+            base_url: path('blog_list_en'),
+            paginated_route: 'blog_list_paginated_en',
+            current_page: 7,
+            total_pages: 7
+        }) }}
+    </section>
+
+    {# ── 14. SHARE BUTTONS COMPONENT ─────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Share Buttons</h2>
+        {{ include('components/share_buttons.html.twig', { title: 'Example Post Title' }) }}
+    </section>
+
+    {# ── 15. SIDEBAR COMPONENTS ───────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Sidebar (top)</h2>
+        <div style="max-width:300px">
+            {{ include('components/sidebar_top.html.twig', { sidebar: sidebarData, locale: locale }) }}
+        </div>
+    </section>
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Sidebar (bottom)</h2>
+        <div style="max-width:300px">
+            {{ include('components/sidebar_bottom.html.twig', { sidebar: sidebarData, locale: locale }) }}
+        </div>
+    </section>
+    <section class="sg-section">
+        <h2 class="sg-section__title">Sidebar: active states</h2>
+        <p class="sg-section__desc"><code>.is-active</code> on <code>li</code> for category widget; <code>.tag-link--active</code> for tag cloud.</p>
+        <div style="max-width:300px">
+            <div class="widget widget-categories">
+                <h3 class="widget-title">categories</h3>
+                <ul>
+                    <li><a href="#">tutorials</a><span class="count">3</span></li>
+                    <li class="is-active"><a href="#">projects</a><span class="count">6</span></li>
+                    <li><a href="#">community</a><span class="count">4</span></li>
+                </ul>
+            </div>
+            <div class="widget widget-tags">
+                <h3 class="widget-title">tags</h3>
+                <div class="tag-cloud">
+                    <a href="#" class="tag-link" data-count="4">docker</a>
+                    <a href="#" class="tag-link tag-link--active" data-count="3">symfony</a>
+                    <a href="#" class="tag-link" data-count="2">linux</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── 16. COOKIE BANNER ───────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Cookie Banner</h2>
+        <div class="sg-cookie-demo">
+            {{ include('components/cookie_banner.html.twig', { privacy_url: '#' }) }}
+        </div>
+    </section>
+
+    {# ── 17. BREADCRUMB ───────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Breadcrumb</h2>
+        {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
+            {label: 'Home', url: '#'},
+            {label: 'Blog', url: '#'},
+            {label: dummyPosts[0].category(), url: '#'},
+            {label: dummyPosts[0].title()},
+        ]}) }}
+    </section>
+
+    {# ── 18. POST PAGE LAYOUT ─────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Post Page: Layout</h2>
+        <article class="post">
+            <header class="post-header">
+                <div class="post-header-body">
+                    <h1 class="post-header__title">{{ dummyPosts[0].title() }}</h1>
+                    <p class="post-meta">
+                        <a class="post-meta-category" href="#">{{ dummyPosts[0].category() }}</a>
+                        <span class="post-meta-sep">&bull;</span>
+                        <time class="post-meta-date">March 15, 2026</time>
+                        <span class="post-meta-sep">&bull;</span>
+                        <span class="post-meta-reading-time">5 min read</span>
+                    </p>
+                </div>
+            </header>
+            <div class="post-body">
+                <h2>Heading h2 inside content</h2>
+                <p>Body text paragraph. <strong>Bold</strong>, <em>italic</em>, <a href="#">link</a>, <code>inline code</code>.</p>
+                <h3>Heading h3</h3>
+                <blockquote>This is a blockquote with some referenced text inside it.</blockquote>
+                <pre><code>// Fenced code block (no language)
+function example(): void {}</code></pre>
+                <pre><code class="language-php">// PHP code block
+function greet(string $name): string
+{
+    return sprintf('Hello, %s!', $name);
+}</code></pre>
+            </div>
+            <footer class="post-footer">
+                <div class="post-tags-section">
+                    <span class="post-tags-label">Tags:</span>
+                    {% for tag in dummyPosts[0].tags() %}
+                        <a href="#" class="tag-link">{{ tag }}</a>
+                    {% endfor %}
+                </div>
+            </footer>
+        </article>
+        {{ include('components/post_navigation.html.twig', { prev_post: dummyPosts[1], next_post: dummyPosts[0] }) }}
+    </section>
+
+    {# ── 19. TABLE OF CONTENTS ─────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Table of Contents (auto-injected)</h2>
+        <p>Auto-generated by <code>table-of-contents.js</code> — injected before the first child of <code>.post-body</code> when 3+ headings are found.</p>
+        <div class="post-body" style="max-width: 720px;">
+            <h2 id="sg-toc-intro">Introduction</h2>
+            <p>First section content.</p>
+            <h3 id="sg-toc-background">Background</h3>
+            <p>Sub-section content under Introduction.</p>
+            <h2 id="sg-toc-setup">Setup</h2>
+            <p>Second section content.</p>
+            <h3 id="sg-toc-config">Configuration</h3>
+            <p>Sub-section under Setup.</p>
+            <h2 id="sg-toc-usage">Usage</h2>
+            <p>Third section content.</p>
+        </div>
+    </section>
+
+    {# ── 20. RELATED POSTS (post_card_mini) ─────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Related Posts (post_card_mini)</h2>
+        <div class="related-posts__grid" style="max-width: 720px;">
+            {{ include('components/post_card_mini.html.twig', { post: dummyPosts[0] }) }}
+            {{ include('components/post_card_mini.html.twig', { post: dummyPosts[1] }) }}
+            {{ include('components/post_card_mini.html.twig', { post: dummyPosts[2] }) }}
+        </div>
+    </section>
+
+    {# ── 21. POST NAVIGATION ─────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Post Navigation</h2>
+
+        <h3>Both prev and next</h3>
+        {{ include('components/post_navigation.html.twig', { prev_post: dummyPosts[1], next_post: dummyPosts[0] }) }}
+
+        <h3>Prev only</h3>
+        {{ include('components/post_navigation.html.twig', { prev_post: dummyPosts[1], next_post: null }) }}
+
+        <h3>Next only</h3>
+        {{ include('components/post_navigation.html.twig', { prev_post: null, next_post: dummyPosts[0] }) }}
+    </section>
+
+    {# ── 22. SERIES NAV ──────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Component: Series Nav</h2>
+
+        <h3>Middle post active (Part 2 of 3)</h3>
+        {{ include('components/series_nav.html.twig', {
+            series_posts: [dummyPosts[0], dummyPosts[1], dummyPosts[2]],
+            series_current_part: 2,
+            content: dummyPosts[1]
+        }) }}
+    </section>
+
+    {# ── 23. PAGE STRUCTURE ───────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Page Structure</h2>
+
+        <h3>.page-header + .no-posts</h3>
+        <div class="page-header">
+            <h1>Category: tutorials</h1>
+        </div>
+        <p class="no-posts">No posts found matching this criteria.</p>
+
+        <h3>.page-content + .page-body (static pages)</h3>
+        <article class="page-content">
+            <div class="page-body">
+                <h2>Heading in page body</h2>
+                <p>Static page body text. <a href="#">Links</a> use the standard underline style.</p>
+            </div>
+        </article>
+
+        <h3>.archive-header</h3>
+        <div class="archive-header">
+            <h1>Archive: March 2026</h1>
+        </div>
+    </section>
+
+    {# ── 24. HOME PAGE SECTIONS ───────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Home Page Sections</h2>
+
+        <h3>.home-hero</h3>
+        <div class="home-hero">
+            <h1 class="home-hero__title">Lorem Ipsum Demo Blog</h1>
+            <p class="home-hero__subtitle">A demo of the Symfony static site generator, styled with a Bootstrap-inspired light theme.</p>
+            <div class="home-hero__actions">
+                <a href="#" class="btn btn-primary" onclick="return false">All Posts</a>
+                <a href="#" class="btn btn-outline-secondary" onclick="return false">About</a>
+            </div>
+        </div>
+
+        <h3>.home-section + .home-section__title with .home-section__all-link</h3>
+        <h2 class="home-section__title">
+            Recent Posts
+            <a href="#" class="home-section__all-link" onclick="return false">All posts &rarr;</a>
+        </h2>
+    </section>
+
+    {# ── 25. SEARCH PAGE ──────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Search Page (.search-page)</h2>
+        <div class="search-page">
+            <p class="text-muted">(Pagefind UI renders here at runtime)</p>
+        </div>
+    </section>
+
+    {# ── 26. ABOUT PROFILE ───────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">About: Profile</h2>
+        {{ include('components/about_profile.html.twig', {
+            author: site_author,
+            role: 'about.role'|trans,
+            headline: 'about.headline'|trans
+        }) }}
+    </section>
+
+    {# ── 26a. SKILLS BADGES ───────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">About: Skills (.about-skills)</h2>
+        <section class="about-skills">
+            <h2 class="about-skills__title">Skills</h2>
+            <dl>
+                <div class="about-skills__group">
+                    <dt>Backend</dt>
+                    <dd>
+                        <span class="badge bg-secondary text-white">PHP</span>
+                        <span class="badge bg-secondary text-white">Symfony</span>
+                        <span class="badge bg-secondary text-white">PHPUnit</span>
+                    </dd>
+                </div>
+                <div class="about-skills__group">
+                    <dt>DevOps</dt>
+                    <dd>
+                        <span class="badge bg-secondary text-white">Docker</span>
+                        <span class="badge bg-secondary text-white">Linux</span>
+                        <span class="badge bg-secondary text-white">Git</span>
+                    </dd>
+                </div>
+            </dl>
+        </section>
+    </section>
+
+    {# ── 27. RECOMMENDATIONS ─────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">About: Recommendations (.recommendation-card)</h2>
+        {{ include('components/recommendation_card.html.twig', {
+            rec: { quote: 'Short pull quote summarising the recommendation in one sentence.', text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nQuis nostrud exercitation ullamco laboris.", name: 'Jane Doe', role: 'Engineering Manager, Acme Corp' },
+            expand_label: 'about.recommendation_expand'|trans,
+            collapse_label: 'about.recommendation_collapse'|trans,
+            via_label: 'about.recommendation_via'|trans
+        }) }}
+        {{ include('components/recommendation_card.html.twig', {
+            rec: { quote: 'Another example card — quote only, no expandable full text.', name: 'John Smith', role: 'CTO, Example Ltd' },
+            expand_label: 'about.recommendation_expand'|trans,
+            collapse_label: 'about.recommendation_collapse'|trans,
+            via_label: 'about.recommendation_via'|trans
+        }) }}
+    </section>
+
+    {# ── 28. PROJECTS GRID ───────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Projects Grid (.projects-grid / .project-card)</h2>
+        <div class="projects-grid">
+            <a href="#" class="project-card">
+                <div class="project-card__body">
+                    <h2 class="project-card__title">Example Project</h2>
+                    <p class="project-card__desc">An open-source CLI tool for scaffolding new projects.</p>
+                    <div class="project-card__tags">
+                        <span class="badge bg-secondary text-white">php</span>
+                        <span class="badge bg-secondary text-white">cli</span>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="project-card">
+                <div class="project-card__body">
+                    <h2 class="project-card__title">Agency Website</h2>
+                    <p class="project-card__desc">Corporate site with a multilingual CMS backend.</p>
+                    <div class="project-card__tags">
+                        <span class="badge bg-secondary text-white">symfony</span>
+                        <span class="badge bg-secondary text-white">scss</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    {# ── 29. COMING SOON ────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Coming Soon (.coming-soon / .coming-soon__card)</h2>
+        <div class="coming-soon" style="min-height:auto;padding:2rem 0">
+            <div class="coming-soon__card">
+                <div class="coming-soon__icon">&#9201;</div>
+                <h2 class="coming-soon__title">Coming Soon</h2>
+                <p class="coming-soon__date">Publishing: 2026-04-15</p>
+                <a href="#" class="btn btn-primary" onclick="return false">Go Home</a>
+            </div>
+        </div>
+    </section>
+
+    {# ── 30. ERROR PAGE ─────────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Error Page (.error-page / .error-page__card)</h2>
+        <div class="error-page" style="min-height:auto;padding:2rem 0">
+            <div class="error-page__card">
+                <div class="error-page__code">404</div>
+                <h2 class="error-page__title">Page Not Found</h2>
+                <p class="error-page__message">page not found</p>
+                <a href="#" class="btn btn-primary" onclick="return false">Go Home</a>
+            </div>
+        </div>
+    </section>
+
+    {# ── 31. IMAGE UTILITIES ──────────────────────────────────────────────────── #}
+    <section class="sg-section">
+        <h2 class="sg-section__title">Image Utilities</h2>
+
+        <h3>.alignleft / .alignright / .aligncenter</h3>
+        <div class="post-body" style="min-height:120px">
+            <img src="{{ dummyPosts[0].image() }}" alt="" style="width:160px" class="alignleft">
+            <p>Text wrapping around a left-aligned image (<code>.alignleft</code>).</p>
+            <div style="clear:both"></div>
+        </div>
+
+        <h3>figure + figcaption</h3>
+        <div class="post-body">
+            <figure>
+                <img src="{{ dummyPosts[0].image() }}" alt="Example figure" style="max-width:400px">
+                <figcaption>This is a figcaption — image description shown below the image.</figcaption>
+            </figure>
+        </div>
+
+        <h3>Lightbox trigger (data-full attribute)</h3>
+        <div class="post-body">
+            <img src="{{ dummyPosts[0].image() }}"
+                 alt="Click to open lightbox"
+                 style="width:240px;cursor:pointer"
+                 data-full="{{ dummyPosts[0].image() }}">
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('recommendation-expand.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,532 @@
+// =============================================================================
+// Pages — home, about, projects, coming-soon, error, search page
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Home page
+// ---------------------------------------------------------------------------
+.home-hero {
+    padding: $sp-5 0;
+    text-align: center;
+
+    @media (min-width: $bp-md) {
+        text-align: left;
+        padding: $sp-5 0 $sp-4;
+    }
+}
+
+.home-hero__title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: $sp-3;
+    color: $color-dark;
+
+    @media (min-width: $bp-md) {
+        font-size: 2.75rem;
+    }
+}
+
+.home-hero__subtitle {
+    font-size: $fs-xl;
+    color: $color-muted;
+    margin-bottom: $sp-4;
+}
+
+.home-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $sp-3;
+    justify-content: center;
+
+    @media (min-width: $bp-md) {
+        justify-content: flex-start;
+    }
+}
+
+.home-section {
+    padding: $sp-4 0;
+}
+
+.home-section__title {
+    font-size: $fs-xxl;
+    font-weight: 700;
+    margin-bottom: $sp-4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $sp-3;
+
+    .home-section__all-link {
+        font-size: $fs-sm;
+        font-weight: 400;
+        color: $color-primary;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// About page
+// ---------------------------------------------------------------------------
+.about-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: $sp-3;
+    margin-bottom: $sp-5;
+
+    @media (min-width: $bp-md) {
+        flex-direction: row;
+        text-align: left;
+        align-items: flex-start;
+    }
+}
+
+.about-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 3px solid $color-border;
+}
+
+.about-info {
+    flex: 1;
+}
+
+.about-info-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: $sp-1;
+    color: $color-dark;
+}
+
+.about-info-role {
+    font-size: $fs-lg;
+    color: $color-muted;
+    margin-bottom: $sp-3;
+}
+
+.about-bio {
+    font-size: $fs-lg;
+    line-height: 1.7;
+    margin-bottom: $sp-5;
+    color: $color-body;
+}
+
+.about-skills {
+    margin-bottom: $sp-5;
+}
+
+.about-skills__title {
+    font-size: $fs-xl;
+    font-weight: 600;
+    margin-bottom: $sp-3;
+    color: $color-dark;
+}
+
+.about-skills__group {
+    margin-bottom: $sp-3;
+
+    dt {
+        font-size: $fs-sm;
+        font-weight: 600;
+        color: $color-muted;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        margin-bottom: $sp-2;
+    }
+
+    dd {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $sp-2;
+        margin: 0;
+    }
+}
+
+.about-recommendations {
+    margin-bottom: $sp-5;
+
+    .about-recommendations__title {
+        font-size: $fs-xl;
+        font-weight: 600;
+        margin-bottom: $sp-3;
+        color: $color-dark;
+    }
+}
+
+// Recommendation card (expandable via recommendation-expand.js)
+.recommendation-card {
+    padding: $sp-4;
+    background-color: $color-light;
+    border: 1px solid $color-border;
+    border-radius: $radius;
+    margin-bottom: $sp-3;
+}
+
+.recommendation-quote {
+    font-size: $fs-lg;
+    font-style: italic;
+    color: $color-body;
+    margin-bottom: $sp-3;
+
+    &::before { content: "\201C"; }
+    &::after  { content: "\201D"; }
+}
+
+.recommendation-footer {
+    display: flex;
+    flex-direction: column;
+    gap: $sp-1;
+    font-size: $fs-sm;
+}
+
+.recommendation-author {
+    font-weight: 600;
+    color: $color-dark;
+}
+
+.recommendation-role {
+    color: $color-muted;
+}
+
+.recommendation-full {
+    margin-top: $sp-3;
+    font-size: $fs-sm;
+    color: $color-muted;
+    line-height: 1.7;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.recommendation-expand {
+    font-size: $fs-sm;
+    color: $color-primary;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-top: $sp-2;
+    text-decoration: underline;
+
+    &:hover {
+        color: $color-primary-dark;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Projects page
+// ---------------------------------------------------------------------------
+.projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $sp-4;
+
+    @media (min-width: $bp-md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.project-card {
+    display: flex;
+    flex-direction: column;
+    background-color: $color-white;
+    border: 1px solid $color-border;
+    border-radius: $radius;
+    box-shadow: $shadow-sm;
+    overflow: hidden;
+    text-decoration: none;
+    color: $color-body;
+    transition: box-shadow $transition, transform $transition;
+
+    &:hover {
+        box-shadow: $shadow;
+        transform: translateY(-2px);
+        color: $color-body;
+        text-decoration: none;
+    }
+}
+
+.project-card__image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+.project-card__body {
+    padding: $sp-3;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card__title {
+    font-size: $fs-lg;
+    font-weight: 600;
+    margin-bottom: $sp-2;
+    color: $color-dark;
+}
+
+.project-card__desc {
+    font-size: $fs-sm;
+    color: $color-muted;
+    flex: 1;
+    margin-bottom: $sp-2;
+}
+
+.project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $sp-1;
+}
+
+// ---------------------------------------------------------------------------
+// Coming-soon page
+// ---------------------------------------------------------------------------
+.coming-soon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: $sp-5 0;
+}
+
+.coming-soon__card {
+    text-align: center;
+    padding: $sp-5;
+    max-width: 480px;
+    width: 100%;
+    background-color: $color-white;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow;
+}
+
+.coming-soon__icon {
+    font-size: 3rem;
+    margin-bottom: $sp-3;
+    color: $color-primary;
+}
+
+.coming-soon__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: $sp-3;
+    color: $color-dark;
+}
+
+.coming-soon__date {
+    font-size: $fs-sm;
+    color: $color-muted;
+    margin-bottom: $sp-4;
+}
+
+// ---------------------------------------------------------------------------
+// Error page (404, 500)
+// ---------------------------------------------------------------------------
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: $sp-5 0;
+}
+
+.error-page__card {
+    text-align: center;
+    padding: $sp-5;
+    max-width: 480px;
+    width: 100%;
+    background-color: $color-white;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow;
+}
+
+.error-page__code {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: $color-primary;
+    margin-bottom: $sp-2;
+}
+
+.error-page__title {
+    font-size: $fs-xxl;
+    font-weight: 600;
+    margin-bottom: $sp-3;
+    color: $color-dark;
+}
+
+.error-page__message {
+    color: $color-muted;
+    margin-bottom: $sp-4;
+}
+
+// ---------------------------------------------------------------------------
+// Search page
+// ---------------------------------------------------------------------------
+.search-page__form {
+    display: flex;
+    gap: $sp-2;
+    margin-bottom: $sp-4;
+}
+
+.search-page__input {
+    flex: 1;
+    display: block;
+    width: 100%;
+    padding: $sp-2 $sp-3;
+    font-family: $font;
+    font-size: $fs-base;
+    line-height: $lh;
+    color: $color-body;
+    background-color: $color-white;
+    border: 1px solid $color-border;
+    border-radius: $radius;
+    transition: border-color $transition, box-shadow $transition;
+
+    &::placeholder {
+        color: $color-muted;
+        opacity: 1;
+    }
+
+    &:focus {
+        border-color: $color-primary;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba($color-primary, .25);
+    }
+}
+
+.search-page__results {
+    margin-top: $sp-3;
+}
+
+.search-page__no-results {
+    color: $color-muted;
+    padding: $sp-4 0;
+}
+
+.search-result {
+    display: flex;
+    gap: $sp-3;
+    padding: $sp-3 0;
+    border-bottom: 1px solid $color-border;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.search-result__image {
+    flex-shrink: 0;
+    width: 80px;
+
+    @media (min-width: $bp-md) {
+        width: 120px;
+    }
+
+    img {
+        width: 100%;
+        height: 60px;
+        object-fit: cover;
+        border-radius: $radius-sm;
+        display: block;
+
+        @media (min-width: $bp-md) {
+            height: 90px;
+        }
+    }
+}
+
+.search-result__body {
+    flex: 1;
+    min-width: 0;
+
+    .post-card-title {
+        font-size: $fs-lg;
+        font-weight: 600;
+        margin-bottom: $sp-1;
+
+        a {
+            color: $color-dark;
+            text-decoration: none;
+
+            &:hover {
+                color: $color-primary;
+            }
+        }
+    }
+
+    .post-card-meta {
+        font-size: $fs-sm;
+        color: $color-muted;
+        margin-bottom: $sp-1;
+    }
+
+    .post-card-excerpt {
+        font-size: $fs-sm;
+        color: $color-muted;
+        margin-bottom: $sp-2;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Contact page
+// ---------------------------------------------------------------------------
+.contact-intro {
+    font-size: $fs-lg;
+    color: $color-muted;
+    margin-bottom: $sp-4;
+}
+
+.contact-form {
+    max-width: 600px;
+}
+
+.contact-turnstile {
+    margin-bottom: $sp-3;
+}
+
+.form-field__error {
+    display: block;
+    margin-top: $sp-1;
+    font-size: $fs-sm;
+    color: $color-danger;
+}
+
+.form-control.is-invalid {
+    border-color: $color-danger;
+    outline-color: $color-danger;
+}
+
+// ---------------------------------------------------------------------------
+// Page content (static pages: default.html.twig)
+// ---------------------------------------------------------------------------
+.page-content {
+    font-size: $fs-base;
+    line-height: 1.7;
+
+    h2,
+    h3,
+    h4 {
+        margin-top: $sp-5;
+        margin-bottom: $sp-3;
+    }
+}

@@ -1,0 +1,45 @@
+{# local/templates/base.html.twig
+ #
+ # "Block override" boilerplate — extends the original base layout and overrides
+ # only the blocks you need. Copy this file to local/templates/base.html.twig.
+ #
+ # The @base namespace always points to the original templates/ directory, so
+ # this file extends the real base.html.twig and not itself.
+ #
+ # Run `ddev exec php bin/console debug:twig` to list all available blocks.
+ #}
+{% extends '@base/base.html.twig' %}
+
+{#
+ # ── Common overrides ────────────────────────────────────────────────────────
+ #
+ # Inject something into <head> on every page (e.g. a custom font, analytics):
+ #
+ # {% block stylesheets %}
+ #     {{ parent() }}
+ #     <link rel="stylesheet" href="https://example.com/my-font.css">
+ # {% endblock %}
+ #
+ # ── Add a script to every page ──────────────────────────────────────────────
+ #
+ # {% block javascripts %}
+ #     {{ parent() }}
+ #     <script src="{{ asset('my-global-script.js') }}" defer></script>
+ # {% endblock %}
+ #
+ # ── Replace the footer on every page ────────────────────────────────────────
+ #
+ # {% block footer %}
+ #     <footer class="site-footer">
+ #         <p>© {{ "now"|date("Y") }} My Site</p>
+ #     </footer>
+ # {% endblock %}
+ #
+ # ── Replace the sidebar bottom on every page ────────────────────────────────
+ #
+ # {% block sidebar_bottom %}
+ #     <aside class="sidebar-widget">
+ #         <p>My custom sidebar widget</p>
+ #     </aside>
+ # {% endblock %}
+ #}

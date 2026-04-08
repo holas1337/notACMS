@@ -1,0 +1,52 @@
+{# local/templates/page/home.html.twig
+ #
+ # Material Cards override — wraps recent posts in a two-column CSS grid.
+ #
+ # This template extends the original base layout. Only the body block changes:
+ # the post loop is wrapped in <div class="home-posts-grid"> so the SCSS in
+ # local/assets/styles/local.scss can lay it out as two columns.
+ #
+ # Everything else (title meta, OG tags, hero section) is identical to the
+ # original templates/page/home.html.twig.
+ #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ site_name }} — {{ content is not null ? content.title() : 'Demo blog' }}{% endblock %}
+{% block meta_description %}{{ content is not null ? content.description() : '' }}{% endblock %}
+{% block og_title %}{{ content is not null ? content.title() : site_name }}{% endblock %}
+
+{% block body %}
+<section class="home-hero">
+    {% if content is not null %}
+        <h1 class="home-hero__title">{{ content.title() }}</h1>
+        <p class="home-hero__subtitle">{{ content.description() }}</p>
+        <div class="home-hero__actions">
+            <a href="{{ path('blog_list_' ~ locale) }}" class="btn btn-primary">{{ 'blog.all_posts'|trans }}</a>
+            <a href="{{ content_url('about', locale) }}" class="btn btn-outline-secondary">{{ 'nav.about'|trans }}</a>
+        </div>
+    {% else %}
+        <h1 class="home-hero__title">{{ site_name }}</h1>
+        <div class="home-hero__actions">
+            <a href="{{ path('blog_list_' ~ locale) }}" class="btn btn-primary">{{ 'blog.all_posts'|trans }}</a>
+        </div>
+    {% endif %}
+</section>
+
+<section class="home-section">
+    <h2 class="home-section__title">
+        {{ 'sidebar.recent_posts'|trans }}
+        <a href="{{ path('blog_list_' ~ locale) }}" class="home-section__all-link">{{ 'blog.all_posts'|trans }} &rarr;</a>
+    </h2>
+    {% if recentPosts is empty %}
+        <p class="no-posts">{{ 'blog.no_posts'|trans }}</p>
+    {% else %}
+        <div class="home-posts-grid">
+            {% for post in recentPosts %}
+                {% with { post: post, featured: post.isPinned(), lcp: loop.index0 is same as(0) } %}
+                    {{ include('components/post_card.html.twig') }}
+                {% endwith %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

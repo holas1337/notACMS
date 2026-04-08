@@ -1,0 +1,29 @@
+{# local/templates/base.html.twig
+ #
+ # Full override starter — replaces the entire base layout from scratch.
+ # No {% extends %} — this file IS the layout. Copy to local/templates/.
+ #
+ # Child templates (blog/post, blog/list, page/default, etc.) override
+ # the blocks defined here. Run `ddev exec php bin/console debug:twig`
+ # to see all blocks available.
+ #}
+<!DOCTYPE html>
+<html lang="{{ locale ?? site_default_locale }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ site_description }}{% endblock %}">
+    {% block robots %}<meta name="robots" content="max-image-preview:large, max-snippet:-1">{% endblock %}
+    {% block stylesheets %}{{ importmap('app-local') }}{% endblock %}
+    {% block head_preconnect %}{% endblock %}
+    {% block structured_data %}{% endblock %}
+</head>
+<body>
+    {% block navigation %}{% endblock %}
+    <main id="main-content">
+        {% block body %}{% endblock %}
+    </main>
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

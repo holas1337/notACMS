@@ -1,0 +1,30 @@
+#!/bin/bash
+## Description: Auto-fix PHP code style issues
+## Usage: code-fix
+## Example: ddev code-fix
+
+cd /var/www/html || exit 1
+
+echo "================================"
+echo "Fixing Code Style Issues"
+echo "================================"
+echo ""
+
+echo "1. Running Rector..."
+vendor/bin/rector 2>&1
+RECTOR_EXIT=$?
+
+echo ""
+echo "2. Running PHP CS Fixer..."
+vendor/bin/php-cs-fixer fix --verbose 2>&1
+PHPCS_EXIT=$?
+
+echo ""
+echo "================================"
+if [ $PHPCS_EXIT -eq 0 ] && [ $RECTOR_EXIT -eq 0 ]; then
+    echo "✅ Code style issues fixed!"
+    exit 0
+else
+    echo "❌ Some issues could not be fixed automatically"
+    exit 1
+fi

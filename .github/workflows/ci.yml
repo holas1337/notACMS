@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: intl, gd, imagick
+          coverage: none
+
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+          sudo ln -sf /usr/bin/convert /usr/local/bin/magick
+          magick --version
+
+      - name: Seed demo content
+        run: |
+          if [ ! -f local/content/_site.yaml ]; then
+            mkdir -p local/content local/translations local/docker/nginx local/assets/images local/docs
+            cp -r docs/examples/content/. local/content/
+            cp docs/examples/translations/messages.en.yaml local/translations/messages.en.yaml
+            cp docs/examples/translations/messages.pl.yaml local/translations/messages.pl.yaml
+            cp docs/examples/nginx/redirects.conf local/docker/nginx/redirects.conf
+            cp docs/examples/nginx/error-pages.conf local/docker/nginx/error-pages.conf
+            cp docs/examples/docs/EDITOR_GUIDE.md local/docs/EDITOR_GUIDE.md
+            cp docs/examples/docs/STYLEGUIDE.md local/docs/STYLEGUIDE.md
+            cp assets/images/og-default.jpg local/assets/images/og-default.jpg
+          fi
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Build SASS
+        run: bin/console sass:build
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Audit dependencies
+        run: composer audit
+
+      - name: Lint Twig templates
+        run: bin/console lint:twig templates --show-deprecations
+
+      - name: Run Rector (dry-run)
+        run: vendor/bin/rector process --dry-run
+
+      - name: Run PHP CS Fixer (dry-run)
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit --testdox

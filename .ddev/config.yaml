@@ -1,0 +1,10 @@
+name: notacms
+type: php
+docroot: public
+php_version: "8.5"
+webserver_type: nginx-fpm
+composer_version: "2"
+nodejs_version: "22"
+corepack_enable: false
+disable_settings_management: true
+omit_containers: [db]

@@ -1,0 +1,63 @@
+#!/bin/bash
+## Description: Run code checks (Composer validate + Composer audit + PHP CS Fixer + PHPStan)
+## Usage: code-check
+## Example: ddev code-check
+
+cd /var/www/html || exit 1
+
+echo "================================"
+echo "Running Code Checks"
+echo "================================"
+echo ""
+
+echo "1. Validating composer.json and composer.lock..."
+composer validate --strict --no-check-publish 2>&1
+COMPOSER_VALID_EXIT=$?
+
+echo ""
+echo "2. Running composer audit..."
+composer audit --no-dev --format=table 2>&1
+COMPOSER_AUDIT_EXIT=$?
+
+echo ""
+echo "3. Linting Twig templates..."
+bin/console lint:twig templates --show-deprecations 2>&1
+TWIG_LINT_EXIT=$?
+
+echo ""
+echo "4. Running Rector (dry-run)..."
+vendor/bin/rector --dry-run 2>&1
+RECTOR_EXIT=$?
+
+echo ""
+echo "5. Checking PHP code style..."
+vendor/bin/php-cs-fixer fix --dry-run --diff 2>&1
+PHPCS_EXIT=$?
+
+echo ""
+echo "6. Running PHPStan static analysis..."
+php -d memory_limit=2G vendor/bin/phpstan analyse --configuration=phpstan.neon --no-progress 2>&1
+PHPSTAN_EXIT=$?
+
+echo ""
+echo "5. Running Rector (dry-run)..."
+vendor/bin/rector --dry-run 2>&1
+RECTOR_EXIT=$?
+
+echo ""
+echo "================================"
+if [ $COMPOSER_VALID_EXIT -eq 0 ] && [ $COMPOSER_AUDIT_EXIT -eq 0 ] && [ $TWIG_LINT_EXIT -eq 0 ] && [ $RECTOR_EXIT -eq 0 ] && [ $PHPCS_EXIT -eq 0 ] && [ $PHPSTAN_EXIT -eq 0 ]; then
+    echo "✅ All checks passed!"
+    exit 0
+else
+    echo "❌ Some checks failed:"
+    [ $COMPOSER_VALID_EXIT -ne 0 ] && echo "   - Composer validation failed"
+    [ $COMPOSER_AUDIT_EXIT -ne 0 ] && echo "   - Composer audit found issues"
+    [ $TWIG_LINT_EXIT -ne 0 ] && echo "   - Twig lint found issues"
+    [ $RECTOR_EXIT -ne 0 ] && echo "   - Rector found issues"
+    [ $PHPCS_EXIT -ne 0 ] && echo "   - PHP CS Fixer found issues"
+    [ $PHPSTAN_EXIT -ne 0 ] && echo "   - PHPStan found type errors"
+    echo ""
+    echo "Run 'ddev code-fix' to auto-fix PHP issues"
+    exit 1
+fi

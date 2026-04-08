@@ -1,0 +1,46 @@
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "${NGINX_PORT:-8123}:80"
+    volumes:
+      - ./docker/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - .:/app:ro
+    networks:
+      - default
+      - web
+    depends_on:
+      - php
+    restart: ${RESTART}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.apache.rule=Host(`${URL}`) || Host(`www.${URL}`)
+      #- traefik.http.routers.apache.rule=Host(`${URL}`)
+      - traefik.http.routers.apache.entrypoints=websecure
+      - traefik.http.routers.apache.tls.certresolver=${CERTRESOLVER}
+      - traefik.http.routers.apache.tls=true
+      - traefik.docker.network=web
+      ### enable gzip middlewares
+      #- traefik.http.routers.apache.middlewares=gzip
+      ### redirect www to non www URL + gzip middlewares
+      - traefik.http.middlewares.nonwwwredirect.redirectregex.regex=^https://www\.(.*)
+      - traefik.http.middlewares.nonwwwredirect.redirectregex.replacement=https://$${1}
+      - traefik.http.routers.apache.middlewares=nonwwwredirect,gzip
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.5}
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - .:/app
+    networks:
+      - default
+    restart: ${RESTART}
+
+networks:
+  default:
+  web:
+    external: true

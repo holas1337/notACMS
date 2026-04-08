@@ -1,0 +1,71 @@
+#!/bin/bash
+## Description: Build assets and static site (clears dart-sass cache first)
+## Usage: build
+## Example: ddev build
+
+cd /var/www/html || exit 1
+
+echo "==> Bootstrapping content"
+if [ ! -f local/content/_site.yaml ]; then
+    echo "    local/content/ is empty — seeding from docs/examples/content/"
+    cp -r docs/examples/content/. local/content/
+else
+    echo "    local/content/ already exists — skipping"
+fi
+
+echo "==> Bootstrapping translations"
+if [ ! -f local/translations/messages.en.yaml ] && [ ! -f local/translations/messages.pl.yaml ]; then
+    echo "    local/translations/ is empty — seeding from docs/examples/translations/"
+    cp docs/examples/translations/messages.en.yaml local/translations/messages.en.yaml
+    cp docs/examples/translations/messages.pl.yaml local/translations/messages.pl.yaml
+else
+    echo "    local/translations/ already exists — skipping"
+fi
+
+echo "==> Bootstrapping local assets"
+if [ ! -f local/assets/images/og-default.jpg ]; then
+    echo "    local/assets/images/ missing og-default.jpg — seeding from assets/images/"
+    mkdir -p local/assets/images
+    cp assets/images/og-default.jpg local/assets/images/og-default.jpg
+else
+    echo "    local/assets/images/og-default.jpg already exists — skipping"
+fi
+
+echo "==> Bootstrapping local docs"
+if [ ! -f local/docs/EDITOR_GUIDE.md ]; then
+    echo "    local/docs/EDITOR_GUIDE.md missing — seeding from docs/examples/docs/"
+    mkdir -p local/docs
+    cp docs/examples/docs/EDITOR_GUIDE.md local/docs/EDITOR_GUIDE.md
+else
+    echo "    local/docs/EDITOR_GUIDE.md already exists — skipping"
+fi
+
+echo "==> Removing dart-sass binary (architecture-specific)"
+rm -rf var/dart-sass
+
+echo "==> Clearing cache"
+php bin/console cache:clear
+
+echo "==> Compiling SCSS"
+php bin/console sass:build
+
+echo "==> Clearing compiled assets"
+rm -rf public/assets
+
+echo "==> Compiling assets"
+php bin/console asset-map:compile
+
+echo "==> Building static site"
+php bin/console app:build -v
+
+echo "==> Copying favicon.ico"
+if [ -f local/assets/favicon.ico ]; then
+    cp local/assets/favicon.ico public/favicon.ico
+elif [ -f assets/images/favicon.ico ]; then
+    cp assets/images/favicon.ico public/favicon.ico
+fi
+
+echo "==> Building search index"
+npx --yes pagefind --site public/static --output-path public/pagefind
+
+echo "==> Done."

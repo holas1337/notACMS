@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ content.title() }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ content.description() ?: content.excerpt(160) }}{% endblock %}
+{% block og_title %}{{ content.title() }}{% endblock %}
+
+{% block body %}
+<article class="page-content" data-pagefind-body>
+    <header class="page-header">
+        {% if content.image() %}
+        <div class="page-header-image">
+            {{ include('components/responsive_img.html.twig', {
+                src: content.image(),
+                alt: content.imageAlt(),
+                sizes: '(max-width: 768px) 100vw, 800px',
+                loading: 'eager',
+                fetchpriority: 'high'
+            }) }}
+        </div>
+        {% endif %}
+        <h1 data-pagefind-meta="title">{{ content.title() }}</h1>
+    </header>
+    <div class="page-body">
+        {{ content.htmlContent|raw }}
+    </div>
+</article>
+{% endblock %}
+
+{% block javascripts %}
+{% if content.hasToc() %}
+<script src="{{ asset('table-of-contents.js') }}" defer></script>
+{% endif %}
+{% endblock %}

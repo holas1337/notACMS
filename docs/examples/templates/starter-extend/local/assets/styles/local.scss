@@ -1,0 +1,31 @@
+/* local/assets/styles/local.scss
+ *
+ * "Extend" boilerplate — imports original SCSS variables for use in your
+ * rules, then adds overrides that load AFTER the original CSS.
+ *
+ * The original CSS rules are loaded separately by the 'app' importmap
+ * entrypoint. This file only imports _variables.scss to get access to
+ * $color-primary etc. at compile time — no double-loading of rules.
+ *
+ * The file MUST be named local.scss (not app.scss) because symfonycasts_sass
+ * requires unique basenames across all root_sass entries.
+ *
+ * See docs/CUSTOMIZATION.md → "SCSS overrides" for full details.
+ */
+
+@import '../../../../assets/styles/variables';   // $color-primary, $fs-base, etc.
+
+/* -------------------------------------------------------------------------
+ * Your overrides below. Write CSS rules using the SCSS variables above,
+ * or use CSS custom properties for runtime theming.
+ * See docs/STYLEGUIDE.md → "Design Tokens" for the full variable list.
+ * ---------------------------------------------------------------------- */
+
+// Example: change the primary colour site-wide via CSS custom property
+// :root { --color-primary: #e85d04; }
+
+// Example: use an SCSS variable directly in a rule
+// .post-body { color: $color-primary; }
+
+// Example: make post body text slightly larger
+// .post-body { font-size: 1.0625rem; }

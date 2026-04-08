@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'contact.title'|trans }} | {{ site_name }}{% endblock %}
+{% block og_title %}{{ 'contact.title'|trans }}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "{{ 'contact.title'|trans }}",
+    "url": "{{ site_base_url }}{{ app.request.pathInfo }}",
+    "mainEntity": {
+        "@type": "Person",
+        "name": "{{ site_author.name }}",
+        "url": "{{ site_base_url }}"
+    }
+}
+</script>
+{% endblock %}
+
+{% block body %}
+<article class="page-content" data-pagefind-body>
+    <header class="page-header">
+        <h1>{{ 'contact.title'|trans }}</h1>
+    </header>
+
+    <div class="contact-form">
+        {% if content is not null %}
+            <div class="contact-intro">{{ content.htmlContent|raw }}</div>
+        {% endif %}
+
+        <p>{{ ('contact.about_nudge'|trans({'%about_url%': content_url('about', locale)}))|raw }}</p>
+
+        <div id="contact-success" class="alert alert-success is-hidden"></div>
+        <div id="contact-error" class="alert alert-danger is-hidden"></div>
+
+        {{ form_start(form, {
+            action: path('api_contact_' ~ locale),
+            attr: { id: 'contact-form', novalidate: 'novalidate' }
+        }) }}
+
+        <div class="mb-3">
+            {{ form_label(form.name, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.name, {attr: {class: 'form-control'}}) }}
+            <span class="text-danger form-field__error" id="error-name" role="alert"></span>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.email, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.email, {attr: {class: 'form-control'}}) }}
+            <span class="text-danger form-field__error" id="error-email" role="alert"></span>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.website, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.website, {attr: {class: 'form-control'}}) }}
+            <span class="text-danger form-field__error" id="error-website" role="alert"></span>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.subject, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.subject, {attr: {class: 'form-control'}}) }}
+            <span class="text-danger form-field__error" id="error-subject" role="alert"></span>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.message, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.message, {attr: {class: 'form-control'}}) }}
+            <span class="text-danger form-field__error" id="error-message" role="alert"></span>
+        </div>
+
+        {# Cloudflare Turnstile widget #}
+        <div class="contact-turnstile mb-3">
+            <div class="cf-turnstile"
+                 data-sitekey="{{ turnstile_site_key }}"
+                 data-callback="onTurnstileSuccess"
+                 data-theme="light"></div>
+        </div>
+
+        {{ form_widget(form.turnstile_token) }}
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary" id="contact-submit">
+                {{ 'contact.form.send'|trans }}
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</article>
+{% endblock %}
+
+{% block head_preconnect %}
+<link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="{{ asset('contact.js') }}"></script>
+{% endblock %}

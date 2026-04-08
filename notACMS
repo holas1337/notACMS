@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(dirname "$(readlink -f "$0")")"
+cd "${DIR}"
+
+COMMAND="${1:-}"
+
+usage() {
+  cat <<EOF
+Usage: ./notACMS <command> [options]
+
+Commands:
+  deploy    Build Docker images, start containers, compile assets, and rebuild content.
+  rebuild   Rebuild static site content and search index (runs inside existing containers).
+
+Options:
+  -h, --help      Show detailed help for a command (e.g., ./notACMS deploy --help)
+EOF
+}
+
+case "${COMMAND}" in
+  deploy)
+    shift
+    exec scripts/deploy.sh "$@"
+    ;;
+  rebuild)
+    shift
+    exec scripts/rebuild-content.sh "$@"
+    ;;
+  -h|--help|help|"")
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Error: unknown command '${COMMAND}'" >&2
+    echo "" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

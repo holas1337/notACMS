@@ -1,0 +1,164 @@
+{# local/templates/base.html.twig
+ #
+ # "Full override" boilerplate — replaces the entire base layout from scratch.
+ # No {% extends %} — this file IS the layout.
+ #
+ # Copy this file to local/templates/base.html.twig. Any template in
+ # local/templates/ that does NOT exist falls back to the original in templates/.
+ # Only this file (and whatever else you put in local/templates/) is replaced.
+ #
+ # Available Twig globals (set by SiteConfigExtension / ContentTwigExtension):
+ #   site_name          — string, e.g. "My Site"
+ #   site_base_url      — string, e.g. "https://example.site"
+ #   site_description   — string
+ #   site_author        — {name: string, ...}
+ #   site_locales       — {en: {og_locale, font_preload, tagline, ...}, pl: {...}}
+ #   site_locales_list  — ['en', 'pl']
+ #   site_default_locale — 'en'
+ #   locale             — current request locale, e.g. 'en'
+ #   translation_map    — {directoryKey: {en: url, pl: url}}
+ #   cf_analytics_token — string or empty (Cloudflare Web Analytics)
+ #
+ # Child templates override the blocks defined here (body, title, etc.).
+ # See templates/base.html.twig for the full list of blocks used by the
+ # built-in child templates (blog/post, blog/list, page/default, etc.).
+ #}
+<!DOCTYPE html>
+<html lang="{{ locale ?? site_default_locale }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ site_description }}{% endblock %}">
+    {% block robots %}<meta name="robots" content="max-image-preview:large, max-snippet:-1">{% endblock %}
+
+    {# Favicons — place favicon.ico / favicon.svg / apple-touch-icon.png in public/ #}
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    {# hreflang — links alternate language versions of content pages #}
+    {% if content is defined and content is not null and content.directoryKey() %}
+        {% set tk = content.directoryKey() %}
+        {% if translation_map is defined and translation_map[tk] is defined %}
+            {% for lang, url in translation_map[tk] %}
+                <link rel="alternate" hreflang="{{ lang }}" href="{{ site_base_url }}{{ url }}">
+            {% endfor %}
+            {% if translation_map[tk][site_default_locale] is defined %}
+                <link rel="alternate" hreflang="x-default" href="{{ site_base_url }}{{ translation_map[tk][site_default_locale] }}">
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {#
+     # locale-redirect.js — detects browser language and redirects to the right
+     # locale. Must load synchronously (no defer/async) before the page renders.
+     # Remove this block if your site is single-language.
+     #}
+    <link rel="preload" href="{{ asset('locale-redirect.js') }}" as="script">
+    <script src="{{ asset('locale-redirect.js') }}"></script>
+
+    <link rel="canonical" href="{{ site_base_url }}{{ app.request.pathInfo }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site_name }} RSS" href="{{ path('rss_' ~ locale) }}">
+
+    {% block stylesheets %}
+        {#
+         # importmap('app-local') loads local/assets/app.js — your custom entrypoint.
+         # Create that file with whatever you need, for example:
+         #
+         #   // local/assets/app.js
+         #   import './styles/local.scss';  // your own SCSS, written from scratch
+         #   import './my-feature.js';      // any additional modules
+         #
+         # If you also want the original app.css as a base (instead of starting from
+         # scratch), use importmap(['app', 'app-local']) — original CSS loads first,
+         # then your overrides on top.
+         #
+         # To load a separate pre-compiled stylesheet instead of using the importmap,
+         # replace this block with a <link rel="stylesheet"> pointing to your file.
+         #}
+        {{ importmap('app-local') }}
+    {% endblock %}
+
+    {% block head_preconnect %}{% endblock %}
+
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ site_name }}",
+        "url": "{{ site_base_url }}",
+        "author": {
+            "@type": "Person",
+            "name": "{{ site_author.name }}",
+            "url": "{{ site_base_url }}"
+        }
+    }
+    </script>
+    {% endblock %}
+</head>
+<body>
+    {# Skip link — accessibility, lets keyboard users jump past nav #}
+    <a href="#main-content" class="skip-link">{{ 'nav.skip_to_content'|trans }}</a>
+
+    {# ── Header ───────────────────────────────────────────────────────────── #}
+    <header>
+        <a href="{{ path('home_' ~ locale) }}">{{ site_name }}</a>
+        {% block navigation %}
+            {#
+             # Drop-in replacement: create local/templates/components/navigation.html.twig
+             # or replace this block entirely.
+             #}
+            {{ include('components/navigation.html.twig') }}
+        {% endblock %}
+    </header>
+
+    {# ── Main content + sidebar ───────────────────────────────────────────── #}
+    <main id="main-content">
+        {% block body %}{% endblock %}
+
+        {#
+         # Sidebar — remove these blocks if you do not want a sidebar.
+         # Replace sidebar_top / sidebar_bottom with your own widgets.
+         #}
+        <aside>
+            {% block sidebar_top %}
+                {{ include('components/sidebar_top.html.twig') }}
+            {% endblock %}
+            {% block sidebar_bottom %}
+                {{ include('components/sidebar_bottom.html.twig') }}
+            {% endblock %}
+        </aside>
+    </main>
+
+    {# ── Footer ───────────────────────────────────────────────────────────── #}
+    <footer>
+        <span>&copy; {{ "now"|date("Y") }} {{ site_name }}</span>
+        <a href="{{ content_url('privacy-policy', locale) }}">{{ 'nav.privacy_policy'|trans }}</a>
+    </footer>
+
+    {# Page-specific scripts injected by child templates #}
+    {% block javascripts %}{% endblock %}
+
+    {#
+     # Cookie banner — rendered server-side, shown/hidden by cookie-banner.js.
+     # Remove both lines if you do not need a cookie banner.
+     #}
+    {{ include('components/cookie_banner.html.twig', {
+        privacy_url: content_url('privacy-policy', locale)
+    }) }}
+    <script src="{{ asset('cookie-banner.js') }}" defer></script>
+
+    {# nav-toggle.js — powers the mobile hamburger menu #}
+    <script src="{{ asset('nav-toggle.js') }}" defer></script>
+
+    {# Cloudflare Web Analytics — omit if not used #}
+    {% if cf_analytics_token %}
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+                data-cf-beacon='{"token": "{{ cf_analytics_token }}"}'></script>
+    {% endif %}
+
+</body>
+</html>

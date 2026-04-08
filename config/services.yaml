@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
+parameters:
+    notacms_content:    '%kernel.project_dir%/local/content'
+    notacms_static_dir: '%kernel.project_dir%/public/static'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    NotACms\:
+        resource: '../src/'
+
+    NotACms\Local\:
+        resource: '../local/src/'
+
+    app.session_toggle.draft:
+        class: NotACms\Service\Preview\SessionToggleService
+        arguments:
+            $sessionKey: !php/const NotACms\Service\Preview\DraftPreviewServiceInterface::SESSION_KEY
+
+    app.session_toggle.scheduled:
+        class: NotACms\Service\Preview\SessionToggleService
+        arguments:
+            $sessionKey: !php/const NotACms\Service\Preview\ScheduledPreviewServiceInterface::SESSION_KEY
+
+    NotACms\Service\Preview\DraftPreviewService:
+        arguments:
+            $sessionToggleService: '@app.session_toggle.draft'
+
+    NotACms\Service\Preview\ScheduledPreviewService:
+        arguments:
+            $sessionToggleService: '@app.session_toggle.scheduled'

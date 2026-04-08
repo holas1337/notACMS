@@ -1,0 +1,30 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(ddev exec:*)",
+            "Bash(ddev code-check)",
+            "Bash(ddev code-fix)",
+            "Bash(ddev test:*)",
+            "Bash(ddev build:*)",
+            "Bash(./deploy.sh:*)",
+            "Bash(find:*)",
+            "Bash(grep:*)",
+            "Bash(head:*)",
+            "Bash(curl:*)",
+            "Bash(cat:*)",
+            "Bash(claude mcp:*)",
+            "Bash(mkdir:*)",
+            "Bash(cp:*)",
+            "Bash(ls:*)",
+            "Bash(tar)",
+            "mcp__hf-mcp-server__dynamic_space",
+            "mcp__draw-things__get_sd_models",
+            "mcp__draw-things__get_config",
+            "mcp__draw-things__generate_image",
+            "mcp__draw-things__check_status",
+            "mcp__draw-things__transform_image",
+            "mcp__plugin_context7_context7__resolve-library-id",
+            "mcp__plugin_context7_context7__query-docs"
+        ]
+    }
+}

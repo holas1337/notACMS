@@ -1,0 +1,11 @@
+twig:
+    paths:
+        '%kernel.project_dir%/local/templates': ''
+        '%kernel.project_dir%/templates': 'base'
+    file_name_pattern: '*.twig'
+    globals:
+        cf_analytics_token: '%env(CF_ANALYTICS_TOKEN)%'
+
+when@test:
+    twig:
+        strict_variables: true

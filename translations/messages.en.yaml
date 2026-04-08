@@ -1,0 +1,129 @@
+header:
+  tagline: "demo blog"
+
+nav:
+  skip_to_content: "Skip to content"
+  home: "Home"
+  blog: "Blog"
+  projects: "Projects"
+  about: "About"
+  contact: "Contact"
+  privacy_policy: "Privacy Policy"
+  search: "Search"
+  menu: "menu"
+
+blog:
+  read_more: "Read more"
+  published_on: "Published on"
+  updated_on: "Updated on"
+  category: "Category"
+  tags: "Tags"
+  no_posts: "No posts in this category."
+  archive: "Archive"
+  all_posts: "All posts"
+  comments_disabled: "Comments are disabled."
+  share: "Share"
+  share_on_x: "Share on X"
+  share_on_linkedin: "Share on LinkedIn"
+  share_on_facebook: "Share on Facebook"
+  share_via_email: "Share via email"
+  copy_link: "Copy link"
+  copied: "Copied!"
+  reading_time: "%count% min read"
+  related_posts: "Related Posts"
+  meta:
+    index: "Articles about web development, PHP, Symfony, and more."
+    category: "Posts in the %category% category."
+    tag: "Posts tagged #%tag%."
+    archive_month: "Posts from %date%."
+    archive_year: "Posts from %year%."
+  post_navigation: "Post navigation"
+  nav_prev: "← Previous"
+  nav_next: "Next →"
+  series_part: "Part %part% of %total%"
+  series_nav_label: "Article series"
+
+sidebar:
+  recent_posts: "Recent posts"
+  categories: "Categories"
+  tags: "Tags"
+  archive: "Archive"
+  search: "Search"
+  contact: "contact"
+  contact_intro: "Building something with PHP or Symfony?"
+  contact_cta: "→ get in touch"
+
+search:
+  title: "Search"
+  placeholder: "Search the site..."
+  no_results: "No results found for \"%query%\"."
+  results_for: "Results for: \"%query%\""
+
+contact:
+  title: "Contact"
+  intro: "Get in touch"
+  about_nudge: "Not sure yet? <a href=\"%about_url%\">Read more about me and my work</a>"
+  form:
+    name: "Full name"
+    email: "Email address"
+    website: "Website (optional)"
+    subject: "Subject"
+    message: "Message"
+    send: "Send"
+    sending: "Sending..."
+    success: "Message sent. Thank you!"
+    error: "An error occurred. Please try again."
+
+pagination:
+  next: "Next"
+  prev: "Previous"
+  page: "Page"
+  of: "of"
+
+language: ~
+
+cookie:
+  banner_text: "This site uses one functional cookie to remember your consent choice."
+  learn_more: "Privacy Policy"
+  accept: "Accept"
+  dismiss: "Dismiss"
+
+about:
+  skills_title: "Expertise"
+  cta_link: "Get in touch"
+  recommendations_title: "Recommendations"
+  recommendation_via: "via LinkedIn"
+  recommendation_expand: "read full recommendation →"
+  recommendation_collapse: "hide ↑"
+
+projects:
+  view_all: "View all %count% projects"
+
+footer:
+  copyright: "All rights reserved"
+  built_with: "Built with"
+
+error:
+  title: "Error"
+  go_home: "Go home"
+
+coming_soon:
+  title: "Coming Soon"
+  heading: "Coming Soon"
+  description: "This post is not published yet."
+  publishing: "Publishing"
+
+code:
+  copy: "copy"
+  copied: "copied!"
+  copy_aria: "Copy code"
+
+toc:
+  title: "Table of Contents"
+
+badge:
+  draft: "[DRAFT]"
+  planned: "[PLANNED]"
+  pinned: "[PINNED]"
+  new: "[NEW]"
+  updated: "[RECENTLY UPDATED]"

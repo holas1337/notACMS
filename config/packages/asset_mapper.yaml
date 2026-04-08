@@ -1,0 +1,15 @@
+framework:
+    asset_mapper:
+        # The paths to make available to the asset mapper.
+        paths:
+            assets/: ''
+            local/assets/: local
+        missing_import_mode: strict
+        excluded_patterns:
+            - '**/assets/styles/**/_*.scss'
+            - '**/local/assets/styles/**/_*.scss'
+
+when@prod:
+    framework:
+        asset_mapper:
+            missing_import_mode: warn

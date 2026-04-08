@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ content.title() }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ content.description() ?: content.excerpt(160) }}{% endblock %}
+{% block og_title %}{{ content.title() }}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "{{ site_author.name|e('js') }}",
+    "url": "{{ site_base_url }}",
+    "jobTitle": "{{ 'about.role'|trans|e('js') }}",
+    "description": "{{ 'about.headline'|trans|e('js') }}",
+    "email": "{{ site_author.email }}",
+    "sameAs": [{% for link in site_social %}"{{ link.url }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+}
+</script>
+{% endblock %}
+
+{% block body %}
+<article class="page-content" data-pagefind-body>
+
+    {{ include('components/about_profile.html.twig', {
+        author: site_author,
+        role: 'about.role'|trans,
+        headline: 'about.headline'|trans
+    }) }}
+
+    <div class="about-bio">
+        {{ content.htmlContent|raw }}
+    </div>
+
+    {% if site_author.skills is not empty %}
+    <section class="about-skills">
+        <h2 class="about-skills__title">{{ 'about.skills_title'|trans }}</h2>
+        <dl>
+            {% for category, items in site_author.skills %}
+            <div class="about-skills__group">
+                <dt>{{ ('about.skills.' ~ category)|trans }}</dt>
+                <dd>
+                    {% for skill in items %}
+                        <span class="badge bg-secondary text-white">{{ skill }}</span>
+                    {% endfor %}
+                </dd>
+            </div>
+            {% endfor %}
+        </dl>
+    </section>
+    {% endif %}
+
+    {% if site_author.recommendations is defined and site_author.recommendations is not empty %}
+    <section class="about-recommendations">
+        <h2 class="about-recommendations__title">{{ 'about.recommendations_title'|trans }}</h2>
+        {% for rec in site_author.recommendations %}
+        {{ include('components/recommendation_card.html.twig', {
+            rec: rec,
+            expand_label: 'about.recommendation_expand'|trans,
+            collapse_label: 'about.recommendation_collapse'|trans,
+            via_label: 'about.recommendation_via'|trans
+        }) }}
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <p>
+        <a href="{{ path('contact_' ~ locale) }}" class="btn btn-primary">{{ 'about.cta_link'|trans }}</a>
+    </p>
+
+</article>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('recommendation-expand.js') }}" defer></script>
+{% if content.hasToc() %}
+<script src="{{ asset('table-of-contents.js') }}" defer></script>
+{% endif %}
+{% endblock %}

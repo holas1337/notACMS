@@ -1,0 +1,15 @@
+# Override or add translation keys for English.
+# Only include the keys you want to change — all other keys are inherited
+# from translations/messages.en.yaml.
+#
+# Copy this file to local/translations/messages.en.yaml and edit as needed.
+
+nav:
+  blog: "Articles"
+
+sidebar:
+  contact_intro: "Got a woodland question?"
+  contact_cta: "→ write to me"
+
+footer:
+  copyright: "All rights reserved — Tree Blog"

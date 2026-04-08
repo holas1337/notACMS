@@ -1,0 +1,11 @@
+parameters:
+    level: 6
+    paths:
+        - src
+    excludePaths:
+        - var
+        - vendor
+    scanFiles:
+        - vendor/autoload.php
+    tmpDir: var/phpstan
+    treatPhpDocTypesAsCertain: false

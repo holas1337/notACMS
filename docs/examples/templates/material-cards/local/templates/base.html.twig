@@ -1,0 +1,15 @@
+{% extends '@base/base.html.twig' %}
+
+{#
+    Override the stylesheets block to inject local.scss AFTER the base app.css.
+
+    importmap() processes entrypoints in order. 'app' is fully resolved first
+    (discovering app.css), then 'app-local' (discovering local.css). Duplicates
+    are skipped, so app.css keeps its earlier position:
+
+        <link rel="stylesheet" href="…/app.css">    ← base styles
+        <link rel="stylesheet" href="…/local.css">  ← Material dark overrides
+#}
+{% block stylesheets %}
+    {{ importmap(['app', 'app-local']) }}
+{% endblock %}

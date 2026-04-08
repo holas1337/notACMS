@@ -1,0 +1,60 @@
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
+
+###> project specific ###
+/.generated/
+/.mockups/
+/.plans/
+/public/static/
+/public/pagefind/
+/public/favicon.ico
+/local/*
+!/local/templates
+/local/templates/*
+!/local/templates/.gitkeep
+!/local/assets
+/local/assets/*
+!/local/assets/.gitkeep
+!/local/translations
+/local/translations/*
+!/local/translations/.gitkeep
+!/local/content
+/local/content/*
+!/local/content/.gitkeep
+!/local/src
+/local/src/*
+!/local/src/.gitkeep
+!/local/docker
+!/local/docker/nginx
+/local/docker/nginx/*
+!/local/docker/nginx/.gitkeep
+!/local/docs
+/local/docs/*
+!/local/docs/.gitkeep
+###< project specific ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> symfonycasts/sass-bundle ###
+/public/assets/
+###< symfonycasts/sass-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
