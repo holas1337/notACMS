@@ -1,0 +1,282 @@
+// =============================================================================
+// Docs — 3-column documentation layout.
+// Left sidebar + main content + right TOC.
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Wrapper (CSS Grid 3-col)
+// ---------------------------------------------------------------------------
+.docs-wrapper {
+    flex: 1;
+    display: grid;
+    grid-template-columns: $sidebar-w 1fr $toc-w;
+    max-width: $container-docs-max;
+    margin: 0 auto;
+    width: 100%;
+
+    // Drop TOC at 1100px
+    @media (max-width: $bp-xl) {
+        grid-template-columns: 220px 1fr;
+
+        .docs-toc {
+            display: none;
+        }
+    }
+
+    // Drop sidebar at 768px — full width, mobile has hamburger toggle
+    @media (max-width: $bp-md) {
+        grid-template-columns: 1fr;
+
+        .docs-sidebar {
+            display: none;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Left Sidebar
+// ---------------------------------------------------------------------------
+.docs-sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: $sp-5 0;
+    position: sticky;
+    top: $nav-height;
+    height: calc(100vh - #{$nav-height});
+    overflow-y: auto;
+
+    // Scrollbar
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: $radius-xs;
+    }
+}
+
+.sidebar-section {
+    padding: 0 $sp-3 1.5rem;
+}
+
+.sidebar-label {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 0.75rem;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.sidebar-nav {
+    list-style: none;
+
+    li a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.75rem;
+        border-radius: $radius;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: all $transition;
+
+        &:hover {
+            color: var(--text);
+            background: var(--bg-elevated);
+            text-decoration: none;
+        }
+
+        &.is-active,
+        &[aria-current="page"] {
+            color: var(--accent);
+            background: var(--accent-bg);
+            font-weight: 600;
+            border-left: 2px solid var(--accent);
+            padding-left: calc(0.75rem - 2px);
+        }
+    }
+}
+
+.sidebar-icon {
+    font-size: 1rem;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0.75rem $sp-3;
+}
+
+.sidebar-external-icon {
+    font-size: 0.7rem;
+    margin-left: 0.15rem;
+    opacity: 0.6;
+}
+
+// Mobile sidebar toggle button (shown when sidebar is hidden)
+.docs-sidebar-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: $fs-sm;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: $radius;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin-bottom: $sp-3;
+
+    @media (max-width: $bp-md) {
+        display: inline-flex;
+    }
+}
+
+// Mobile sidebar drawer
+.docs-sidebar--mobile {
+    display: none;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: $radius-md;
+    padding: $sp-3 0;
+    margin-bottom: $sp-5;
+
+    &.is-open {
+        display: block;
+    }
+
+    @media (min-width: #{$bp-md + 1px}) {
+        display: none !important;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Main content area
+// ---------------------------------------------------------------------------
+.docs-content {
+    padding: $sp-6 $sp-6 6rem;
+    min-width: 0; // prevent grid blowout
+
+    @media (max-width: $bp-lg) {
+        padding: $sp-5 $sp-5 5rem;
+    }
+
+    @media (max-width: $bp-md) {
+        padding: $sp-5 $sp-3 4rem;
+    }
+}
+
+.docs-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: $lh-tight;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+.docs-description {
+    font-size: $fs-lg;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 620px;
+    margin-bottom: 2.5rem;
+    padding-bottom: $sp-5;
+    border-bottom: 1px solid var(--border);
+}
+
+// ---------------------------------------------------------------------------
+// Right TOC
+// ---------------------------------------------------------------------------
+.docs-toc {
+    padding: $sp-5 1.5rem $sp-5 1rem;
+    position: sticky;
+    top: $nav-height;
+    height: calc(100vh - #{$nav-height});
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: $radius-xs;
+    }
+}
+
+.docs-toc.is-hidden {
+    display: none;
+}
+
+.toc-label {
+    font-family: $font-mono;
+    font-size: $fs-xs;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.toc-list {
+    list-style: none;
+
+    li {
+        margin-bottom: 0.1rem;
+    }
+
+    a {
+        display: block;
+        font-size: $fs-sm;
+        color: var(--text-muted);
+        padding: 0.25rem 0.5rem;
+        border-radius: $radius-sm;
+        text-decoration: none;
+        border-left: 2px solid transparent;
+        line-height: 1.4;
+        transition: all $transition;
+
+        &:hover {
+            color: var(--text);
+            border-left-color: var(--border);
+            text-decoration: none;
+        }
+
+        &.is-active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: var(--accent-bg);
+            font-weight: 500;
+        }
+    }
+
+    .toc-h3 {
+        margin-left: 0.75rem;
+
+        a {
+            font-size: 0.75rem;
+        }
+    }
+}
+

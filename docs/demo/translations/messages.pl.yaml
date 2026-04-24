@@ -1,0 +1,233 @@
+header:
+  tagline: blog demo
+nav:
+  skip_to_content: Przejdź do treści
+  home: Strona główna
+  blog: Wpisy
+  projects: Realizacje
+  about: O mnie
+  contact: Kontakt
+  privacy_policy: Polityka prywatności
+  search: Szukaj
+  menu: menu
+  main: Nawigacja główna
+  theme_toggle: Przełącz motyw
+  theme_to_light: Przełącz na jasny motyw
+  theme_to_dark: Przełącz na ciemny motyw
+  language_switcher: Język (%locale%)
+blog:
+  read_more: Czytaj dalej
+  published_on: Opublikowano
+  updated_on: Zaktualizowano
+  category: Kategoria
+  tags: Tagi
+  no_posts: Brak wpisów w tej kategorii.
+  archive: Archiwum
+  all_posts: Wszystkie wpisy
+  comments_disabled: Komentarze są wyłączone.
+  share: Udostępnij
+  share_on_x: Udostępnij na X
+  share_on_linkedin: Udostępnij na LinkedIn
+  share_on_facebook: Udostępnij na Facebooku
+  share_via_email: Udostępnij przez e-mail
+  copy_link: Kopiuj link
+  copied: Skopiowano!
+  reading_time: '%count% min czytania'
+  related_posts: Powiązane wpisy
+  meta:
+    index: Artykuły o web developmencie, PHP, Symfony i nie tylko.
+    category: Wpisy w kategorii %category%.
+    tag: 'Wpisy z tagiem #%tag%.'
+    archive_month: Wpisy z %date%.
+    archive_year: Wpisy z roku %year%.
+  post_navigation: Nawigacja między wpisami
+  nav_prev: ← Poprzedni
+  nav_next: Następny →
+  series_part: Część %part% z %total%
+  series_nav_label: Seria artykułów
+sidebar:
+  recent_posts: Ostatnie wpisy
+  categories: Kategorie
+  tags: Tagi
+  archive: Archiwum
+  search: Szukaj
+  contact: kontakt
+  contact_intro: Budujesz coś z PHP lub Symfony?
+  contact_cta: → skontaktuj się
+search:
+  title: Szukaj
+  close: Zamknij wyszukiwanie
+  placeholder: Szukaj na stronie...
+  no_results: Nie znaleziono wyników dla "%query%".
+  results_for: 'Wyniki dla: "%query%"'
+  hint_navigate: nawiguj
+  hint_open: otwórz
+  hint_close: zamknij
+  hint_anywhere: gdziekolwiek
+contact:
+  title: Kontakt
+  meta_description: Skontaktuj się z zespołem notACMS. Użyj formularza kontaktowego, aby zadać pytania lub rozpocząć rozmowę.
+  connection_error: Błąd połączenia. Spróbuj ponownie.
+  intro: Skontaktuj się ze mną
+  about_nudge: Chcesz wiedzieć więcej? <a href="%about_url%">Przeczytaj o notACMS
+    i jak działa</a>
+  form:
+    name: Imię i nazwisko
+    email: Adres e-mail
+    website: Strona WWW (opcjonalnie)
+    subject: Temat
+    message: Wiadomość
+    send: Wyślij
+    sending: Wysyłanie...
+    success: Wiadomość została wysłana. Dziękuję!
+    error: Coś poszło nie tak. Sprawdź swoje dane i spróbuj ponownie.
+breadcrumb:
+  label: Ścieżka nawigacyjna
+pagination:
+  label: Paginacja
+  next: Następna
+  prev: Poprzednia
+  page: Strona
+  of: z
+language:
+  switcher: Język (%locale%)
+  choose: Wybierz język
+cookie:
+  banner_text: Ta strona używa jednego funkcjonalnego pliku cookie do zapamiętania
+    Twojego wyboru.
+  learn_more: Polityka prywatności
+  accept: Akceptuję
+  dismiss: Zamknij
+about:
+  role: Programista
+  headline: Przyjazny dla AI generator stron statycznych oparty na Symfony
+  skills_title: Specjalizacja
+  cta_link: Napisz do mnie
+  recommendations_title: Polecenia
+  recommendation_via: przez LinkedIn
+  recommendation_expand: czytaj całe polecenie →
+  recommendation_collapse: zwiń ↑
+  tech_stack: Technologie
+  skills.Language: Język
+  skills.Framework: Framework
+  skills.Frontend: Frontend
+  skills.Infra: Infrastruktura
+projects:
+  view_all: Zobacz wszystkie %count% realizacje
+footer:
+  copyright: Wszelkie prawa zastrzeżone
+  built_with: Zbudowane z
+error:
+  title: Błąd
+  go_home: Wróć na stronę główną
+coming_soon:
+  title: Już wkrótce
+  heading: Już wkrótce
+  description: Ten wpis nie został jeszcze opublikowany.
+  publishing: Publikacja
+code:
+  copy: kopiuj
+  copied: skopiowano!
+  copy_aria: Kopiuj kod
+toc:
+  title: Spis treści
+badge:
+  draft: '[SZKIC]'
+  planned: '[ZAPLANOWANY]'
+  pinned: '[PRZYPIĘTY]'
+  new: '[NOWY]'
+  updated: '[ZAKTUALIZOWANY]'
+site:
+  docs: Dokumentacja
+  releases: Wydania
+  about: O projekcie
+  manual: Podręcznik
+  architecture: Architektura
+  customization: Dostosowanie
+  locales: Lokalizacja
+  design_reference: Wzornik
+  github: GitHub
+  project: Projekt
+  author: Autor
+  on_this_page: Na tej stronie
+  documentation: Dokumentacja
+  open_source: Open source na licencji Apache 2.0
+  built_with: Zbudowane z notACMS
+  nav_prev: Poprzedni
+  nav_next: Następny
+  open_navigation: Otwórz nawigację
+  contact: Kontakt
+home:
+  hero_badge: Open Source · PHP / Symfony
+  hero_heading: Generator stron statycznych, który<br><em>po prostu nie przeszkadza.</em>
+  hero_sub: Pisz w Markdown. Definiuj strukturę w YAML. Uruchom jedno polecenie. Uzyskaj
+    czysty statyczny HTML — brak bazy danych, brak serwera, brak niespodzianek.
+  hero_cta: Zacznij
+  stat_db: Tabel w bazie danych
+  stat_static: Statyczny wynik
+  stat_ai: Przyjazna struktura
+  what_label: Czym jest notACMS?
+  what_heading: CMS, który w czasie działania<br>nic nie przechowuje.
+  what_p1: <strong>notACMS</strong> to generator stron statycznych PHP/Symfony dla
+    programistów, którzy chcą pełnej kontroli. Treść żyje w plikach Markdown + YAML.
+    Szablony to Twig. Wynik to czysty HTML.
+  what_p2: Żadnych migracji baz danych. Żadnych konfliktów wtyczek. Żadnego vendor
+    lock-in. Tylko krok budowania, który zamienia katalog <code>local/content/</code>
+    w kompletną stronę statyczną.
+  what_p3: <strong>Zaprojektowany dla przepływów pracy przyjaznych AI</strong> — płaskie
+    pliki są trywialne do odczytu, wyszukiwania i generowania przez LLM.
+  stat_db_label: Zależność od bazy danych
+  stat_db_desc: Treść żyje w płaskich plikach Markdown + YAML. Brak ORM, brak migracji.
+  stat_cmd_label: Polecenie budowania
+  stat_cmd_desc: <code>./notACMS deploy</code> generuje kompletną stronę do <code>public/static/</code>.
+  stat_locales_label: Obsługiwanych lokali
+  stat_locales_desc: Dodaj dowolny język jedną linią w <code>_site.yaml</code>. Treść
+    zlokalizowana per lokal.
+  stat_license_label: Licencja
+  stat_license_desc: Forkuj, rozszerzaj, dostosuj do swoich potrzeb. Brak vendor lock-in.
+  features_label: Funkcje
+  features_heading: Wszystko, czego potrzebujesz.<br>Nic czego nie potrzebujesz.
+  features_sub: Zbudowany na Symfony 7.4 i PHP 8.5. Znajome narzędzia, minimalna magia.
+  feat_md_title: Markdown + YAML
+  feat_md_desc: Pisz treść w Markdown z frontmatter YAML. CommonMark z nagłówkami,
+    tabelami, calloutami.
+  feat_i18n_title: Wielojęzyczność
+  feat_i18n_desc: Pełne wsparcie i18n. Treść zlokalizowana per lokal. Nadpisywanie
+    URL per język. hreflang od razu.
+  feat_search_title: Wyszukiwanie pełnotekstowe
+  feat_search_desc: Integracja z Pagefind. Statyczne wyszukiwanie bez kosztów serwera,
+    indeksowane podczas budowania. Brak zewnętrznego API.
+  feat_php_title: PHP / Symfony Core
+  feat_php_desc: Pełny Symfony DI, polecenia konsolowe, szablony Twig, SCSS przez
+    AssetMapper. Programiści PHP czują się jak w domu.
+  how_label: Jak to działa
+  how_heading: Trzy kroki od pomysłu<br>do działającej strony.
+  step1_title: Pisz treść
+  step1_desc: Twórz pliki Markdown w <code>local/content/</code> z frontmatter YAML.
+    Dodawaj strony, wpisy i lokale według potrzeb.
+  step2_title: Zbuduj
+  step2_desc: Uruchom <code>./notACMS deploy --prod</code>. notACMS kompiluje SCSS,
+    przetwarza obrazy, renderuje szablony Twig i generuje cały statyczny HTML.
+  step3_title: Wdróż gdziekolwiek
+  step3_desc: Prześlij <code>public/</code> na dowolny serwer WWW, CDN lub hosting
+    statyczny. PHP nie jest wymagane w czasie serwowania — chyba że używasz trybu
+    live.
+  meta_text: Ta strona jest zbudowana z notACMS.
+  meta_sub: 'Żywy proof-of-concept: produkt dokumentuje i promuje się sam przy użyciu
+    dokładnie tych samych narzędzi, które dostarcza.'
+  meta_github: Zobacz źródło na GitHub
+  releases_label: Wydania
+  releases_heading: Najnowsze wydanie
+  releases_all: Wszystkie wydania
+  release_read: Czytaj wpis
+  cta_heading: Zacznij budować dziś.
+  cta_sub: Sklonuj repozytorium, dodaj treść, uruchom jedno polecenie. Strona jest
+    live.
+  cta_manual: Czytaj Podręcznik
+releases:
+  meta_description: '%site_name% — informacje o wydaniach i ogłoszenia.'
+  meta_tagged: 'Wpisy z tagiem #%tag% — %site_name% informacje o wydaniach.'
+  tagged_heading: Wpisy z tagiem
+  tagged_desc: 'Wszystkie wpisy z tagiem #%tag%.'
+  description: Informacje o wydaniach, ogłoszenia i aktualizacje notACMS.
+  empty: Brak wpisów.

@@ -7,6 +7,7 @@ namespace NotACms\Controller;
 use NotACms\Attribute\LocalizedRoute;
 use NotACms\Content\ContentItem;
 use NotACms\Content\Enum\CardLayout;
+use NotACms\Content\Enum\FilterType;
 use NotACms\Service\Content\ContentServiceInterface;
 use NotACms\Service\Content\RelatedPostsServiceInterface;
 use NotACms\Service\Content\SidebarDataProviderInterface;
@@ -82,7 +83,7 @@ final class BlogController extends AbstractController
 
         $ctx = $this->buildContext($locale);
         $ctx['posts'] = $posts;
-        $ctx['filter_type'] = 'tag';
+        $ctx['filter_type'] = FilterType::Tag->value;
         $ctx['filter_value'] = $tag;
         $ctx['current_page'] = 1;
         $ctx['total_pages'] = 1;
@@ -99,7 +100,7 @@ final class BlogController extends AbstractController
 
         $ctx = $this->buildContext($locale);
         $ctx['posts'] = $posts;
-        $ctx['filter_type'] = 'archive';
+        $ctx['filter_type'] = FilterType::Archive->value;
         $ctx['archive_year'] = $year;
         $ctx['archive_month'] = $month;
         $ctx['current_page'] = 1;
@@ -116,7 +117,7 @@ final class BlogController extends AbstractController
 
         $ctx = $this->buildContext($locale);
         $ctx['posts'] = $posts;
-        $ctx['filter_type'] = 'archive';
+        $ctx['filter_type'] = FilterType::Archive->value;
         $ctx['archive_year'] = $year;
         $ctx['current_page'] = 1;
         $ctx['total_pages'] = 1;
@@ -160,7 +161,7 @@ final class BlogController extends AbstractController
 
         $ctx = $this->buildContext($locale);
         $ctx['posts'] = $posts;
-        $ctx['filter_type'] = 'category';
+        $ctx['filter_type'] = FilterType::Category->value;
         $ctx['filter_value'] = $category;
         $ctx['current_page'] = 1;
         $ctx['total_pages'] = 1;

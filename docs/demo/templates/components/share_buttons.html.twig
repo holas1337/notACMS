@@ -1,0 +1,15 @@
+{% set share_url = site_base_url ~ app.request.pathInfo %}
+{% set share_title = title ?? '' %}
+<div class="share-buttons" aria-label="{{ 'blog.share'|trans }}">
+    <span>{{ 'blog.share'|trans }}:</span>
+    <a href="https://twitter.com/intent/tweet?url={{ share_url|url_encode }}&text={{ share_title|url_encode }}"
+       target="_blank" rel="noopener noreferrer" class="share-btn share-btn--x" aria-label="{{ 'blog.share_on_x'|trans }}">X</a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url|url_encode }}"
+       target="_blank" rel="noopener noreferrer" class="share-btn share-btn--linkedin" aria-label="{{ 'blog.share_on_linkedin'|trans }}">LinkedIn</a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url|url_encode }}"
+       target="_blank" rel="noopener noreferrer" class="share-btn share-btn--facebook" aria-label="{{ 'blog.share_on_facebook'|trans }}">Facebook</a>
+    <a href="mailto:?subject={{ share_title|url_encode }}&body={{ share_url|url_encode }}"
+       class="share-btn share-btn--email" aria-label="{{ 'blog.share_via_email'|trans }}">Email</a>
+    <button type="button" class="share-btn share-btn--copy"
+            data-url="{{ share_url }}" data-label="{{ 'blog.copy_link'|trans }}" data-copied="{{ 'blog.copied'|trans }}">{{ 'blog.copy_link'|trans }}</button>
+</div>

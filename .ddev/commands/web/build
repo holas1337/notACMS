@@ -1,44 +1,98 @@
 #!/bin/bash
-## Description: Build assets and static site (clears dart-sass cache first)
-## Usage: build
-## Example: ddev build
+## Description: Build assets and static site
+## Usage: build [--bare|--demo]
+## Example: ddev build --demo
 
 cd /var/www/html || exit 1
 
-echo "==> Bootstrapping content"
-if [ ! -f local/content/_site.yaml ]; then
-    echo "    local/content/ is empty — seeding from docs/examples/content/"
-    cp -r docs/examples/content/. local/content/
+# ── Parse flags ──────────────────────────────────────────────────────────
+SEED_MODE=""
+for arg in "$@"; do
+    case "$arg" in
+        --bare|--demo)
+            if [ -n "$SEED_MODE" ] && [ "$SEED_MODE" != "$arg" ]; then
+                echo "ERROR: --bare and --demo are mutually exclusive" >&2
+                exit 1
+            fi
+            SEED_MODE="$arg"
+            ;;
+        *)
+            echo "ERROR: Unknown flag: $arg" >&2
+            echo "Usage: ddev build [--bare|--demo]" >&2
+            exit 1
+            ;;
+    esac
+done
+
+# ── Helpers ──────────────────────────────────────────────────────────────
+
+# Check whether a directory contains only .gitkeep files (recursively).
+# Returns 0 (true) if the dir is empty or only has .gitkeep, 1 (false) otherwise.
+dir_is_empty() {
+    local dir="$1"
+    [ -d "$dir" ] || return 0
+    local non_gitkeep
+    non_gitkeep="$(find "$dir" -type f ! -name '.gitkeep' 2>/dev/null)"
+    [ -z "$non_gitkeep" ]
+}
+
+# Check whether local/ as a whole has any real content across all subdirs.
+local_has_content() {
+    local subdirs=(content translations assets docs src templates docker)
+    for sub in "${subdirs[@]}"; do
+        if ! dir_is_empty "local/$sub"; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# ── Seed logic ───────────────────────────────────────────────────────────
+
+if [ -n "$SEED_MODE" ]; then
+    if [ ! -d local ]; then
+        echo "==> local/ does not exist — creating and seeding ($SEED_MODE)"
+        mkdir -p local
+        SEED_SOURCE="docs/${SEED_MODE#--}"
+        cp -r "$SEED_SOURCE/." local/
+    elif local_has_content; then
+        TIMESTAMP="$(date '+%Y-%m-%d-%H%M%S')"
+        echo "==> local/ has content — backing up to local-$TIMESTAMP/"
+        mv local "local-$TIMESTAMP"
+        mkdir -p local
+        SEED_SOURCE="docs/${SEED_MODE#--}"
+        cp -r "$SEED_SOURCE/." local/
+        echo "    Seeded from $SEED_SOURCE/"
+    else
+        echo "==> local/ exists but is empty — seeding ($SEED_MODE)"
+        SEED_SOURCE="docs/${SEED_MODE#--}"
+        cp -r "$SEED_SOURCE/." local/
+    fi
+
+    # Ensure og-default.jpg exists (both bare and demo may need it)
+    if [ ! -f local/assets/images/og-default.jpg ]; then
+        mkdir -p local/assets/images
+        cp assets/images/og-default.jpg local/assets/images/og-default.jpg
+    fi
 else
-    echo "    local/content/ already exists — skipping"
+    # No flag — seed demo if local/ is empty/missing, otherwise skip
+    if [ ! -d local ] || ! local_has_content; then
+        echo "==> local/ is empty or missing — seeding from docs/demo/"
+        mkdir -p local
+        cp -r docs/demo/. local/
+        if [ ! -f local/assets/images/og-default.jpg ]; then
+            mkdir -p local/assets/images
+            cp assets/images/og-default.jpg local/assets/images/og-default.jpg
+        fi
+    else
+        echo "==> local/ has existing content — skipping seed (use --bare or --demo to force)"
+    fi
 fi
 
-echo "==> Bootstrapping translations"
-if [ ! -f local/translations/messages.en.yaml ] && [ ! -f local/translations/messages.pl.yaml ]; then
-    echo "    local/translations/ is empty — seeding from docs/examples/translations/"
-    cp docs/examples/translations/messages.en.yaml local/translations/messages.en.yaml
-    cp docs/examples/translations/messages.pl.yaml local/translations/messages.pl.yaml
-else
-    echo "    local/translations/ already exists — skipping"
-fi
+# ── Build pipeline ───────────────────────────────────────────────────────
 
-echo "==> Bootstrapping local assets"
-if [ ! -f local/assets/images/og-default.jpg ]; then
-    echo "    local/assets/images/ missing og-default.jpg — seeding from assets/images/"
-    mkdir -p local/assets/images
-    cp assets/images/og-default.jpg local/assets/images/og-default.jpg
-else
-    echo "    local/assets/images/og-default.jpg already exists — skipping"
-fi
-
-echo "==> Bootstrapping local docs"
-if [ ! -f local/docs/EDITOR_GUIDE.md ]; then
-    echo "    local/docs/EDITOR_GUIDE.md missing — seeding from docs/examples/docs/"
-    mkdir -p local/docs
-    cp docs/examples/docs/EDITOR_GUIDE.md local/docs/EDITOR_GUIDE.md
-else
-    echo "    local/docs/EDITOR_GUIDE.md already exists — skipping"
-fi
+echo "==> Installing dependencies"
+composer install --optimize-autoloader --no-interaction
 
 echo "==> Removing dart-sass binary (architecture-specific)"
 rm -rf var/dart-sass

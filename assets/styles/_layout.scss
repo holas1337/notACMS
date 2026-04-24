@@ -1,143 +1,110 @@
-// =============================================================================
-// Layout — container, two-column CSS Grid, header, footer
-// =============================================================================
-
-// ---------------------------------------------------------------------------
-// Container
-// ---------------------------------------------------------------------------
 .container {
     width: 100%;
     max-width: $container-max;
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: $sp-3;
-    padding-left: $sp-3;
+    margin: 0 auto;
+    padding: 0 $sp-3;
 
-    @media (min-width: $bp-md) {
-        padding-right: $sp-4;
-        padding-left: $sp-4;
+    &--wide {
+        max-width: $container-wide;
+    }
+
+    &--prose {
+        max-width: $container-max;
+    }
+
+    &--post {
+        max-width: $container-max;
     }
 }
 
-// ---------------------------------------------------------------------------
-// Site Header
-// ---------------------------------------------------------------------------
-.site-header {
-    background-color: $color-white;
-    border-bottom: 1px solid $color-border;
-    padding: $sp-3 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: $shadow-sm;
-}
-
-.site-header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: $sp-3;
-}
-
-.site-branding {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    flex-shrink: 0;
-}
-
-.site-branding__name {
-    font-size: $fs-xl;
-    font-weight: 700;
-    color: $color-dark;
-    text-decoration: none;
-    line-height: 1.2;
-
-    &:hover {
-        color: $color-primary;
-        text-decoration: none;
-    }
-}
-
-.site-branding__tagline {
-    font-size: $fs-sm;
-    color: $color-muted;
-    margin: 0;
-}
-
-// ---------------------------------------------------------------------------
-// Main content area
-// ---------------------------------------------------------------------------
-.site-main {
-    padding: $sp-5 0;
-    min-height: calc(100vh - 200px);
-}
-
-// Two-column layout: main content + sidebar
 .content-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: $gap;
-    align-items: start;
+    display: flex;
+    gap: $sp-5;
 
-    @media (min-width: $bp-lg) {
-        grid-template-columns: 1fr $sidebar-w;
+    @media (max-width: $bp-md) {
+        flex-direction: column;
     }
 }
 
 .content-main {
-    min-width: 0; // prevent grid blowout
+    flex: 1;
+    min-width: 0;
 }
 
 .content-sidebar {
-    min-width: 0;
+    width: 220px;
+    flex-shrink: 0;
 
-    @media (min-width: $bp-lg) {
-        position: sticky;
-        top: calc(70px + #{$sp-3}); // header height + gap
+    @media (max-width: $bp-md) {
+        display: none;
     }
 }
 
-// ---------------------------------------------------------------------------
-// Site Footer
-// ---------------------------------------------------------------------------
-.site-footer {
-    background-color: $color-light;
-    border-top: 1px solid $color-border;
-    padding: $sp-4 0;
-    font-size: $fs-sm;
-    color: $color-muted;
-}
+.site-header {
+    border-bottom: 1px solid var(--border);
+    margin-bottom: $sp-5;
 
-.site-footer__inner {
-    display: flex;
-    flex-direction: column;
-    gap: $sp-2;
-    align-items: center;
-    text-align: center;
-
-    @media (min-width: $bp-md) {
-        flex-direction: row;
+    .site-header-inner {
+        display: flex;
+        align-items: center;
         justify-content: space-between;
-        text-align: left;
+        padding: $sp-3 0;
+        gap: $sp-3;
     }
 
-    a {
-        color: $color-muted;
+    .site-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
 
-        &:hover {
-            color: $color-body;
+        img {
+            height: 1.75rem;
+            width: auto;
+            display: block;
         }
     }
 }
 
-// ---------------------------------------------------------------------------
-// Page-level headings (used on listing/archive/tag pages)
-// ---------------------------------------------------------------------------
-.page-title {
-    font-size: 1.75rem;
-    font-weight: 700;
+.site-main {
+    min-height: 50vh;
+}
+
+.site-footer {
+    margin-top: $sp-6;
+    padding: $sp-4 0;
+    border-top: 1px solid var(--border);
+    font-size: $fs-sm;
+    color: var(--text-muted);
+
+    .container {
+        display: flex;
+        align-items: center;
+        gap: $sp-3;
+    }
+
+    a {
+        color: var(--text-muted);
+        text-decoration: none;
+
+        &:hover {
+            color: var(--accent);
+        }
+    }
+}
+
+.page-header {
     margin-bottom: $sp-4;
-    padding-bottom: $sp-3;
-    border-bottom: 1px solid $color-border;
+
+    h1 {
+        margin-bottom: $sp-2;
+    }
+
+    .page-header-image {
+        margin-bottom: $sp-3;
+    }
+
+    .page-header-desc {
+        color: var(--text-muted);
+        margin-bottom: $sp-3;
+    }
 }

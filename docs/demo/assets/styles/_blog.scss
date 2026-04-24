@@ -1,0 +1,52 @@
+// =============================================================================
+// Blog — overrides and utilities for blog/post context.
+// Most post components are in _components.scss (.post-meta, .post-nav, etc.)
+// Most prose styles are in _prose.scss.
+// This file only holds blog-specific structural and utility classes.
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Reading progress bar (reading-progress.js — injected on post pages)
+// ---------------------------------------------------------------------------
+.reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    z-index: 200;
+    transition: width 0.1s linear;
+}
+
+// ---------------------------------------------------------------------------
+// Code copy button (code-copy.js — injected into .prose pre blocks)
+// ---------------------------------------------------------------------------
+.code-copy-btn {
+    position: absolute;
+    top: $sp-2;
+    right: $sp-2;
+    padding: $sp-1 $sp-2;
+    font-size: 0.68rem;
+    font-family: $font-mono;
+    color: var(--text-muted);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: $radius-sm;
+    cursor: pointer;
+    opacity: 0;
+    transition:
+        opacity $transition,
+        color $transition;
+
+    pre:hover & {
+        opacity: 1;
+    }
+
+    &:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+}
+
+

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NotACms\Service\Preview;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final readonly class SessionToggleService implements SessionToggleServiceInterface
@@ -17,7 +18,7 @@ final readonly class SessionToggleService implements SessionToggleServiceInterfa
     public function isEnabled(): bool
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (!$request instanceof \Symfony\Component\HttpFoundation\Request || !$request->hasSession()) {
+        if (!$request instanceof Request || !$request->hasSession()) {
             return false;
         }
 
@@ -27,7 +28,7 @@ final readonly class SessionToggleService implements SessionToggleServiceInterfa
     public function toggle(): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (!$request instanceof \Symfony\Component\HttpFoundation\Request || !$request->hasSession()) {
+        if (!$request instanceof Request || !$request->hasSession()) {
             return;
         }
 

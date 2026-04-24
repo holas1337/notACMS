@@ -196,7 +196,9 @@ final readonly class ContentItem
 
     public function excerpt(int $length = self::DEFAULT_EXCERPT_LENGTH): string
     {
-        $html = str_replace(['</p>', '</li>', '</h1>', '</h2>', '</h3>', '</h4>', '<br>', '<br/>'], ' ', $this->htmlContent);
+        $html = (string) preg_replace('/<a[^>]*class="heading-anchor"[^>]*>.*?<\/a>/s', '', $this->htmlContent);
+        $html = str_replace(['</p>', '</li>', '</h1>', '</h2>', '</h3>', '</h4>', '<br>', '<br/>'], ' ', $html);
+
         $text = strip_tags($html);
         $text = (string) preg_replace('/\s+/', ' ', trim($text));
         if (mb_strlen($text) <= $length) {
@@ -206,21 +208,21 @@ final readonly class ContentItem
         return mb_substr($text, 0, $length).'…';
     }
 
-    private function parseDate(mixed $d): ?\DateTimeImmutable
+    private function parseDate(mixed $date): ?\DateTimeImmutable
     {
-        if ($d instanceof \DateTimeImmutable) {
-            return $d;
+        if ($date instanceof \DateTimeImmutable) {
+            return $date;
         }
 
-        if ($d instanceof \DateTime) {
-            return \DateTimeImmutable::createFromMutable($d);
+        if ($date instanceof \DateTime) {
+            return \DateTimeImmutable::createFromMutable($date);
         }
 
-        if (is_int($d)) {
-            return new \DateTimeImmutable('@'.$d);
+        if (is_int($date)) {
+            return new \DateTimeImmutable('@'.$date);
         }
 
-        $parsed = \DateTimeImmutable::createFromFormat('Y-m-d', (string) $d);
+        $parsed = \DateTimeImmutable::createFromFormat('Y-m-d', (string) $date);
 
         return false !== $parsed ? $parsed->setTime(0, 0, 0) : null;
     }

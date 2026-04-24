@@ -1,0 +1,139 @@
+// =============================================================================
+// Tokens — CSS custom properties for theming.
+// Light mode in :root, dark mode overrides in [data-theme="dark"].
+// Nav and footer are always-dark — their vars are fixed regardless of theme.
+// =============================================================================
+
+:root {
+    // Backgrounds
+    --bg: #ffffff;
+    --bg-surface: #f8f9fa;
+    --bg-elevated: #f1f3f5;
+
+    // Text
+    --text: #212529;
+    --text-muted: #6c757d;
+
+    // Borders
+    --border: #dee2e6;
+
+    // Accent — amber phosphor, light mode
+    --accent: #b45309;
+    --accent-h: #92400e;
+    --accent-bg: #fffbeb;
+    --accent-border: rgba(180, 83, 9, 0.2);
+
+    // Sidebar
+    --sidebar-bg: #f8f9fa;
+
+    // Cards
+    --card-bg: #ffffff;
+    --card-border: #dee2e6;
+
+    // Alerts
+    --success: #276749;
+    --success-bg: rgba(72, 187, 120, 0.1);
+    --success-border: rgba(72, 187, 120, 0.35);
+    --danger: #e53e3e;
+    --danger-bg: rgba(229, 62, 62, 0.08);
+    --danger-border: rgba(229, 62, 62, 0.3);
+
+    // Code blocks
+    --code-bg: #f6f8fa;
+    --code-border: #d0d7de;
+    --code-text: #24292f;
+    --code-comment: #6e7781;
+    --code-label-bg: #eaeef2;
+
+    // Nav — always dark
+    --nav-bg: rgba(14, 13, 11, 0.95);
+    --nav-text: #f8f9fa;
+    --nav-muted: #9ca3af;
+    --nav-border: rgba(255, 255, 255, 0.06);
+    --nav-subtle-bg: rgba(255, 255, 255, 0.05);
+    --nav-hover-bg: rgba(255, 255, 255, 0.07);
+    --nav-active-bg: rgba(255, 255, 255, 0.1);
+    --nav-active-border: rgba(255, 255, 255, 0.18);
+
+    // Footer — always dark
+    --footer-bg: #0e0d0b;
+    --footer-text: #f8f9fa;
+    --footer-muted: #9ca3af;
+    --footer-border: rgba(255, 255, 255, 0.06);
+
+    // Terminal — always dark (GitHub-inspired)
+    --terminal-bg: #0d1117;
+    --terminal-bar-bg: #161b22;
+    --terminal-border: #21262d;
+    --terminal-text: #8b949e;
+    --terminal-cmd: #e6edf3;
+    --terminal-comment: #4b5563;
+    --terminal-output: #6b7280;
+    --terminal-dot-close: #ff5f57;
+    --terminal-dot-min: #ffbd2e;
+    --terminal-dot-max: #28c840;
+
+    // Hero — always dark (but glow/grid adapt to theme)
+    --hero-bg: #0e0d0b;
+    --hero-text: #f8f9fa;
+    --hero-muted: rgba(248, 249, 250, 0.65);
+    --hero-glow: rgba(255, 176, 0, 0.12);
+    --hero-glow-2: rgba(255, 176, 0, 0.06);
+    --hero-grid: rgba(255, 255, 255, 0.025);
+    --hero-accent: #ffb000;
+    --hero-accent-h: #ffca28;
+    --on-accent: #0e0d0b;
+
+    // UI overlays and dividers — always dark
+    --overlay-bg: rgba(0, 0, 0, 0.6);
+    --divider-on-dark: rgba(255, 255, 255, 0.08);
+    --btn-outline-hover-border: rgba(255, 255, 255, 0.3);
+    --nav-sep: rgba(255, 255, 255, 0.15);
+
+    // on-accent — always-dark context (same value in both themes)
+    --on-accent: #0e0d0b;
+}
+
+[data-theme="dark"] {
+    --on-accent: #0e0d0b;
+    // Backgrounds
+    --bg: #0e0d0b;
+    --bg-surface: #161410;
+    --bg-elevated: #1e1c17;
+
+    // Text
+    --text: #f8f9fa;
+    --text-muted: #9ca3af;
+
+    // Borders
+    --border: #2d2a24;
+
+    // Accent — amber phosphor, dark mode
+    --accent: #ffb000;
+    --accent-h: #ffca28;
+    --accent-bg: rgba(255, 176, 0, 0.08);
+    --accent-border: rgba(255, 176, 0, 0.2);
+
+    // Sidebar
+    --sidebar-bg: #111009;
+
+    // Cards
+    --card-bg: #161410;
+    --card-border: #2d2a24;
+
+    // Alerts
+    --success: #9ae6b4;
+    --success-bg: rgba(72, 187, 120, 0.08);
+    --success-border: rgba(72, 187, 120, 0.2);
+    --danger: #fc8181;
+    --danger-bg: rgba(229, 62, 62, 0.07);
+    --danger-border: rgba(229, 62, 62, 0.2);
+
+    // Code blocks
+    --code-bg: #0d1117;
+    --code-border: #21262d;
+    --code-text: #c9d1d9;
+    --code-comment: #4b5563;
+    --code-label-bg: #161b22;
+}
+

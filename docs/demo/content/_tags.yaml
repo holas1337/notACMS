@@ -1,0 +1,12 @@
+# Tag translations grouped by default locale (EN) slug.
+# Each entry maps the canonical tag to its equivalents in other locales.
+# Tags identical across all locales are omitted.
+release:
+  de: veröffentlichung
+  pl: wydanie
+announcement:
+  de: ankündigung
+  pl: ogłoszenie
+open-source:
+  de: Open-Source
+  pl: otwarto-źródłowe

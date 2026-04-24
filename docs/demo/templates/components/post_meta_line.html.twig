@@ -1,0 +1,3 @@
+{% if post.category() %}<span class="meta-category">{{ post.category() }}</span>{% endif %}
+{% if post.category() and post.date() %}<span class="post-meta-sep">&bull;</span>{% endif %}
+{% if post.date() %}{{ post.date()|date(site_locales[locale].date_format) }}{% endif %}

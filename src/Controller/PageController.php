@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NotACms\Controller;
 
 use NotACms\Attribute\LocalizedRoute;
+use NotACms\Content\ContentItem;
 use NotACms\Service\Content\ContentServiceInterface;
 use NotACms\Service\Content\SidebarDataProviderInterface;
 use NotACms\Service\SiteConfigServiceInterface;
@@ -54,7 +55,7 @@ final class PageController extends AbstractController
         $url = $prefix.$slug.'/';
 
         $page = $this->contentService->findByUrl($url, $locale);
-        if (!$page instanceof \NotACms\Content\ContentItem) {
+        if (!$page instanceof ContentItem) {
             throw $this->createNotFoundException('Page not found: '.$url);
         }
 

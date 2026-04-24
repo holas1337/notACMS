@@ -14,11 +14,28 @@ server {
     add_header X-Content-Type-Options    "nosniff"                          always;
     add_header Referrer-Policy           "strict-origin-when-cross-origin"  always;
     add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
-    # script-src: unsafe-inline needed for AssetMapper importmap; wasm-unsafe-eval needed for Pagefind; data: needed for importmap CSS stubs
-    add_header Content-Security-Policy   "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' data: challenges.cloudflare.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-src challenges.cloudflare.com; connect-src 'self' challenges.cloudflare.com cloudflareinsights.com;" always;
 
-    # Contact form — only these routes go to PHP-FPM
-    # Matches /api/ (default locale) and /{locale}/api/ (any non-default locale)
+    # Content-Security-Policy
+    # Default is bare-theme-safe. Themes with external-origin assets (e.g. the
+    # demo theme uses unpkg.com for Phosphor Icons and Google Fonts) seed a
+    # local/docker/nginx/csp.conf override that redefines $csp before it is
+    # emitted below.
+    # Notes on the directives:
+    #   script-src: 'unsafe-inline' for AssetMapper importmap; 'wasm-unsafe-eval' for Pagefind; data: for importmap CSS stubs
+    #   Cloudflare entries support optional Turnstile captcha + Web Analytics beacon
+    set $csp "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' data: challenges.cloudflare.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; frame-src challenges.cloudflare.com; connect-src 'self' challenges.cloudflare.com cloudflareinsights.com;";
+
+    # Site-specific overrides — place *.conf files in local/docker/nginx/
+    # (auto-seeded on first deploy from docs/demo/docker/nginx/ or docs/bare/docker/nginx/)
+    include /app/local/docker/nginx/*.conf;
+
+    add_header Content-Security-Policy $csp always;
+
+    # Contact form — only these routes go to PHP-FPM.
+    # Matches /api/ (default locale) and /{locale}/api/ (any non-default locale).
+    # Requires RUNTIME_PHP_ENABLED=true to start the php container; otherwise
+    # /api/ requests return 502 (lazy DNS resolution via the resolver above keeps
+    # nginx starting cleanly even when the upstream is absent).
     location ~ ^/([a-z]\{2\}/)?api/ {
         fastcgi_pass $php_upstream;
         fastcgi_index index.php;
@@ -33,9 +50,6 @@ server {
     # Locale-specific error pages are in local/docker/nginx/error-pages.conf (auto-seeded on first deploy)
     error_page 404 /404.html;
     error_page 500 502 503 504 /500.html;
-
-    # Site-specific redirects — place *.conf files in local/docker/nginx/
-    include /app/local/docker/nginx/*.conf;
 
     # Hashed assets (CSS, JS, fonts) — safe to cache for 1 year (hash in filename changes on deploy)
     # Assets are at public/assets/ (not public/static/assets/), so use $uri not /static$uri

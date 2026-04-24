@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'site.releases'|trans }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{% if filter_type is same as('tag') %}{{ 'releases.meta_tagged'|trans({'%tag%': filter_value, '%site_name%': site_name}) }}{% else %}{{ 'releases.meta_description'|trans({'%site_name%': site_name}) }}{% endif %}{% endblock %}
+{% block og_title %}{{ 'site.releases'|trans }}{% endblock %}
+
+{% block body %}
+
+<div class="page-content">
+
+    {# Page header #}
+    <div class="page-header">
+        {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
+            { label: site_name, url: path('home_' ~ locale) },
+            { label: 'site.releases'|trans }
+        ] }) }}
+        <h1>
+            {% if filter_type is same as('tag') %}
+                {{ 'releases.tagged_heading'|trans }} <span class="text-accent">#{{ filter_value }}</span>
+            {% else %}
+                {{ 'site.releases'|trans }}
+            {% endif %}
+        </h1>
+        <p class="page-header-desc">
+            {% if filter_type is same as('tag') %}
+                {{ 'releases.tagged_desc'|trans({'%tag%': filter_value}) }}
+            {% else %}
+                {{ 'releases.description'|trans }}
+            {% endif %}
+        </p>
+    </div>
+
+    {# Release cards #}
+    {% if posts is not empty %}
+    <div class="releases-list" role="list">
+        {% for post in posts %}
+        {{ include('components/release_card.html.twig', { post: post, attrs: 'role="listitem"' }) }}
+        {% endfor %}
+    </div>
+
+    {% if filter_type is not defined or filter_type is null %}
+        {{ include('components/pagination.html.twig', {
+            base_url: path('blog_list_' ~ locale),
+            paginated_route: 'blog_list_paginated_' ~ locale,
+            current_page: current_page,
+            total_pages: total_pages,
+        }) }}
+    {% endif %}
+
+    {% else %}
+    <p class="releases-empty">{{ 'releases.empty'|trans }}</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block structured_data %}
+{% if posts is not empty %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "{{ block('title')|striptags|trim }}",
+    "url": "{{ site_base_url }}{{ app.request.pathInfo }}",
+    "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": {{ posts|length }},
+        "itemListElement": [
+            {% for post in posts %}
+            {
+                "@type": "ListItem",
+                "position": {{ loop.index }},
+                "url": "{{ site_base_url }}{{ post.url() }}"
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]
+    }
+}
+</script>
+{% endif %}
+{% endblock %}

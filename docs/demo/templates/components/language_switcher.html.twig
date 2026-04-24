@@ -1,0 +1,70 @@
+{% set other_locales = [] %}
+{% for l in site_locales_list %}
+    {% if l is not same as(locale) %}
+        {% set other_locales = other_locales|merge([l]) %}
+    {% endif %}
+{% endfor %}
+
+{% if other_locales is not empty %}
+
+{% set switch_content = (content is defined and content is not null) ? content : ((index_content is defined and index_content is not null) ? index_content : null) %}
+{% set tk = (switch_content is not null and switch_content.directoryKey()) ? switch_content.directoryKey() : null %}
+
+{% set switch_urls = lang_switch_urls(other_locales) %}
+
+{% set current_locale_url = app.request.pathInfo %}
+{% if tk and translation_map is defined and translation_map[tk] is defined and translation_map[tk][locale] is defined %}
+    {% set current_locale_url = translation_map[tk][locale] %}
+{% endif %}
+
+{# Determine display mode: inline links for 2 languages, dropdown for 3+ #}
+{% set total_locales = site_locales_list|length %}
+{% set use_dropdown = total_locales > 2 %}
+
+{% if use_dropdown %}
+    {# Styled dropdown for 3+ languages #}
+    <div class="lang-dropdown" data-lang-dropdown>
+        <button type="button"
+                class="lang-dropdown__trigger"
+                data-lang-dropdown-trigger
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                aria-label="{{ 'nav.language_switcher'|trans({'%locale%': locale|upper}) }}"
+        >
+            <span class="lang-dropdown__code">{{ locale|upper }}</span>
+            <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="lang-dropdown__menu" role="listbox" aria-label="{{ 'language.choose'|trans }}">
+            {% for l in site_locales_list %}
+                {% set lang_name = site_locales[l]['label'] ?? l|upper %}
+                {% if l is same as(locale) %}
+                    <span class="lang-dropdown__item lang-dropdown__item--active" role="option" aria-selected="true">
+                        <span class="lang-dropdown__label">{{ l|upper }}</span>
+                        <span class="lang-dropdown__name">{{ lang_name }}</span>
+                    </span>
+                {% else %}
+                    <a href="{{ switch_urls[l] ?? app.request.pathInfo }}"
+                       class="lang-dropdown__item lang-switch"
+                       hreflang="{{ l }}"
+                       lang="{{ l }}"
+                       role="option"
+                    >
+                        <span class="lang-dropdown__label">{{ l|upper }}</span>
+                        <span class="lang-dropdown__name">{{ lang_name }}</span>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    {# Inline links for 2 languages (original behavior) #}
+    <div class="lang-switcher">
+        <a href="{{ current_locale_url }}" aria-current="page" class="is-active">{{ locale|upper }}</a>
+        {% for other, url in switch_urls %}
+            <span class="lang-sep">/</span>
+            <a href="{{ url }}" class="lang-switch" hreflang="{{ other }}" lang="{{ other }}">{{ other|upper }}</a>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endif %}

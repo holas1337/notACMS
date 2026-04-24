@@ -9,25 +9,24 @@ services:
     networks:
       - default
       - web
-    depends_on:
-      - php
     restart: ${RESTART}
     labels:
+      # Router and middleware names include COMPOSE_PROJECT_NAME so multiple
+      # notACMS stacks on the same Traefik/web network don't collide.
       - traefik.enable=true
-      - traefik.http.routers.apache.rule=Host(`${URL}`) || Host(`www.${URL}`)
-      #- traefik.http.routers.apache.rule=Host(`${URL}`)
-      - traefik.http.routers.apache.entrypoints=websecure
-      - traefik.http.routers.apache.tls.certresolver=${CERTRESOLVER}
-      - traefik.http.routers.apache.tls=true
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${URL}`) || Host(`www.${URL}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=websecure
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=${CERTRESOLVER}
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls=true
       - traefik.docker.network=web
-      ### enable gzip middlewares
-      #- traefik.http.routers.apache.middlewares=gzip
       ### redirect www to non www URL + gzip middlewares
-      - traefik.http.middlewares.nonwwwredirect.redirectregex.regex=^https://www\.(.*)
-      - traefik.http.middlewares.nonwwwredirect.redirectregex.replacement=https://$${1}
-      - traefik.http.routers.apache.middlewares=nonwwwredirect,gzip
+      - traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-nonwwwredirect.redirectregex.regex=^https://www\.(.*)
+      - traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-nonwwwredirect.redirectregex.replacement=https://$${1}
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.middlewares=${COMPOSE_PROJECT_NAME}-nonwwwredirect,gzip
 
   php:
+    profiles:
+      - runtime
     build:
       context: .
       dockerfile: docker/Dockerfile

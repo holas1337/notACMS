@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace NotACms\Tests\Integration\Controller;
 
+use NotACms\Service\TurnstileValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Mailer\MailerInterface;
 
 final class ContactControllerTest extends WebTestCase
 {
@@ -65,5 +67,47 @@ final class ContactControllerTest extends WebTestCase
         ]));
 
         self::assertResponseStatusCodeSame(422);
+    }
+
+    public function testApiContactReturns422WhenTurnstileVerificationFails(): void
+    {
+        $turnstile = $this->createStub(TurnstileValidatorInterface::class);
+        $turnstile->method('verify')->willReturn(false);
+        self::getContainer()->set(TurnstileValidatorInterface::class, $turnstile);
+
+        $this->client->request('POST', '/api/contact', [
+            'contact' => [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'subject' => 'Test subject line',
+                'message' => 'A message long enough to pass validation constraints.',
+                'turnstile_token' => 'fake-token',
+            ],
+        ]);
+
+        self::assertResponseStatusCodeSame(422);
+    }
+
+    public function testApiContactReturns500WhenMailerThrows(): void
+    {
+        $turnstile = $this->createStub(TurnstileValidatorInterface::class);
+        $turnstile->method('verify')->willReturn(true);
+        self::getContainer()->set(TurnstileValidatorInterface::class, $turnstile);
+
+        $mailer = $this->createStub(MailerInterface::class);
+        $mailer->method('send')->willThrowException(new \RuntimeException('SMTP down'));
+        self::getContainer()->set(MailerInterface::class, $mailer);
+
+        $this->client->request('POST', '/api/contact', [
+            'contact' => [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'subject' => 'Test subject line',
+                'message' => 'A message long enough to pass validation constraints.',
+                'turnstile_token' => 'fake-token',
+            ],
+        ]);
+
+        self::assertResponseStatusCodeSame(500);
     }
 }

@@ -1,0 +1,55 @@
+#!/bin/bash
+## Description: Run PHPUnit tests
+## Usage: test [options]
+## Example: ddev test
+## Example: ddev test --filter ContentItemTest
+## Example: ddev test --coverage-text
+
+DEFAULT_ARGS="--testdox"
+COVERAGE=false
+if [[ "$*" =~ "--coverage" ]]; then
+    COVERAGE=true
+fi
+
+if [[ ! "$*" =~ "--testdox" ]] && [[ "$COVERAGE" == false ]]; then
+    DEFAULT_ARGS="$DEFAULT_ARGS --display-phpunit-notices"
+fi
+
+XDEBUG_WAS_ON=0
+if [[ "$COVERAGE" == true ]]; then
+    if ddev exec php -m 2>/dev/null | grep -qi xdebug; then
+        XDEBUG_WAS_ON=1
+    else
+        echo "Enabling Xdebug for coverage..."
+        ddev xdebug on >/dev/null 2>&1
+    fi
+fi
+
+echo "================================"
+echo "Running PHPUnit Tests"
+echo "================================"
+echo ""
+
+if [[ "$COVERAGE" == true ]]; then
+    ddev exec env XDEBUG_MODE=coverage vendor/bin/phpunit $DEFAULT_ARGS "$@"
+else
+    ddev exec vendor/bin/phpunit $DEFAULT_ARGS "$@"
+fi
+
+PHPUNIT_EXIT=$?
+
+if [[ "$COVERAGE" == true ]] && [[ "$XDEBUG_WAS_ON" -eq 0 ]]; then
+    echo ""
+    echo "Disabling Xdebug..."
+    ddev xdebug off >/dev/null 2>&1
+fi
+
+echo ""
+echo "================================"
+if [ $PHPUNIT_EXIT -eq 0 ]; then
+    echo "✅ All tests passed!"
+    exit 0
+else
+    echo "❌ Some tests failed"
+    exit 1
+fi

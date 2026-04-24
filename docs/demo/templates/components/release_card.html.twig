@@ -1,0 +1,20 @@
+{# Release card — blog list and homepage.
+   Expects: post (ContentItem), attrs (string, optional extra attributes) #}
+<a href="{{ post.url() }}" class="release-card"{{ attrs is defined ? ' ' ~ attrs : '' }}>
+    <div class="release-card-meta">
+        {% if post.category() %}
+        <span class="release-badge">{{ post.category() }}</span>
+        {% endif %}
+        {% if post.date() %}
+        <span class="release-date">{{ post.date()|date(site_locales[locale].date_format) }}</span>
+        {% endif %}
+        {% for tag in post.tags() %}
+        <span class="release-tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+    <h2>{{ post.title() }}</h2>
+    <p>{{ post.excerpt(200) }}</p>
+    <span class="read-more">
+        {{ 'home.release_read'|trans }} <i class="ph ph-arrow-right" aria-hidden="true"></i>
+    </span>
+</a>

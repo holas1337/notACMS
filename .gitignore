@@ -15,13 +15,15 @@
 ###< symfony/asset-mapper ###
 
 ###> project specific ###
+/.agents/
 /.generated/
 /.mockups/
 /.plans/
 /public/static/
 /public/pagefind/
 /public/favicon.ico
-/local/*
+#/local/*
+/local-*
 !/local/templates
 /local/templates/*
 !/local/templates/.gitkeep
@@ -38,12 +40,14 @@
 /local/src/*
 !/local/src/.gitkeep
 !/local/docker
+/local/docker/*
 !/local/docker/nginx
 /local/docker/nginx/*
 !/local/docker/nginx/.gitkeep
 !/local/docs
 /local/docs/*
 !/local/docs/.gitkeep
+/config/reference.php
 ###< project specific ###
 
 ###> friendsofphp/php-cs-fixer ###
@@ -58,3 +62,7 @@
 /phpunit.xml
 /.phpunit.cache/
 ###< phpunit/phpunit ###
+
+###> backups ###
+/backup*
+###< backups ###

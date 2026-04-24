@@ -1,9 +1,7 @@
 <div id="cookie-banner" class="cookie-banner is-hidden">
-    <div class="cookie-banner__inner">
-        <p class="cookie-banner__text">{{ 'cookie.banner_text'|trans }} <a href="{{ privacy_url }}">{{ 'cookie.learn_more'|trans }}</a></p>
-        <div class="cookie-banner__actions">
-            <button id="cookie-accept" class="cookie-banner__accept">{{ 'cookie.accept'|trans }}</button>
-            <button id="cookie-dismiss" class="cookie-banner__dismiss" aria-label="{{ 'cookie.dismiss'|trans }}">&times;</button>
-        </div>
+    <p>{{ 'cookie.banner_text'|trans }} <a href="{{ privacy_url }}">{{ 'common.privacy_policy'|trans }}</a></p>
+    <div class="cookie-banner__actions">
+        <button id="cookie-accept">{{ 'cookie.accept'|trans }}</button>
+        <button id="cookie-dismiss" aria-label="{{ 'cookie.dismiss'|trans }}">&times;</button>
     </div>
 </div>

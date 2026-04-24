@@ -1,0 +1,106 @@
+
+// =============================================================================
+// Base — reset + global element styles.
+// =============================================================================
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: $fs-base;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: $font;
+    font-size: $fs-base;
+    line-height: $lh;
+    color: var(--text);
+    background-color: var(--bg);
+    transition: $transition-theme;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+// ---------------------------------------------------------------------------
+// Links
+// ---------------------------------------------------------------------------
+a {
+    color: var(--accent);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Images
+// ---------------------------------------------------------------------------
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+// ---------------------------------------------------------------------------
+// Skip link (accessibility)
+// ---------------------------------------------------------------------------
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: $sp-2;
+    z-index: 9999;
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: $sp-2 $sp-3;
+    text-decoration: none;
+    border-radius: $radius;
+    font-size: $fs-sm;
+
+    &:focus,
+    &:focus-visible {
+        left: $sp-2;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Reduced motion
+// ---------------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+.is-hidden {
+    display: none !important;
+}
+.text-muted {
+    color: var(--text-muted);
+}
+.text-center {
+    text-align: center;
+}
+.text-accent {
+    color: var(--accent);
+}
+

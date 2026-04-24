@@ -1,0 +1,20 @@
+{% if prev_post or next_post %}
+<nav class="post-navigation" aria-label="{{ 'blog.post_navigation'|trans }}" data-pagefind-ignore>
+    {% if prev_post %}
+        <a href="{{ prev_post.url() }}" class="post-navigation__item">
+            <span class="post-navigation__label">{{ 'blog.nav_prev'|trans }}</span>
+            <span class="post-navigation__title">{{ prev_post.title() }}</span>
+        </a>
+    {% else %}
+        <div class="post-navigation__item post-navigation__item--empty"></div>
+    {% endif %}
+    {% if next_post %}
+        <a href="{{ next_post.url() }}" class="post-navigation__item post-navigation__item--next">
+            <span class="post-navigation__label">{{ 'blog.nav_next'|trans }}</span>
+            <span class="post-navigation__title">{{ next_post.title() }}</span>
+        </a>
+    {% else %}
+        <div class="post-navigation__item post-navigation__item--next post-navigation__item--empty"></div>
+    {% endif %}
+</nav>
+{% endif %}

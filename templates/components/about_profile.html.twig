@@ -1,7 +1,5 @@
 <div class="about-profile">
-    <img src="{{ author.avatar }}" alt="{{ author.name }}" class="about-avatar">
-    <div class="about-info">
-        <div class="about-info-name">{{ author.name }}</div>
-        <div class="about-info-role">{{ role }}</div>
-    </div>
+    <h2>{{ site_name }}</h2>
+    {% if headline is defined %}<p>{{ headline }}</p>{% endif %}
+    {% if role is defined %}<p>{{ role }}</p>{% endif %}
 </div>

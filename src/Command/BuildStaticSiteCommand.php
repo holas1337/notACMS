@@ -134,8 +134,8 @@ final class BuildStaticSiteCommand extends Command
                 $routes[] = $post->url();
             }
 
-            foreach ($tree->getAllCategories() as $cat) {
-                $routes[] = $this->route('blog_category_'.$locale, ['category' => $cat->slug]);
+            foreach ($tree->getAllCategories() as $categoryCount) {
+                $routes[] = $this->route('blog_category_'.$locale, ['category' => $categoryCount->slug]);
             }
 
             foreach ($tree->getAllTags() as $tag) {
@@ -402,6 +402,6 @@ final class BuildStaticSiteCommand extends Command
 
     private function isVariantFile(string $baseName): bool
     {
-        return array_any($this->siteConfigService->getImageVariantWidths(), fn ($w): bool => str_ends_with($baseName, '-'.$w.'w'));
+        return array_any($this->siteConfigService->getImageVariantWidths(), fn ($width): bool => str_ends_with($baseName, '-'.$width.'w'));
     }
 }

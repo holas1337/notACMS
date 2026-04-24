@@ -10,13 +10,14 @@
     <h1>{{ 'search.title'|trans }}</h1>
     <div id="search"
          data-placeholder="{{ 'search.placeholder'|trans }}"
-         data-zero-results="{{ 'search.no_results'|trans({'%query%': '[SEARCH_TERM]'}) }}"
+         data-zero-results="{{ 'search.no_results'|trans({'%query%': '[SEARCH_TERM]' }) }}"
          data-read-more="{{ 'blog.read_more'|trans }}"
-         data-tag-base="{{ path('blog_tag_' ~ locale, {tag: 'tag-placeholder'}) }}"></div>
+         data-tag-base="{{ path('blog_tag_' ~ locale, {tag: 'tag-placeholder'}) }}"
+         data-image-widths="{{ image_variant_widths|join(',') }}"></div>
 </div>
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script src="{{ asset('search.js') }}"></script>
+<script src="{{ asset('search.js') }}" defer></script>
 {% endblock %}

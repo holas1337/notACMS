@@ -1,29 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{# Compute archive date label once — used across title, og_title, meta_description, breadcrumb, h1 #}
-{% if filter_type is same as('archive') %}
+{% if filter_type is defined and filter_type is same as('archive') %}
     {% set archive_date = archive_month is defined
         ? ('%04d-%02d-01'|format(archive_year, archive_month))|date('F Y')
         : archive_year %}
 {% endif %}
 
 {% block title %}
-    {% if filter_type is same as('category') %}
+    {% if filter_type is defined and filter_type is same as('category') %}
         {{ filter_value|capitalize }} | {{ site_name }}
-    {% elseif filter_type is same as('tag') %}
+    {% elseif filter_type is defined and filter_type is same as('tag') %}
         #{{ filter_value }} | {{ site_name }}
-    {% elseif filter_type is same as('archive') %}
+    {% elseif filter_type is defined and filter_type is same as('archive') %}
         {{ archive_date }} | {{ site_name }}
     {% else %}
         {{ 'nav.blog'|trans }} | {{ site_name }}
     {% endif %}
 {% endblock %}
 
-{% block og_title %}{%- if filter_type is same as('category') -%}{{ 'blog.category'|trans }}: {{ filter_value }}{%- elseif filter_type is same as('tag') -%}#{{ filter_value }}{%- elseif filter_type is same as('archive') -%}{{ 'blog.archive'|trans }}: {{ archive_date }}{%- else -%}{{ 'nav.blog'|trans }}{%- endif -%}{% endblock %}
+{% block og_title %}{%- if filter_type is defined and filter_type is same as('category') -%}{{ 'blog.category'|trans }}: {{ filter_value }}{%- elseif filter_type is defined and filter_type is same as('tag') -%}#{{ filter_value }}{%- elseif filter_type is defined and filter_type is same as('archive') -%}{{ 'blog.archive'|trans }}: {{ archive_date }}{%- else -%}{{ 'nav.blog'|trans }}{%- endif -%}{% endblock %}
 
-{% block meta_description %}{% if filter_type is same as('category') %}{{ 'blog.meta.category'|trans({'%category%': filter_value|capitalize}) }}{% elseif filter_type is same as('tag') %}{{ 'blog.meta.tag'|trans({'%tag%': filter_value}) }}{% elseif filter_type is same as('archive') %}{% if archive_month is defined %}{{ 'blog.meta.archive_month'|trans({'%date%': archive_date}) }}{% else %}{{ 'blog.meta.archive_year'|trans({'%year%': archive_year}) }}{% endif %}{% else %}{{ 'blog.meta.index'|trans }}{% endif %}{% endblock %}
+{% block meta_description %}{% if filter_type is defined and filter_type is same as('category') %}{{ 'blog.meta.category'|trans({'%category%': filter_value|capitalize}) }}{% elseif filter_type is defined and filter_type is same as('tag') %}{{ 'blog.meta.tag'|trans({'%tag%': filter_value}) }}{% elseif filter_type is defined and filter_type is same as('archive') %}{% if archive_month is defined %}{{ 'blog.meta.archive_month'|trans({'%date%': archive_date}) }}{% else %}{{ 'blog.meta.archive_year'|trans({'%year%': archive_year}) }}{% endif %}{% else %}{{ 'blog.meta.index'|trans }}{% endif %}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">{{ {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": block('title'),
+    "description": block('meta_description'),
+    "url": site_base_url ~ app.request.pathInfo,
+    "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": posts|map((post, i) => {
+            "@type": "ListItem",
+            "position": i + 1,
+            "url": site_base_url ~ post.url()
+        })
+    }
+}|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</script>
+{% endblock %}
 
 {% block body %}
+<div class="page-content">
 {% set crumbs = [{label: 'nav.home'|trans, url: path('home_' ~ locale)}] %}
 {% if filter_type is defined and filter_type is not null %}
     {% set crumbs = crumbs|merge([{label: 'nav.blog'|trans, url: path('blog_list_' ~ locale)}]) %}
@@ -54,9 +72,7 @@
 {% if posts is not empty %}
     <div class="post-list">
     {% for post in posts %}
-        {% with { post: post, featured: post.isPinned(), lcp: loop.index0 is same as(0) } %}
-            {{ include('components/post_card.html.twig') }}
-        {% endwith %}
+        {{ include('components/post_card.html.twig', { post: post, featured: post.isPinned() }) }}
     {% endfor %}
     </div>
 
@@ -69,32 +85,7 @@
         }) }}
     {% endif %}
 {% else %}
-    <p class="no-posts">{{ 'blog.no_posts'|trans }}</p>
+    <p>{{ 'blog.no_posts'|trans }}</p>
 {% endif %}
-{% endblock %}
-
-{% block structured_data %}
-{% if posts is not empty %}
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "{{ block('title')|striptags|trim }}",
-    "url": "{{ site_base_url }}{{ app.request.pathInfo }}",
-    "mainEntity": {
-        "@type": "ItemList",
-        "numberOfItems": {{ posts|length }},
-        "itemListElement": [
-            {% for post in posts %}
-            {
-                "@type": "ListItem",
-                "position": {{ loop.index }},
-                "url": "{{ site_base_url }}{{ post.url() }}"
-            }{% if not loop.last %},{% endif %}
-            {% endfor %}
-        ]
-    }
-}
-</script>
-{% endif %}
+</div>
 {% endblock %}

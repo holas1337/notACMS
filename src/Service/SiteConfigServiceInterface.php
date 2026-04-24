@@ -26,6 +26,8 @@ interface SiteConfigServiceInterface
 
     public const int DEFAULT_COMING_SOON_REVEAL_DAYS = 14;
 
+    public const int DEFAULT_META_DESCRIPTION_LENGTH = 160;
+
     /**
      * @return string[] Ordered locale codes, first = default
      */
@@ -69,6 +71,8 @@ interface SiteConfigServiceInterface
     public function getNewPostDays(): int;
 
     public function getComingSoonRevealDays(): int;
+
+    public function getMetaDescriptionLength(): int;
 
     public function getContactFormConfig(): ContactFormConfig;
 }

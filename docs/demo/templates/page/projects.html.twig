@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ content.title() }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ content.description() }}{% endblock %}
+{% block og_title %}{{ content.title() }}{% endblock %}
+
+{% block body %}
+<div class="projects-page" data-pagefind-body>
+    <article class="page-content">
+        {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
+            { label: site_name, url: path('home_' ~ locale) },
+            { label: content.title() }
+        ] }) }}
+        <header class="page-header">
+            <h1 data-pagefind-meta="title">{{ content.title() }}</h1>
+        </header>
+        <div class="page-body">
+            {{ content.htmlContent|raw }}
+        </div>
+    </article>
+
+    <div class="projects-grid">
+        {% for project in featured_projects %}
+        <a href="{{ project.url() }}" class="project-card">
+            {% if project.image() %}
+            <div class="project-card__image">
+                {{ include('components/responsive_img.html.twig', {
+                    src: project.image(),
+                    alt: project.imageAlt(),
+                    sizes: '(max-width: 768px) 100vw, (max-width: 992px) 50vw, 400px'
+                }) }}
+            </div>
+            {% endif %}
+            <div class="project-card__body">
+                <h2 class="project-card__title">{{ project.title() }}</h2>
+                <p class="project-card__desc">{{ project.description() }}</p>
+                <div class="project-card__tags">
+                    {% for tag in project.tags() %}
+                    <span class="tag-pill">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <p class="projects-cta">
+        <a href="{{ path('blog_category_' ~ locale, {category: content.slug()}) }}" class="all-releases-link">
+            {{ 'projects.view_all'|trans({'%count%': total_projects}) }} <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </a>
+    </p>
+</div>
+{% endblock %}

@@ -1,4 +1,3 @@
-{# Collect other locales #}
 {% set other_locales = [] %}
 {% for l in site_locales_list %}
     {% if l is not same as(locale) %}
@@ -8,43 +7,13 @@
 
 {% if other_locales is not empty %}
 
-{# Resolve switch content (page or index) for translation map lookup #}
-{% set switch_content = (content is defined and content is not null) ? content : ((index_content is defined and index_content is not null) ? index_content : null) %}
-{% set tk = (switch_content is not null and switch_content.directoryKey()) ? switch_content.directoryKey() : null %}
-
-{# Build switch URL for each other locale #}
-{% set switch_urls = {} %}
-{% for other in other_locales %}
-    {% set url = null %}
-
-    {# Try translation map #}
-    {% if tk and translation_map is defined and translation_map[tk] is defined and translation_map[tk][other] is defined %}
-        {% set url = translation_map[tk][other] %}
-    {% endif %}
-
-    {# Try controller-provided lang_switch_url (tag pages) — only for first other locale #}
-    {% if url is null and lang_switch_url is defined and loop.first %}
-        {% set url = lang_switch_url %}
-    {% endif %}
-
-    {# Fallback: archive, paginated listing, or homepage #}
-    {% if url is null %}
-        {% if filter_type is defined and filter_type is same as('archive') and archive_year is defined and archive_month is defined %}
-            {% set url = path('blog_archive_' ~ other, {year: archive_year, month: '%02d'|format(archive_month)}) %}
-        {% elseif current_page is defined and current_page > 1 and (filter_type is not defined or filter_type is null) %}
-            {% set url = path('blog_list_paginated_' ~ other, {page: current_page}) %}
-        {% else %}
-            {% set url = path('home_' ~ other) %}
-        {% endif %}
-    {% endif %}
-
-    {% set switch_urls = switch_urls|merge({(other): url}) %}
-{% endfor %}
+{% set switch_urls = lang_switch_urls(other_locales) %}
 
 <div class="lang-switcher">
-    <span class="lang-switcher__link lang-switcher__link--active">{{ locale|upper }}</span>
-    {% for other in other_locales %}
-        <a href="{{ switch_urls[other] }}" class="lang-switcher__link lang-switch" hreflang="{{ other }}" lang="{{ other }}">{{ other|upper }}</a>
+    <a href="{{ app.request.pathInfo }}" aria-current="page" class="lang-switcher__link lang-switcher__link--active">{{ locale|upper }}</a>
+    {% for other, url in switch_urls %}
+        <span class="lang-sep">/</span>
+        <a href="{{ url }}" class="lang-switcher__link lang-switch" hreflang="{{ other }}" lang="{{ other }}">{{ other|upper }}</a>
     {% endfor %}
 </div>
 

@@ -1,0 +1,94 @@
+{% set current_path = app.request.pathInfo %}
+{% set home_url    = path('home_' ~ locale) %}
+{% set blog_url    = path('blog_list_' ~ locale) %}
+{% set about_url   = content_url('about', locale) %}
+{% set contact_url = path('contact_' ~ locale) %}
+
+{% set manual_url       = content_url('manual', locale) %}
+{% set arch_url         = content_url('architecture', locale) %}
+{% set custom_url       = content_url('customization', locale) %}
+{% set locales_url      = content_url('locales', locale) %}
+{% set styleguide_url   = content_url('styleguide', locale) %}
+
+{% set is_docs = current_path starts with manual_url
+    or current_path starts with arch_url
+    or current_path starts with custom_url
+    or current_path starts with locales_url
+    or current_path starts with styleguide_url %}
+
+{# Mobile hamburger #}
+<button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="{{ 'nav.menu'|trans }}">
+    <span class="nav-toggle__bar"></span>
+    <span class="nav-toggle__bar"></span>
+    <span class="nav-toggle__bar"></span>
+</button>
+
+<ul id="nav-list">
+    {# Docs dropdown #}
+    <li class="nav-item nav-item--docs{{ is_docs ? ' nav-item--active' : '' }}">
+        <a href="{{ manual_url }}"{% if is_docs %} aria-current="page"{% endif %}>
+            {{ 'site.docs'|trans }} <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </a>
+        <ul class="nav-dropdown">
+            <li>
+                <a href="{{ manual_url }}"{% if current_path starts with manual_url %} aria-current="page"{% endif %}>
+                    <i class="ph ph-book-open" aria-hidden="true"></i> {{ 'site.manual'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ arch_url }}"{% if current_path starts with arch_url %} aria-current="page"{% endif %}>
+                    <i class="ph ph-tree-structure" aria-hidden="true"></i> {{ 'site.architecture'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ custom_url }}"{% if current_path starts with custom_url %} aria-current="page"{% endif %}>
+                    <i class="ph ph-sliders" aria-hidden="true"></i> {{ 'site.customization'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ locales_url }}"{% if current_path starts with locales_url %} aria-current="page"{% endif %}>
+                    <i class="ph ph-globe" aria-hidden="true"></i> {{ 'site.locales'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ styleguide_url }}"{% if current_path starts with styleguide_url %} aria-current="page"{% endif %}>
+                    <i class="ph ph-palette" aria-hidden="true"></i> {{ 'site.design_reference'|trans }}
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    {# Releases #}
+    <li class="nav-item{{ current_path starts with blog_url ? ' nav-item--active' : '' }}">
+        <a href="{{ blog_url }}"{% if current_path starts with blog_url %} aria-current="page"{% endif %}>
+            {{ 'site.releases'|trans }}
+        </a>
+    </li>
+
+    {# About #}
+    <li class="nav-item{{ current_path is same as(about_url) ? ' nav-item--active' : '' }}">
+        <a href="{{ about_url }}"{% if current_path is same as(about_url) %} aria-current="page"{% endif %}>
+            {{ 'site.about'|trans }}
+        </a>
+    </li>
+
+    {# Contact #}
+    <li class="nav-item{{ current_path is same as(contact_url) ? ' nav-item--active' : '' }}">
+        <a href="{{ contact_url }}"{% if current_path is same as(contact_url) %} aria-current="page"{% endif %}>
+            {{ 'site.contact'|trans }}
+        </a>
+    </li>
+</ul>
+
+<div class="nav-right">
+    {{ include('components/language_switcher.html.twig') }}
+    <button class="theme-toggle"
+            aria-label="{{ 'nav.theme_toggle'|trans }}"
+            data-label-light="{{ 'nav.theme_to_light'|trans }}"
+            data-label-dark="{{ 'nav.theme_to_dark'|trans }}">
+        <i class="ph ph-moon" aria-hidden="true"></i>
+    </button>
+    <button class="search-trigger" aria-label="{{ 'search.title'|trans }}" aria-controls="site-search">
+        <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+    </button>
+</div>

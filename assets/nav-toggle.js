@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.site-nav')) close();
+        if (!e.target.closest('.site-header')) close();
     });
 
     document.addEventListener('keydown', (e) => {

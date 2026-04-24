@@ -10,20 +10,13 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\Validation;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ContactTypeTest extends TestCase
 {
-    private TranslatorInterface $translator;
-
     private SiteConfigServiceInterface $siteConfigService;
 
     protected function setUp(): void
     {
-        $this->translator = $this->createStub(TranslatorInterface::class);
-        $this->translator->method('trans')
-            ->willReturnCallback(fn (string $key): string => $key);
-
         $this->siteConfigService = $this->createStub(SiteConfigServiceInterface::class);
         $this->siteConfigService->method('getDefaultLocale')->willReturn('en');
     }
@@ -34,7 +27,7 @@ final class ContactTypeTest extends TestCase
 
         return Forms::createFormFactoryBuilder()
             ->addExtension(new ValidatorExtension($validator))
-            ->addType(new ContactType($this->translator, $this->siteConfigService))
+            ->addType(new ContactType($this->siteConfigService))
             ->getFormFactory();
     }
 

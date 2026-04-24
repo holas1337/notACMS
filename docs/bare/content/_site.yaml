@@ -1,0 +1,42 @@
+site:
+  name: "notACMS"
+  description: "A static-first CMS that generates plain HTML from Markdown"
+  base_url: "https://notacms.holas.pl"
+  default_locale: en
+  locales:
+    en:
+      label: "English"
+      og_locale: en_US
+      date_format: "F j, Y"
+      tagline: "static. simple. yours."
+    pl:
+      label: "Polski"
+      og_locale: pl_PL
+      date_format: "j.m.Y"
+      tagline: "statyczny. prosty. twój."
+  author:
+    name: "Your Name"
+    email: "hello@notacms.holas.pl"
+    url: "https://notacms.holas.pl"
+    skills:
+      backend: [PHP, Symfony, Twig]
+      frontend: [Twig, CSS, JavaScript]
+    recommendations:
+      - name: "Jane Doe"
+        role: "Developer | Example Inc"
+        url: "https://example.com"
+        quote: "A pleasure to work with. Highly recommended!"
+  social:
+    github: "https://github.com"
+  # Overrideable via _site.yaml — all keys below use interface defaults if omitted
+  # See SiteConfigServiceInterface for default values
+  posts_per_page: 10
+  rss_limit: 20                # items in RSS feed
+  recent_posts_limit: 6        # posts shown in sidebar "Recent"
+  related_posts_limit: 3       # posts shown in "Related Posts"
+  new_post_days: 14            # age at which "[NEW]" badge appears
+  coming_soon_reveal_days: 14  # days before scheduled post date to show teaser
+  meta_description_length: 160 # excerpt length for <meta description> / OG / JSON-LD
+  image_variant_widths: [640, 960]
+  image_quality: 82            # JPEG/WebP quality (0-100)
+  image_magick_flags: "-strip" # extra flags passed to ImageMagick

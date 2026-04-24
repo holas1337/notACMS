@@ -24,13 +24,14 @@ tests/
 │   │   ├── ContentTreeTest.php
 │   │   ├── Enum/CardLayoutTest.php
 │   │   └── ValueObject/*Test.php
-│   └── Service/
-│       ├── Content/
-│       │   ├── RelatedPostsServiceTest.php
-│       │   └── TranslationMapBuilderTest.php
-│       ├── Image/
-│       │   └── ResponsiveImageServiceTest.php
-│       └── SiteConfigServiceTest.php
+│   ├── Service/
+│   │   ├── Content/
+│   │   │   ├── RelatedPostsServiceTest.php
+│   │   │   ├── TagTranslationServiceTest.php
+│   │   │   └── TranslationMapBuilderTest.php
+│   │   ├── Image/
+│   │   │   └── ResponsiveImageServiceTest.php
+│   │   └── SiteConfigServiceTest.php
 │   └── Twig/
 │       └── SrcsetExtensionTest.php
 └── Integration/
@@ -39,10 +40,15 @@ tests/
     ├── Controller/
     │   ├── BlogControllerTest.php
     │   ├── ContactControllerTest.php
+    │   ├── DraftPreviewControllerTest.php
     │   ├── ErrorControllerTest.php
     │   ├── HomeControllerTest.php
+    │   ├── MediaControllerTest.php
     │   ├── PageControllerTest.php
-    │   └── SearchControllerTest.php
+    │   ├── ProjectsControllerTest.php
+    │   ├── ScheduledPreviewControllerTest.php
+    │   ├── SearchControllerTest.php
+    │   └── StyleguideControllerTest.php
     ├── DataCollector/
     │   ├── DraftPreviewDataCollectorTest.php
     │   └── ScheduledPreviewDataCollectorTest.php
@@ -68,8 +74,7 @@ tests/
     │   └── TurnstileValidatorTest.php
     └── Twig/
         ├── ContentTwigExtensionTest.php
-        ├── SiteConfigExtensionTest.php
-        └── TranslationMapTwigExtensionTest.php
+        └── SiteConfigExtensionTest.php
 ```
 
 ## Conventions
@@ -107,11 +112,11 @@ Located at `tests/Unit/Fixtures/ContentItemFactory.php`. All static methods retu
 | Phase | Type | Target | Status |
 |---|---|---|---|
 | Phase 0 | Infrastructure (PHPUnit, config, DDEV command) | — | ✅ Done |
-| Phase 1 | Pure unit tests (no mocks, no kernel) | ~50% | ✅ Done (191 tests) |
-| Phase 2 | Unit tests with mocking (interfaces) | ~78% | ✅ Done (240 tests) |
-| Phase 3 | Integration tests (kernel booted) | ~80% | ✅ Done (368 tests) |
+| Phase 1 | Pure unit tests (no mocks, no kernel) | ~50% | ✅ Done |
+| Phase 2 | Unit tests with mocking (interfaces) | ~78% | ✅ Done |
+| Phase 3 | Integration tests (kernel booted) | ~80% | ✅ Done |
 
-**Coverage note:** Final coverage is ~80% lines, ~82% methods. The remaining ~15% gap is in:
+**Coverage note:** Final coverage is ~80% lines, ~82% methods. The remaining gap is in:
 - **ContactController** (success email path) — requires kernel-level MailerInterface mock
 - **BuildStaticSiteCommand** (media copy, image optimization, error paths) — requires real filesystem with images
 - **ErrorController** (`__invoke` with HttpException) — hard to trigger via HTTP client

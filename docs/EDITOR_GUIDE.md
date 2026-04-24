@@ -2,7 +2,7 @@
 
 How to add and edit content in notACMS — blog posts, static pages, and translations.
 
-> **Site-specific writing guide:** categories, approved tags, voice, and image generation styles for *this* site are documented in `local/docs/EDITOR_GUIDE.md` (seeded from `docs/examples/docs/EDITOR_GUIDE.md` on first deploy).
+> **Site-specific writing guide:** categories, approved tags, voice, and image generation styles for *this* site are documented in `local/docs/EDITOR_GUIDE.md` (seeded from `docs/demo/docs/EDITOR_GUIDE.md` on first deploy).
 
 ---
 
@@ -131,8 +131,9 @@ title: "My Page"
 slug: "my-page"
 description: "What this page is about."
 template: page/default
-menu.weight: 50
-menu.label: "My Page"
+menu:
+  weight: 50
+  label: "My Page"
 ---
 ```
 
@@ -143,8 +144,9 @@ title: "Moja strona"
 slug: "pl/moja-strona"
 description: "O czym jest ta strona."
 template: page/default
-menu.weight: 50
-menu.label: "Moja strona"
+menu:
+  weight: 50
+  label: "Moja strona"
 ---
 ```
 
@@ -189,9 +191,9 @@ If you don't want the page in the navigation menu, omit the `menu` fields entire
 | `featured` | bool | `false` | no | **Projects only.** If `true`, the post appears in the curated grid on the `/projects/` portfolio page. Has no effect on other post types. The grid should always show exactly **12 featured projects** — when adding a new project with `featured: true`, remove the flag from the least relevant existing one to keep the count at 12. |
 | `pinned` | date or `false` | `false` | no | **Posts only.** Set to a `YYYY-MM-DD` date to pin until that date (inclusive). Post sorts to the top of all listings, gets the featured card + `[PINNED]` badge on homepage. Auto-unpins after the date passes. Stacks with `[NEW]` or `[RECENTLY UPDATED]`. |
 | `dynamic` | bool | `false` | no | If `true`, the page is not pre-rendered -- always served live by Symfony. |
+| `toc` | bool | `false` | no | If `true`, force-show the auto-generated table of contents. If `false`, suppress it. Default behavior (field omitted): show ToC on posts with 3+ headings. |
 | `template` | string | `page/default` | no | Twig template to use (without `.html.twig`). |
-| `menu.weight` | int | `50` | no | Navigation order. Lower = earlier. Page must have this to appear in nav. |
-| `menu.label` | string | title | no | Navigation label. Defaults to `title`. |
+| `menu` | object | — | no | Navigation entry. Set `weight` (lower = earlier) and `label` (defaults to `title`) to include this page in the nav. Example: `menu: { weight: 50, label: "My Page" }` |
 
 #### When to set `updated:`
 
@@ -294,7 +296,7 @@ Blog posts with **3 or more headings** (h2/h3) automatically get a collapsible T
 - The ToC is open by default; clicking the summary collapses it
 - Posts with fewer than 3 headings do not show a ToC
 
-To suppress the ToC on a long post (unusual), add `dynamic: true` and handle it server-side — there is no frontmatter toggle.
+To suppress the ToC on a specific post, set `toc: false` in frontmatter. To force it on a post that doesn't meet the 3-heading threshold, set `toc: true`.
 
 ---
 

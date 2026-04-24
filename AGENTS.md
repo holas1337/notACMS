@@ -10,7 +10,8 @@ The `local/` directory contains instance-specific overrides. If a `local/docs/` 
 
 Examples:
 - `local/docs/EDITOR_GUIDE.md` → site-specific writing guide (categories, tags, voice, image generation)
-- `local/docs/STYLEGUIDE.md` → site-specific design tokens and variables
+- `local/docs/DESIGN.md` → site-specific design system (tokens, rationale, Do's/Don'ts)
+- `local/docs/STYLEGUIDE.md` → site-specific component usage guide (Twig includes, SCSS mixins)
 
 ---
 
@@ -29,7 +30,7 @@ Non-trivial tasks are tracked as plan files in `.plans/` at the project root.
 
 A stub with just a title, 2 bullet points, and 3 checkboxes is **not acceptable**. The plan file must be detailed enough that another agent could implement it from scratch using only that file.
 
-**Timing:** Create the `.plans/` file **before** starting implementation — not after. The file is the source of truth; update checkboxes as steps complete. When using plan mode (Claude-internal `~/.claude/plans/`), **copy the plan to `.plans/` as the very first step of implementation**, before touching any code.
+**Timing:** Create the `.plans/` file **before** starting implementation — not after. The file is the source of truth; update checkboxes as steps complete. When using plan mode (Claude-internal `~/.claude/plans/`, OpenCode-internal `~/.opencode/plans/`), **copy the plan to `.plans/` as the very first step of implementation**, before touching any code.
 
 **Updates:** Check items off as they complete. If requirements change mid-task, update the plan file rather than abandoning it.
 
@@ -83,7 +84,7 @@ When the user asks for a **code review** (phrases like "review the code", "audit
 **Documentation**
 - `docs/ARCHITECTURE.md` service/file tables out of sync with `src/`
 - `docs/STYLEGUIDE.md` conventions out of sync with `assets/styles/` implementation
-- `local/docs/STYLEGUIDE.md` variable tables out of sync with `assets/styles/_variables.scss`
+- `local/docs/STYLEGUIDE.md` (if present) component list out of sync with `templates/components/`
 - Component reference tables out of sync with `templates/components/`
 
 
@@ -114,25 +115,94 @@ HTML mockups live in `.mockups/` at the project root. The folder is gitignored.
 
 When writing or editing any content (blog posts, pages, UI strings, descriptions), **read `local/docs/EDITOR_GUIDE.md`** before proceeding. It contains the site-specific reference for voice, categories, approved tags, titles, descriptions, intros, body structure, EN/PL parity, and image generation styles.
 
-`local/docs/EDITOR_GUIDE.md` is seeded from `docs/examples/docs/EDITOR_GUIDE.md` on first bootstrap and is gitignored — operators customise it for their own site. System-level documentation (frontmatter fields, URL structure, series, drafts, etc.) lives in `docs/EDITOR_GUIDE.md`.
+`local/docs/EDITOR_GUIDE.md` is seeded from `docs/demo/docs/EDITOR_GUIDE.md` on first bootstrap and is gitignored — operators customise it for their own site. System-level documentation (frontmatter fields, URL structure, series, drafts, etc.) lives in `docs/EDITOR_GUIDE.md`.
+
+---
+
+## Design system documentation (DESIGN.md)
+
+notACMS supports Google's [google-labs-code/design.md](https://github.com/google-labs-code/design.md) open specification for describing a visual identity to AI coding agents.
+See [spec.md](https://github.com/google-labs-code/design.md/blob/main/docs/spec.md) for full format specification.
+
+### Location and precedence
+
+| Theme | DESIGN.md location | Notes |
+|---|---|---|
+| **Bare** (wireframe) | `docs/bare/docs/DESIGN.md` | Minimal tokens, light mode, system fonts |
+| **Demo** (full) | `docs/demo/docs/DESIGN.md` | Amber phosphor, dark mode, custom fonts |
+| **Site-specific** | `local/docs/DESIGN.md` *(optional)* | Overrides for the active installation |
+
+**When working with design or SCSS, always read the active `DESIGN.md` first.** It contains machine-readable tokens (YAML front matter) plus human-readable rationale for colors, typography, elevation, shapes, and components.
+
+### What the spec provides
+
+- **Machine-readable tokens**: colors, typography, spacing, rounded corners, component properties (YAML front matter)
+- **Human-readable guidance**: design rationale, do's/don'ts, component descriptions
+- **Token references**: `{colors.accent}`, `{rounded.md}`, `{typography.body}` syntax for cross-referencing values
+- **Validation**: The `@google/design.md` CLI can lint files, diff versions, and export to Tailwind or DTCG
+
+### DESIGN.md sections (in order)
+
+1. Overview / Brand & Style
+2. Colors
+3. Typography
+4. Layout & Spacing
+5. Elevation & Depth
+6. Shapes
+7. Components
+8. Do's and Don'ts
+
+### Agent workflow
+
+When a user asks to change colors, add components, or redesign a page:
+1. Read the active `DESIGN.md`
+2. Check if tokens need updating in the YAML front matter
+3. Apply prose guidance when choosing values (e.g. "accent sparingly — one per screen")
+4. Update `local/docs/DESIGN.md` if the change should persist across sessions
+5. Sync `local/docs/STYLEGUIDE.md` if SCSS implementation changes
+
+### Related files
+
+- `assets/styles/_tokens.scss` — CSS custom properties derived from DESIGN.md colors
+- `assets/styles/_variables.scss` — Compile-time SCSS constants (spacing, radii, breakpoints)
+- `assets/styles/_utilities.scss` — Utility classes for rapid layout without new component CSS
+- `docs/STYLEGUIDE.md` — System-level styleguide mechanics (irrespective of theme)
 
 ---
 
 ## Documentation review
 
-The project has five documentation files: `README.md` (root) and four in `docs/`: `ARCHITECTURE.md`, `EDITOR_GUIDE.md`, `STYLEGUIDE.md`, `LOCALES.md`.
+The project has eight documentation files: `README.md` (root) and seven in `docs/`: `ARCHITECTURE.md`, `CUSTOMIZATION.md`, `EDITOR_GUIDE.md`, `LOCALES.md`, `STYLEGUIDE.md`, `TESTING.md`, `TESTS.md`.
 
 **After any implementation task, review whether the change affects any of these docs and update them.** Do not leave docs out of sync with the code.
+
+**Mechanisms, not inventories:** Files in `docs/` describe how notACMS works — patterns, mechanisms, and configuration. They must be content-agnostic. Use generic illustrative names (e.g. `my-page/`, `about/`) in example directory trees, not the current demo content page names. Concrete listings and current page names belong only in `docs/demo/` content pages. When adding a new component template, JS file, or service, do not add it to `docs/ARCHITECTURE.md` unless it introduces a new architectural pattern — add it to `local/docs/STYLEGUIDE.md` (component list) instead.
 
 | Changed area | Docs to review |
 |---|---|
 | Architecture, routing, services, content pipeline | `docs/ARCHITECTURE.md`, `README.md` |
 | Locale config, translations, adding/removing languages | `docs/LOCALES.md`, `docs/ARCHITECTURE.md` |
 | Content authoring, frontmatter, images, slugs | `docs/EDITOR_GUIDE.md` |
-| SCSS, design tokens, Twig components | `local/docs/STYLEGUIDE.md`, `docs/STYLEGUIDE.md` |
+| SCSS, design tokens, Twig components | `local/docs/DESIGN.md` (rationale / tokens), `local/docs/STYLEGUIDE.md` (components / mixins), `docs/STYLEGUIDE.md` (mechanics) |
 | nginx, Docker, env vars | `README.md` |
 | Build commands, deploy process, dev workflow | `README.md` |
 | Adding or editing a blog post or page | *(no doc to update — CONTENT_ANALYSIS.md removed)* |
+
+### Demo Content Alignment
+
+The directory `docs/demo/` contains the reference demo content (pages, blog posts, translations) that ships with the project. **Always review whether changes to `./docs/` files require corresponding updates to `docs/demo/` pages.**
+
+When updating documentation in `./docs/`, check if these demo pages need alignment:
+
+| `./docs/` File | `docs/demo/` Page(s) | What to verify |
+|---|---|---|
+| `docs/ARCHITECTURE.md` | `docs/demo/content/pages/manual/*.md`, `docs/demo/content/pages/architecture/*.md` | Content pipeline, routing, services, deployment info |
+| `docs/CUSTOMIZATION.md` | `docs/demo/content/pages/customization/*.md` | Override patterns, template system, SCSS variables |
+| `docs/EDITOR_GUIDE.md` | `docs/demo/content/pages/manual/*.md` | Frontmatter fields, content structure, images |
+| `docs/LOCALES.md` | `docs/demo/content/pages/locales/*.md` | Locale configuration, URL patterns, translations |
+| `docs/TESTING.md` / `TESTS.md` | `docs/demo/content/pages/manual/*.md` | Test commands, coverage info |
+
+**Rule of thumb:** If you update documentation about *how the system works*, the demo pages that explain those same concepts to end users must stay synchronized. Demo pages can be more concise and user-focused, but the technical facts must match.
 
 ---
 
@@ -141,6 +211,43 @@ The project has five documentation files: `README.md` (root) and four in `docs/`
 **Do not include `local/` directory content in CHANGELOG.md.** The changelog should describe the project itself — features, architecture, tech stack, dependencies, and technical changes — not instance-specific content.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+---
+
+## Upgrade guides
+
+For every minor or major release that contains breaking changes, create an `UPGRADE-X.Y.md` file in the project root (e.g. `UPGRADE-1.1.md`).
+
+**When to create one:** any time a release requires users to take action — renamed files, removed translation keys, changed SCSS variables, restructured templates, renamed config options, or removed features.
+
+**Format:**
+
+```markdown
+# UPGRADE FROM `X.0` TO `X.Y`
+
+## <Feature area or theme of the change>
+
+Short prose explanation of what changed and why.
+
+### <Specific breaking change>
+
+**Breaking if you have …**
+
+Before/after code blocks, then the exact steps to migrate.
+
+---
+
+## Non-breaking changes
+
+Brief notes on internal refactors that have no user action required.
+```
+
+**Content rules:**
+- Lead each breaking section with `**Breaking if you have …**` so users can skip irrelevant sections quickly.
+- Include before/after code blocks for any rename, config change, or API change.
+- List removed and added translation keys in a table.
+- If an `old-template` compatibility package is provided, reference it at the top under a "Core template redesign" section.
+- Non-breaking internal changes go in a separate `## Non-breaking changes` section at the bottom.
 
 ---
 
@@ -187,6 +294,7 @@ Configuration:
 - Methods/Variables: camelCase (e.g., `getRecentPosts`)
 - Constants: UPPER_SNAKE_CASE
 - Private properties: camelCase with type declarations
+- **No abbreviations or single/two-letter variables** — use full descriptive names (e.g. `$directoryKey` not `$tk`, `$translationMap` not `$tm`); abbreviations are a code smell to flag in review
 
 ### Type Declarations
 - Always use explicit type declarations for parameters and return types
@@ -340,12 +448,6 @@ final readonly class TagCount
 **Interface requirement:** Every injectable class in `src/Service/` (and subdirectories) must have a corresponding `XxxInterface`. The concrete class implements the interface; all injection points (controllers, commands, other services) type-hint against the interface, never the concrete class.
 
 **Constants belong in the interface:** Any constant used by a service must be declared in its interface (as `public const`), not in the concrete class. The concrete class inherits and uses it via `self::CONSTANT_NAME`.
-
-Current interfaces (grouped by subdirectory):
-- `NotACms\Service\Content`: `ContentServiceInterface`, `ContentTreeBuilderInterface`, `MarkdownParserInterface`, `SidebarDataProviderInterface`, `TranslationMapBuilderInterface`
-- `NotACms\Service\Image`: `ImageResizerInterface`, `MediaFileResolverInterface`, `ResponsiveImageServiceInterface`
-- `NotACms\Service\Preview`: `DraftPreviewServiceInterface`, `ScheduledPreviewServiceInterface`
-- `NotACms\Service` (root): `SiteConfigServiceInterface`, `TurnstileValidatorInterface`
 
 ### Configuration Principles
 - **Attributes over YAML/XML**: Prefer PHP 8 attributes for service configuration where possible
@@ -510,7 +612,9 @@ For detailed architecture documentation (content pipeline, routing, templates, n
 
 - `docs/ARCHITECTURE.md` — Content layer, service layer, routing, static build, multi-language
 - `docs/EDITOR_GUIDE.md` — Content authoring, frontmatter, images, series
-- `docs/STYLEGUIDE.md` — Design tokens, components, living styleguide
+- `docs/STYLEGUIDE.md` — Styleguide mechanics (dev-only page, SCSS conventions, component update checklist)
+- `local/docs/DESIGN.md` — Design tokens, palette, typography, rationale (if present)
+- `local/docs/STYLEGUIDE.md` — Component usage guide, mixins, Twig includes (if present)
 - `README.md` — Development environment, commands, deployment
 
 ---

@@ -63,7 +63,7 @@ final class ContactController extends AbstractController
         if (!$form->isSubmitted() || !$form->isValid()) {
             $errors = [];
             foreach ($form->all() as $fieldName => $field) {
-                if ('turnstile_token' === $fieldName) {
+                if (ContactType::FIELD_TURNSTILE === $fieldName) {
                     continue;
                 }
 
@@ -80,7 +80,7 @@ final class ContactController extends AbstractController
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $token = (string) $form->get('turnstile_token')->getData();
+        $token = (string) $form->get(ContactType::FIELD_TURNSTILE)->getData();
         if (!$this->turnstileValidator->verify($token, $request->getClientIp())) {
             $this->logger->warning('Contact form CAPTCHA failed', [
                 'ip' => $request->getClientIp(),

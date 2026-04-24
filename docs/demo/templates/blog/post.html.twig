@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ content.title() }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ content.description() ?: content.excerpt(meta_description_length) }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ content.title() }}{% endblock %}
+
+{% block og_article_meta %}
+<meta property="article:published_time" content="{{ content.date()|date('c') }}">
+{% if content.updatedDate() %}
+<meta property="article:modified_time" content="{{ content.updatedDate()|date('c') }}">
+{% endif %}
+<meta property="article:author" content="{{ site_base_url }}{{ content_url('about', locale) }}">
+{% if content.category() %}
+<meta property="article:section" content="{{ content.category() }}">
+{% endif %}
+{% for tag in content.tags() %}
+<meta property="article:tag" content="{{ tag }}">
+{% endfor %}
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ content.title()|e('js') }}",
+    "description": "{{ (content.description() ?: content.excerpt(meta_description_length))|e('js') }}",
+    "inLanguage": "{{ locale }}",
+    "datePublished": "{{ content.date()|date('c') }}"{% if content.updatedDate() %},
+    "dateModified": "{{ content.updatedDate()|date('c') }}"{% endif %},
+    "wordCount": {{ content.wordCount() }}{% if content.category() %},
+    "articleSection": "{{ content.category()|e('js') }}"{% endif %}{% if content.tags() is not empty %},
+    "keywords": "{{ content.tags()|join(', ')|e('js') }}"{% endif %},
+    "author": {
+        "@type": "Person",
+        "name": "{{ site_author.name|e('js') }}",
+        "url": "{{ site_base_url }}"
+    },
+    "publisher": {
+        "@type": "Person",
+        "name": "{{ site_author.name|e('js') }}"
+    },
+    "mainEntityOfPage": "{{ site_base_url }}{{ app.request.pathInfo }}"
+}
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="container container--post">
+
+    {# Breadcrumb #}
+    {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
+        { label: site_name, url: path('home_' ~ locale) },
+        { label: 'site.releases'|trans, url: path('blog_list_' ~ locale) },
+        { label: content.title() }
+    ] }) }}
+
+    <article data-pagefind-body>
+
+        {# Post meta #}
+        <div class="post-meta">
+            {% if content.category() %}
+                <span class="post-badge">{{ content.category() }}</span>
+            {% endif %}
+            {% if content.date() %}
+                <time datetime="{{ content.date()|date('Y-m-d') }}" class="post-date">
+                    {{ content.date()|date(site_locales[locale].date_format) }}
+                </time>
+                <span hidden data-pagefind-meta="date">{{ content.date()|date(site_locales[locale].date_format) }}</span>
+            {% endif %}
+            {% for tag in content.tags() %}
+                <span class="post-tag-label">{{ tag }}</span>
+            {% endfor %}
+        </div>
+
+        {# Post header #}
+        <header class="post-header">
+            <h1 class="post-header-title" data-pagefind-meta="title">{{ content.title() }}</h1>
+            {% if content.description() %}
+            <p class="post-header-lead">{{ content.description() }}</p>
+            {% endif %}
+        </header>
+
+        {# Post body #}
+        <div class="prose">
+            {{ content.htmlContent|srcset_media|raw }}
+        </div>
+
+        {# Tags #}
+        {% if content.tags() is not empty %}
+        <div class="post-tags" data-pagefind-ignore>
+            <span class="post-tags-label">Tags:</span>
+            {% for tag in content.tags() %}
+                <a href="{{ path('blog_tag_' ~ locale, {tag: tag}) }}" class="tag-pill">{{ tag }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </article>
+
+    {# Prev / Next navigation #}
+    {{ include('components/prev_next_nav.html.twig', {
+        prev: prev_post is defined and prev_post ? { url: prev_post.url(), title: prev_post.title() } : null,
+        next: next_post is defined and next_post ? { url: next_post.url(), title: next_post.title() } : null,
+        aria_label: 'Post navigation'
+    }) }}
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('local/code-copy.js') }}" defer></script>
+<script src="{{ asset('local/reading-progress.js') }}" defer></script>
+{% endblock %}

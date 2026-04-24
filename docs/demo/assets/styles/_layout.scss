@@ -1,0 +1,224 @@
+// =============================================================================
+// Layout — containers, page shell, header, footer.
+// Nav and footer are always-dark.
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Containers
+// ---------------------------------------------------------------------------
+.container {
+    max-width: $container-max;
+    margin: 0 auto;
+    padding: 0 $sp-5;
+
+    @media (max-width: $bp-md) {
+        padding: 0 $sp-3;
+    }
+}
+
+.container--docs {
+    max-width: $container-docs-max;
+    margin: 0 auto;
+    width: 100%;
+}
+
+
+// ---------------------------------------------------------------------------
+// Site header (always dark glass nav)
+// ---------------------------------------------------------------------------
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--nav-border);
+    height: $nav-height;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.site-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: $container-docs-max;
+    margin: 0 auto;
+    padding: 0 $sp-5;
+
+    @media (max-width: $bp-md) {
+        padding: 0 $sp-3;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Logo
+// ---------------------------------------------------------------------------
+.site-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+
+    svg {
+        height: 40px;
+        width: auto;
+    }
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Main content area
+// ---------------------------------------------------------------------------
+.site-main {
+    flex: 1;
+}
+
+// ---------------------------------------------------------------------------
+// Footer (always dark)
+// ---------------------------------------------------------------------------
+.site-footer {
+    background: var(--footer-bg);
+    border-top: 1px solid var(--footer-border);
+    padding: 3.5rem 0 0;
+    flex-shrink: 0;
+}
+
+.site-footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $sp-6;
+    flex-wrap: wrap;
+}
+
+.footer-brand {
+    p {
+        font-size: $fs-sm;
+        color: var(--footer-muted);
+        line-height: 1.6;
+        max-width: 240px;
+        margin-top: $sp-3;
+    }
+}
+
+.footer-links {
+    display: flex;
+    gap: $sp-6;
+    flex-wrap: wrap;
+}
+
+.footer-col {
+    h4 {
+        font-family: $font-mono;
+        font-size: $fs-xs;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--footer-muted);
+        margin-bottom: $sp-3;
+    }
+
+    ul {
+        list-style: none;
+    }
+    li {
+        margin-bottom: $sp-2;
+    }
+
+    a {
+        font-size: 0.875rem;
+        color: var(--footer-muted);
+        text-decoration: none;
+        transition: color $transition;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        &:hover {
+            color: var(--accent);
+            text-decoration: none;
+        }
+    }
+}
+
+.footer-bottom {
+    margin-top: $sp-6;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--footer-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $sp-3;
+
+    p {
+        font-size: $fs-sm;
+        color: var(--footer-muted);
+        margin: 0;
+    }
+
+    a {
+        color: var(--footer-muted);
+        &:hover {
+            color: var(--accent);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Page header (default pages, releases list)
+// ---------------------------------------------------------------------------
+.page-header {
+    padding: 4rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+
+    h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: $lh-tight;
+        margin-bottom: 0.75rem;
+        color: var(--text);
+    }
+}
+
+.page-header-desc {
+    font-size: $fs-lg;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Breadcrumb
+// ---------------------------------------------------------------------------
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: $fs-sm;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+
+    a {
+        color: var(--text-muted);
+        &:hover {
+            color: var(--accent);
+            text-decoration: none;
+        }
+    }
+}
+
+.breadcrumb-sep {
+    opacity: 0.4;
+}
+

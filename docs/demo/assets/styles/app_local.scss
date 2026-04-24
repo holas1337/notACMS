@@ -1,0 +1,26 @@
+// =============================================================================
+// app.scss — demo theme entrypoint. Import order matters:
+//   1. tokens    — CSS custom properties (:root / [data-theme="dark"])
+//   2. variables — SCSS compile-time constants (spacing, breakpoints, fonts)
+//   3. base      — reset, html/body, transitions
+//   4. layout    — containers, header, footer, breadcrumb, page-header
+//   5. nav       — navigation, dropdown, hamburger, theme toggle
+//   6. components — named reusable UI components (callout, feature-card, etc.)
+//   7. prose     — .prose / .prose--post rendered Markdown styles
+//   8. docs      — 3-col docs layout, sidebar, TOC
+//   9. styleguide — sg-* Design Reference scaffold classes
+//  10. pages     — homepage sections, hero, steps, CTA, post header
+//  11. blog      — blog utilities (progress bar, code-copy)
+// =============================================================================
+
+@import 'tokens';
+@import 'variables';
+@import 'base';
+@import 'layout';
+@import 'nav';
+@import 'components';
+@import 'prose';
+@import 'docs';
+@import 'styleguide';
+@import 'pages';
+@import 'blog';

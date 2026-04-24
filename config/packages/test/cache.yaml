@@ -1,0 +1,5 @@
+framework:
+    cache:
+        pools:
+            app.content:
+                adapter: cache.adapter.array

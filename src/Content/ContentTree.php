@@ -113,9 +113,9 @@ final class ContentTree
         return array_values(array_filter(
             $this->getAllPosts(),
             function (ContentItem $contentItem) use ($year, $month): bool {
-                $d = $contentItem->date();
+                $date = $contentItem->date();
 
-                return $d instanceof \DateTimeImmutable && (int) $d->format('Y') === $year && (int) $d->format('m') === $month;
+                return $date instanceof \DateTimeImmutable && (int) $date->format('Y') === $year && (int) $date->format('m') === $month;
             },
         ));
     }
@@ -177,14 +177,14 @@ final class ContentTree
     {
         $categories = [];
         foreach ($this->getAllPosts() as $contentItem) {
-            $cat = $contentItem->category();
-            if ($cat) {
-                $categories[$cat] = ($categories[$cat] ?? 0) + 1;
+            $category = $contentItem->category();
+            if ($category) {
+                $categories[$category] = ($categories[$category] ?? 0) + 1;
             }
         }
 
         return array_map(
-            fn (string $cat, int $count): CategoryCount => new CategoryCount($cat, $count),
+            fn (string $category, int $count): CategoryCount => new CategoryCount($category, $count),
             array_keys($categories),
             array_values($categories),
         );
@@ -195,12 +195,12 @@ final class ContentTree
     {
         $months = [];
         foreach ($this->getAllPosts() as $contentItem) {
-            $d = $contentItem->date();
-            if (null === $d) {
+            $date = $contentItem->date();
+            if (null === $date) {
                 continue;
             }
 
-            $key = $d->format('Y-m');
+            $key = $date->format('Y-m');
             $months[$key] = ($months[$key] ?? 0) + 1;
         }
 
@@ -227,12 +227,12 @@ final class ContentTree
     {
         $years = [];
         foreach ($this->getAllPosts() as $contentItem) {
-            $d = $contentItem->date();
-            if (null === $d) {
+            $date = $contentItem->date();
+            if (null === $date) {
                 continue;
             }
 
-            $year = (int) $d->format('Y');
+            $year = (int) $date->format('Y');
             $years[$year] = ($years[$year] ?? 0) + 1;
         }
 
