@@ -1,9 +1,9 @@
 {% if series_posts is defined and series_posts|length > 1 %}
-<details class="series-nav" aria-label="{{ 'blog.series_nav_label'|trans }}" data-pagefind-ignore open>
-    <summary class="series-nav__title">{{ 'blog.series_part'|trans({'%part%': series_current_part, '%total%': series_posts|length}) }}</summary>
-    <ol class="series-nav__list">
+<details class="series-nav" aria-label="{{ 'blog.series_nav_label'|trans }}" data-pagefind-ignore>
+    <summary>{{ 'blog.series_part'|trans({'%part%': series_current_part, '%total%': series_posts|length}) }}</summary>
+    <ol>
         {% for sp in series_posts %}
-        <li class="series-nav__item{{ sp.url() is same as(content.url()) ? ' series-nav__item--current' : '' }}">
+        <li{% if sp.url() is same as(content.url()) %} class="series-nav__item--current"{% endif %}>
             {% if sp.url() is same as(content.url()) %}
                 <span>{{ sp.title() }}</span>
             {% else %}

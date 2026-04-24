@@ -1,0 +1,168 @@
+// =============================================================================
+// Variables — Bootstrap 5 design tokens, no Bootstrap library imported.
+// Every value in this file is used by at least one other partial.
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Colours (Bootstrap 5 palette)
+// ---------------------------------------------------------------------------
+$color-primary:           #2d8a4e;
+$color-primary-dark:      #1f6b3a;
+$color-secondary:         #6c757d;
+$color-secondary-dark:    #565e64;
+$color-success:           #198754;
+$color-danger:            #dc3545;
+$color-warning:           #ffc107;
+$color-info:              #0dcaf0;
+$color-light:             #f8f9fa;
+$color-dark:              #212529;
+$color-white:             #ffffff;
+
+// Semantic aliases
+$color-body-bg:           #ffffff;
+$color-body:              #212529;
+$color-muted:             #6c757d;
+$color-border:            #dee2e6;
+$color-link:              #2d8a4e;
+$color-link-hover:        #1f6b3a;
+
+// Code blocks
+$color-code-bg:           #f8f9fa;
+$color-code-inline-bg:    rgba(175, 184, 193, 0.2);
+
+// Series nav (alert-info palette)
+$color-series-bg:         #cff4fc;
+$color-series-border:     #b6effb;
+$color-series-text:       #055160;
+$color-series-link:       #023e52;
+
+// Alert palettes
+$color-alert-info-bg:     #cff4fc;
+$color-alert-info-border: #b6effb;
+$color-alert-info-text:   #055160;
+
+$color-alert-success-bg:     #d1e7dd;
+$color-alert-success-border: #badbcc;
+$color-alert-success-text:   #0f5132;
+
+$color-alert-danger-bg:     #f8d7da;
+$color-alert-danger-border: #f5c2c7;
+$color-alert-danger-text:   #842029;
+
+$color-alert-warning-bg:     #fff3cd;
+$color-alert-warning-border: #ffecb5;
+$color-alert-warning-text:   #664d03;
+
+// ---------------------------------------------------------------------------
+// Typography — self-hosted: Open Sans (body) + Source Code Pro (mono)
+// ---------------------------------------------------------------------------
+
+// Open Sans — normal (variable 400–700)
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('../fonts/open-sans-normal-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('../fonts/open-sans-normal-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// Open Sans — italic 400
+@font-face {
+    font-family: 'Open Sans';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/open-sans-italic-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/open-sans-italic-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// Source Code Pro — normal (variable 400–500)
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url('../fonts/source-code-pro-normal-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    font-style: normal;
+    font-weight: 400 500;
+    font-display: swap;
+    src: url('../fonts/source-code-pro-normal-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+$font:      "Open Sans", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+$font-mono: "Source Code Pro", "SFMono-Regular", Menlo, Monaco, Consolas, "Courier New", monospace;
+
+$fs-sm:   0.875rem;   // 14px
+$fs-base: 1rem;       // 16px
+$fs-lg:   1.125rem;   // 18px
+$fs-xl:   1.25rem;    // 20px
+$fs-xxl:  1.5rem;     // 24px
+
+$lh: 1.5;
+
+// ---------------------------------------------------------------------------
+// Spacing — Bootstrap 5 scale (multiples of 0.25 rem)
+// ---------------------------------------------------------------------------
+$sp-1: 0.25rem;   //  4px
+$sp-2: 0.5rem;    //  8px
+$sp-3: 1rem;      // 16px
+$sp-4: 1.5rem;    // 24px
+$sp-5: 3rem;      // 48px
+
+// ---------------------------------------------------------------------------
+// Border-radius
+// ---------------------------------------------------------------------------
+$radius-sm:   0.25rem;
+$radius:      0.375rem;
+$radius-lg:   0.5rem;
+$radius-pill: 50rem;
+
+// ---------------------------------------------------------------------------
+// Shadows
+// ---------------------------------------------------------------------------
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
+$shadow:    0 .125rem .25rem rgba(0, 0, 0, .075);
+$shadow-lg: 0 .5rem 1rem rgba(0, 0, 0, .15);
+
+// ---------------------------------------------------------------------------
+// Layout
+// ---------------------------------------------------------------------------
+$container-max: 1200px;
+$sidebar-w:     300px;
+$gap:           2rem;
+
+// ---------------------------------------------------------------------------
+// Breakpoints
+// ---------------------------------------------------------------------------
+$bp-md: 768px;
+$bp-lg: 992px;
+
+// ---------------------------------------------------------------------------
+// Animation
+// ---------------------------------------------------------------------------
+$transition: .2s ease-in-out;

@@ -1,0 +1,41 @@
+# Locale-specific URL path overrides for structural routes.
+# Only non-default locales that differ from the default (EN) path need entries here.
+# Routes not listed: non-default locales auto-prefix the default path with /{locale}/.
+
+routes:
+  blog_list:
+    pl: /wpisy/
+    de: /beitraege/
+    fr: /articles/
+  blog_list_paginated:
+    pl: /wpisy/strona/{page}/
+    de: /beitraege/seite/{page}/
+    fr: /articles/page/{page}/
+  blog_category:
+    pl: /wpisy/{category}/
+    de: /beitraege/{category}/
+    fr: /articles/{category}/
+  blog_tag:
+    pl: /wpisy/tag/{tag}/
+    de: /beitraege/tag/{tag}/
+    fr: /articles/tag/{tag}/
+  blog_archive:
+    pl: /archiwum/{year}/{month}/
+    de: /archiv/{year}/{month}/
+    fr: /archives/{year}/{month}/
+  blog_archive_year:
+    pl: /archiwum/{year}/
+    de: /archiv/{year}/
+    fr: /archives/{year}/
+  search:
+    pl: /szukaj/
+    de: /suche/
+    fr: /recherche/
+  contact:
+    pl: /kontakt/
+    de: /kontakt/
+    fr: /contact/
+  projects:
+    pl: /realizacje/
+    de: /projekte/
+    fr: /projets/

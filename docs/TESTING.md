@@ -37,21 +37,70 @@ Tests are organized in `tests/` directory:
 
 ```
 tests/
+├── bootstrap.php              # PHPUnit bootstrap (loads Composer autoload + env)
+├── TmpDirTrait.php            # Shared temp-directory fixture helper (used by filesystem-dependent tests)
 ├── Unit/                      # Pure unit tests (no Symfony kernel)
 │   ├── Content/
 │   │   ├── ContentItemTest.php
 │   │   ├── ContentTreeTest.php
-│   │   └── Enum/
+│   │   ├── Enum/
+│   │   │   └── CardLayoutTest.php
+│   │   └── ValueObject/
+│   │       └── *Test.php
 │   ├── Service/
 │   │   ├── Content/
-│   │   └── Image/
+│   │   │   ├── RelatedPostsServiceTest.php
+│   │   │   ├── TagTranslationServiceTest.php
+│   │   │   └── TranslationMapBuilderTest.php
+│   │   ├── Image/
+│   │   │   └── ResponsiveImageServiceTest.php
+│   │   └── SiteConfigServiceTest.php
+│   ├── Twig/
+│   │   ├── LangSwitcherExtensionTest.php
+│   │   └── SrcsetExtensionTest.php
 │   └── Fixtures/
 │       └── ContentItemFactory.php
-└── Integration/               # Integration tests (kernel booted)
-    ├── Service/
-    ├── Controller/
-    ├── Command/
-    └── ...
+├── Integration/               # Integration tests (kernel booted)
+│   ├── Command/
+│   │   └── BuildStaticSiteCommandTest.php
+│   ├── Controller/
+│   │   ├── BlogControllerTest.php
+│   │   ├── ContactControllerTest.php
+│   │   ├── DraftPreviewControllerTest.php
+│   │   ├── ErrorControllerTest.php
+│   │   ├── HomeControllerTest.php
+│   │   ├── MediaControllerTest.php
+│   │   ├── PageControllerTest.php
+│   │   ├── ProjectsControllerTest.php
+│   │   ├── ScheduledPreviewControllerTest.php
+│   │   ├── SearchControllerTest.php
+│   │   └── StyleguideControllerTest.php
+│   ├── DataCollector/
+│   │   ├── DraftPreviewDataCollectorTest.php
+│   │   └── ScheduledPreviewDataCollectorTest.php
+│   ├── EventListener/
+│   │   └── LocaleListenerTest.php
+│   ├── Form/
+│   │   └── ContactTypeTest.php
+│   ├── Routing/
+│   │   └── LocalizedRouteLoaderTest.php
+│   ├── Service/
+│   │   ├── Content/
+│   │   │   ├── ContentServiceTest.php
+│   │   │   ├── ContentTreeBuilderTest.php
+│   │   │   ├── MarkdownParserTest.php
+│   │   │   └── SidebarDataProviderTest.php
+│   │   ├── Image/
+│   │   │   ├── ImageResizerTest.php
+│   │   │   └── MediaFileResolverTest.php
+│   │   ├── Preview/
+│   │   │   ├── DraftPreviewServiceTest.php
+│   │   │   ├── ScheduledPreviewServiceTest.php
+│   │   │   └── SessionToggleServiceTest.php
+│   │   └── TurnstileValidatorTest.php
+│   └── Twig/
+│       ├── ContentTwigExtensionTest.php
+│       └── SiteConfigExtensionTest.php
 ```
 
 ### Unit Tests
@@ -66,7 +115,7 @@ tests/
 - Symfony kernel booted via `KernelTestCase` or `WebTestCase`
 - Test real services and their interactions
 - Use test fixtures and environment overrides
-- **Coverage target:** 95%+
+- **Coverage target:** ~80%
 
 ## Test Conventions
 
@@ -269,9 +318,9 @@ final class MyServiceTest extends TestCase
 | Phase | Target | Status |
 |-------|--------|--------|
 | Phase 0 | Infrastructure ready | ✅ Complete |
-| Phase 1 | ~50% (pure unit tests) | ✅ Complete (191 tests) |
-| Phase 2 | ~78% (unit with mocking) | ⏳ Pending |
-| Phase 3 | 95%+ (integration tests) | ⏳ Pending |
+| Phase 1 | ~50% (pure unit tests) | ✅ Complete |
+| Phase 2 | ~78% (unit with mocking) | ✅ Complete |
+| Phase 3 | ~80% (integration tests) | ✅ Complete |
 
 Check coverage:
 

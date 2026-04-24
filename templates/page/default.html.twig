@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ content.title() }} | {{ site_name }}{% endblock %}
-{% block meta_description %}{{ content.description() ?: content.excerpt(160) }}{% endblock %}
+{% block meta_description %}{{ content.description() ?: content.excerpt(meta_description_length) }}{% endblock %}
 {% block og_title %}{{ content.title() }}{% endblock %}
 
 {% block body %}
-<article class="page-content" data-pagefind-body>
+{{ include('components/breadcrumb.html.twig', { breadcrumbs: [
+    {label: site_name, url: path('home_' ~ locale)},
+    {label: content.title()}
+]}) }}
+
+<div class="container container--prose">
+<article data-pagefind-body>
     <header class="page-header">
         {% if content.image() %}
         <div class="page-header-image">
@@ -19,14 +25,19 @@
         </div>
         {% endif %}
         <h1 data-pagefind-meta="title">{{ content.title() }}</h1>
+        {% if content.description() %}
+            <p class="page-header-desc">{{ content.description() }}</p>
+        {% endif %}
     </header>
-    <div class="page-body">
-        {{ content.htmlContent|raw }}
+    <div class="page-body prose">
+        {{ content.htmlContent|srcset_media|raw }}
     </div>
 </article>
+</div>
 {% endblock %}
 
 {% block javascripts %}
+<script src="{{ asset('lightbox.js') }}" defer></script>
 {% if content.hasToc() %}
 <script src="{{ asset('table-of-contents.js') }}" defer></script>
 {% endif %}

@@ -1,0 +1,236 @@
+header:
+  tagline: Demo-Blog
+nav:
+  skip_to_content: Zum Inhalt springen
+  home: Startseite
+  blog: Blog
+  projects: Projekte
+  about: Über mich
+  contact: Kontakt
+  privacy_policy: Datenschutz
+  search: Suche
+  menu: Menü
+  main: Hauptnavigation
+  theme_toggle: Farbschema wechseln
+  theme_to_light: Zu hellem Design wechseln
+  theme_to_dark: Zu dunklem Design wechseln
+  language_switcher: Sprache (%locale%)
+blog:
+  read_more: Weiterlesen
+  published_on: Veröffentlicht am
+  updated_on: Aktualisiert am
+  category: Kategorie
+  tags: Tags
+  no_posts: Keine Beiträge in dieser Kategorie.
+  archive: Archiv
+  all_posts: Alle Beiträge
+  comments_disabled: Kommentare sind deaktiviert.
+  share: Teilen
+  share_on_x: Auf X teilen
+  share_on_linkedin: Auf LinkedIn teilen
+  share_on_facebook: Auf Facebook teilen
+  share_via_email: Per E-Mail
+  copy_link: Link kopieren
+  copied: Kopiert!
+  reading_time: '%count% Min. Lesezeit'
+  related_posts: Ähnliche Beiträge
+  meta:
+    index: Artikel über Webentwicklung, PHP, Symfony und mehr.
+    category: Beiträge in der Kategorie %category%.
+    tag: 'Beiträge mit dem Tag #%tag%.'
+    archive_month: Beiträge vom %date%.
+    archive_year: Beiträge aus dem Jahr %year%.
+  post_navigation: Beitragsnavigation
+  nav_prev: ← Vorheriger
+  nav_next: Nächster →
+  series_part: Teil %part% von %total%
+  series_nav_label: Artikelserie
+sidebar:
+  recent_posts: Aktuelle Beiträge
+  categories: Kategorien
+  tags: Tags
+  archive: Archiv
+  search: Suche
+  contact: Kontakt
+  contact_intro: Bauen Sie etwas mit PHP oder Symfony?
+  contact_cta: → Kontakt aufnehmen
+search:
+  title: Suche
+  close: Suche schließen
+  placeholder: Seite durchsuchen...
+  no_results: Keine Ergebnisse für "%query%" gefunden.
+  results_for: 'Ergebnisse für: "%query%"'
+  hint_navigate: navigieren
+  hint_open: öffnen
+  hint_close: schließen
+  hint_anywhere: überall
+contact:
+  title: Kontakt
+  meta_description: Nehmen Sie Kontakt mit dem notACMS-Team auf. Stellen Sie Fragen oder beginnen Sie ein Gespräch über das Kontaktformular.
+  connection_error: Verbindungsfehler. Bitte versuchen Sie es erneut.
+  intro: Nehmen Sie Kontakt auf
+  about_nudge: Noch unsicher? <a href="%about_url%">Mehr über notACMS und wie es
+    funktioniert</a>
+  form:
+    name: Vollständiger Name
+    email: E-Mail-Adresse
+    website: Website (optional)
+    subject: Betreff
+    message: Nachricht
+    send: Senden
+    sending: Wird gesendet...
+    success: Nachricht gesendet. Vielen Dank!
+    error: Etwas ist schiefgelaufen. Bitte überprüfen Sie Ihre Angaben und versuchen
+      Sie es erneut.
+breadcrumb:
+  label: Seitenpfad
+pagination:
+  label: Seitennavigation
+  next: Weiter
+  prev: Zurück
+  page: Seite
+  of: von
+language:
+  switcher: Sprache (%locale%)
+  choose: Sprache wählen
+cookie:
+  banner_text: Diese Seite verwendet ein funktionales Cookie, um Ihre Einwilligung
+    zu speichern.
+  learn_more: Datenschutz
+  accept: Akzeptieren
+  dismiss: Schließen
+about:
+  role: Entwickler
+  headline: KI-freundlicher statischer Site-Generator auf Basis von Symfony
+  skills_title: Fachgebiete
+  cta_link: Kontakt aufnehmen
+  recommendations_title: Empfehlungen
+  recommendation_via: via LinkedIn
+  recommendation_expand: Vollständige Empfehlung lesen →
+  recommendation_collapse: Einklappen ↑
+  tech_stack: Tech-Stack
+  skills.Language: Sprache
+  skills.Framework: Framework
+  skills.Frontend: Frontend
+  skills.Infra: Infrastruktur
+projects:
+  view_all: Alle %count% Projekte ansehen
+footer:
+  copyright: Alle Rechte vorbehalten
+  built_with: Erstellt mit
+error:
+  title: Fehler
+  go_home: Zur Startseite
+coming_soon:
+  title: Demnächst
+  heading: Demnächst verfügbar
+  description: Dieser Beitrag wurde noch nicht veröffentlicht.
+  publishing: Veröffentlichung
+code:
+  copy: kopieren
+  copied: kopiert!
+  copy_aria: Code kopieren
+toc:
+  title: Inhaltsverzeichnis
+badge:
+  draft: '[ENTWURF]'
+  planned: '[GEPLANT]'
+  pinned: '[ANGEHEFTET]'
+  new: '[NEU]'
+  updated: '[KÜRZLICH AKTUALISIERT]'
+site:
+  docs: Dokumentation
+  releases: Versionen
+  about: Über das Projekt
+  manual: Handbuch
+  architecture: Architektur
+  customization: Anpassung
+  locales: Lokalisierung
+  design_reference: Design-Referenz
+  github: GitHub
+  project: Projekt
+  author: Autor
+  on_this_page: Auf dieser Seite
+  documentation: Dokumentation
+  open_source: Open Source unter Apache 2.0
+  built_with: Erstellt mit notACMS
+  nav_prev: Zurück
+  nav_next: Weiter
+  open_navigation: Navigation öffnen
+  contact: Kontakt
+home:
+  hero_badge: Open Source · PHP / Symfony
+  hero_heading: Der Static Site Generator, der<br><em>einfach nicht stört.</em>
+  hero_sub: Schreib Markdown. Definiere Struktur in YAML. Führe einen Befehl aus.
+    Erhalte reines statisches HTML — keine Datenbank, keine Laufzeit, keine Überraschungen.
+  hero_cta: Loslegen
+  stat_db: Datenbanktabellen
+  stat_static: Statische Ausgabe
+  stat_ai: KI-freundliche Struktur
+  what_label: Was ist notACMS?
+  what_heading: Ein CMS, das zur Laufzeit<br>nichts speichert.
+  what_p1: <strong>notACMS</strong> ist ein PHP/Symfony Static Site Generator für
+    Entwickler, die volle Kontrolle wollen. Inhalte leben in Markdown + YAML-Dateien.
+    Templates sind Twig. Die Ausgabe ist reines HTML.
+  what_p2: Keine Datenbankmigrationen. Keine Plugin-Konflikte. Kein CMS-Lock-in. Nur
+    ein Build-Schritt, der das <code>local/content/</code>-Verzeichnis in eine vollständige
+    statische Website umwandelt.
+  what_p3: <strong>Für KI-freundliche Workflows konzipiert</strong> — Flat Files sind
+    trivial zu lesen, zu durchsuchen und mit LLMs zu generieren.
+  stat_db_label: Datenbankabhängigkeit
+  stat_db_desc: Inhalte leben in Flat Markdown + YAML-Dateien. Kein ORM, keine Migrationen.
+  stat_cmd_label: Build-Befehl
+  stat_cmd_desc: <code>./notACMS deploy</code> gibt die komplette Website nach <code>public/static/</code>
+    aus.
+  stat_locales_label: Unterstützte Locales
+  stat_locales_desc: Füge eine Zeile in <code>_site.yaml</code> hinzu. Inhalte pro
+    Locale co-lokalisiert.
+  stat_license_label: Lizenziert
+  stat_license_desc: Fork it, extend it, make it yours. Kein Vendor-Lock-in.
+  features_label: Features
+  features_heading: Alles was du brauchst.<br>Nichts was du nicht brauchst.
+  features_sub: Aufgebaut auf Symfony 7.4 und PHP 8.5. Vertraute Werkzeuge, minimale
+    Magie.
+  feat_md_title: Markdown + YAML
+  feat_md_desc: Inhalte in Markdown mit YAML-Frontmatter schreiben. CommonMark mit
+    Überschriften, Tabellen, Callouts.
+  feat_i18n_title: Mehrsprachig
+  feat_i18n_desc: First-class i18n. Inhalte pro Locale co-lokalisiert. URL-Überschreibungen
+    je Sprache. hreflang out of the box.
+  feat_search_title: Volltextsuche
+  feat_search_desc: Pagefind-Integration. Statische Suche ohne Serverkosten, beim
+    Build indexiert. Keine externe API.
+  feat_php_title: PHP / Symfony Core
+  feat_php_desc: Vollständiges Symfony DI, Console-Commands, Twig-Templates, SCSS
+    via AssetMapper. PHP-Entwickler fühlen sich sofort zu Hause.
+  how_label: So funktioniert's
+  how_heading: Drei Schritte von der<br>Idee zur Live-Site.
+  step1_title: Inhalt schreiben
+  step1_desc: Markdown-Dateien in <code>local/content/</code> mit YAML-Frontmatter
+    erstellen. Seiten, Beiträge und Locales nach Bedarf hinzufügen.
+  step2_title: Bauen
+  step2_desc: Führe <code>./notACMS deploy --prod</code> aus. notACMS kompiliert SCSS,
+    verarbeitet Bilder, rendert Twig-Templates und generiert das gesamte statische
+    HTML.
+  step3_title: Überall deployen
+  step3_desc: Lade <code>public/</code> auf jeden Webserver, CDN oder Static Host
+    hoch. Keine PHP-Laufzeit erforderlich — außer im Live-Modus.
+  meta_text: Diese Seite ist mit notACMS gebaut.
+  meta_sub: 'Ein lebendiger Proof-of-Concept: Das Produkt dokumentiert und vermarktet
+    sich selbst mit genau den Werkzeugen, die es bereitstellt.'
+  meta_github: Quellcode auf GitHub ansehen
+  releases_label: Versionen
+  releases_heading: Neueste Version
+  releases_all: Alle Versionen
+  release_read: Beitrag lesen
+  cta_heading: Noch heute loslegen.
+  cta_sub: Repository klonen, Inhalte hinzufügen, einen Befehl ausführen. Die Website
+    ist live.
+  cta_manual: Handbuch lesen
+releases:
+  meta_description: '%site_name% Versionshinweise und Ankündigungen.'
+  meta_tagged: 'Beiträge mit Tag #%tag% — %site_name% Versionshinweise und Ankündigungen.'
+  tagged_heading: Beiträge mit Tag
+  tagged_desc: 'Alle Beiträge mit Tag #%tag%.'
+  description: Versionshinweise, Ankündigungen und Updates für notACMS.
+  empty: Noch keine Beiträge.

@@ -1,0 +1,612 @@
+// =============================================================================
+// Nav — always-dark glass nav bar.
+// nav-toggle.js controls mobile menu via .is-open on #nav-list.
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Nav links (left side)
+// ---------------------------------------------------------------------------
+.site-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+#nav-list {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+
+    // Desktop: truly centered in the header bar
+    @media (min-width: #{$bp-lg + 1px}) {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+    }
+
+    // Mobile: hidden by default, shown when .is-open
+    @media (max-width: $bp-lg) {
+        display: none;
+        position: absolute;
+        top: $nav-height;
+        left: 0;
+        right: 0;
+        z-index: 101;
+        background: var(--nav-bg);
+        border-bottom: 1px solid var(--nav-border);
+        flex-direction: column;
+        align-items: stretch;
+        padding: $sp-3;
+        gap: $sp-1;
+
+        &.is-open {
+            display: flex;
+        }
+    }
+}
+
+.nav-item {
+    a {
+        color: var(--nav-muted);
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0.4rem 0.8rem;
+        border-radius: $radius;
+        text-decoration: none;
+        transition: all $transition;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        &:hover {
+            color: var(--nav-text);
+            background: var(--nav-hover-bg);
+            text-decoration: none;
+        }
+
+        @media (max-width: $bp-lg) {
+            padding: 0.6rem $sp-3;
+            border-radius: $radius;
+        }
+    }
+
+    &--active > a,
+    a[aria-current="page"] {
+        color: var(--nav-text);
+        background: var(--nav-hover-bg);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Nav right side (lang + toggle)
+// ---------------------------------------------------------------------------
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: $sp-2;
+}
+
+// ---------------------------------------------------------------------------
+// Language switcher
+// ---------------------------------------------------------------------------
+.lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+
+    a {
+        color: var(--nav-muted);
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.4rem;
+        border-radius: $radius-sm;
+        text-decoration: none;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        transition: all $transition;
+
+        &:hover {
+            color: var(--nav-text);
+            text-decoration: none;
+        }
+        &.is-active {
+            color: var(--nav-text);
+            background: var(--nav-active-bg);
+            pointer-events: none;
+        }
+    }
+}
+
+.lang-sep {
+    color: var(--nav-sep);
+    font-size: 0.7rem;
+}
+
+// ---------------------------------------------------------------------------
+// Language dropdown (bootstrap-styled, shown when 3+ locales)
+// ---------------------------------------------------------------------------
+.lang-dropdown {
+    position: relative;
+
+    &__trigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        background: var(--nav-subtle-bg);
+        border: 1px solid var(--nav-active-bg);
+        border-radius: $radius;
+        color: var(--nav-text);
+        font-size: 0.75rem;
+        font-weight: 700;
+        font-family: $font-mono;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all $transition;
+        line-height: 1;
+        flex-shrink: 0;
+
+        &:hover {
+            background: var(--nav-active-bg);
+            border-color: var(--nav-active-border);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        &[aria-expanded="true"] {
+            background: var(--nav-active-bg);
+            border-color: var(--nav-active-border);
+
+            i {
+                transform: rotate(180deg);
+            }
+        }
+
+        i {
+            display: none; /* icon removed for compact 34x34 button */
+        }
+    }
+
+    &__menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.4rem);
+        right: auto;
+        left: 0;
+        background: var(--nav-bg);
+        border: 1px solid var(--nav-active-bg);
+        border-radius: $radius;
+        padding: 0.4rem;
+        min-width: 120px;
+        box-shadow: $shadow-lg;
+        z-index: 102;
+        flex-direction: column;
+        gap: 0.1rem;
+
+        &.is-open {
+            display: flex;
+        }
+
+        // Arrow
+        &::before {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: 12px;
+            width: 10px;
+            height: 10px;
+            background: var(--nav-bg);
+            border-left: 1px solid var(--nav-active-bg);
+            border-top: 1px solid var(--nav-active-bg);
+            transform: rotate(45deg);
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 0.7rem;
+        border-radius: $radius-sm;
+        text-decoration: none;
+        font-size: 0.875rem;
+        color: var(--nav-muted);
+        transition: all $transition;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+
+        &:hover,
+        &:focus-visible {
+            background: var(--nav-hover-bg);
+            color: var(--nav-text);
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        &--active {
+            color: var(--nav-text);
+            background: var(--accent-bg);
+
+            .lang-dropdown__label {
+                color: var(--accent);
+            }
+        }
+    }
+
+    &__label {
+        font-family: $font-mono;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--nav-text);
+        min-width: 28px;
+    }
+
+    &__name {
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Search trigger button
+// ---------------------------------------------------------------------------
+.search-trigger {
+    width: 34px;
+    height: 34px;
+    border-radius: $radius;
+    border: 1px solid var(--nav-active-bg);
+    background: var(--nav-subtle-bg);
+    color: var(--nav-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all $transition;
+    flex-shrink: 0;
+
+    &:hover {
+        background: var(--nav-active-bg);
+        color: var(--nav-text);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+}
+
+// Search overlay
+// ---------------------------------------------------------------------------
+.search-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+
+    &.is-open {
+        display: flex;
+    }
+
+    &__panel {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: $radius-xl;
+        width: 100%;
+        max-width: 620px;
+        margin: 0 $sp-4;
+        box-shadow: $shadow-xl;
+        overflow: hidden;
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: $sp-3;
+        padding: $sp-4 $sp-5;
+        border-bottom: 1px solid var(--border);
+    }
+
+    &__icon {
+        font-size: 1.125rem;
+        color: var(--text-muted);
+        flex-shrink: 0;
+    }
+
+    &__input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 1.0625rem;
+        color: var(--text);
+        font-family: inherit;
+
+        &::placeholder {
+            color: var(--text-muted);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+    }
+
+    &__close {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: $radius-sm;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        padding: 0.2rem 0.45rem;
+        cursor: pointer;
+        flex-shrink: 0;
+        font-family: $font-mono;
+        transition: all $transition;
+
+        i {
+            font-size: 0.875rem;
+        }
+
+        &:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+    }
+
+    &__results {
+        max-height: 420px;
+        overflow-y: auto;
+        padding: $sp-2 $sp-3;
+    }
+
+    &__result {
+        display: block;
+        padding: $sp-3 $sp-3;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background $transition;
+
+        &:hover,
+        &:focus {
+            background: var(--bg-surface);
+            text-decoration: none;
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+    }
+
+    &__result-title {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.2rem;
+    }
+
+    &__result-excerpt {
+        display: block;
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+
+        mark {
+            background: var(--accent-bg);
+            color: var(--accent);
+            border-radius: $radius-xs;
+            padding: 0 0.15rem;
+        }
+    }
+
+    &__empty {
+        padding: $sp-5 $sp-3;
+        color: var(--text-muted);
+        font-size: 0.9375rem;
+        text-align: center;
+    }
+
+    &__footer {
+        display: flex;
+        gap: $sp-4;
+        padding: $sp-3 $sp-5;
+        border-top: 1px solid var(--border);
+        background: var(--bg-surface);
+        font-family: $font-mono;
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        flex-wrap: wrap;
+
+        kbd {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: $radius-sm;
+            padding: 0.1rem 0.35rem;
+            font-size: 0.65rem;
+            font-family: $font-mono;
+            color: var(--text-muted);
+        }
+    }
+
+    &__shortcut-hint {
+        margin-left: auto;
+
+        @media (max-width: $bp-sm) {
+            display: none;
+        }
+    }
+}
+
+// Theme toggle button
+// ---------------------------------------------------------------------------
+.theme-toggle {
+    width: 34px;
+    height: 34px;
+    border-radius: $radius;
+    border: 1px solid var(--nav-active-bg);
+    background: var(--nav-subtle-bg);
+    color: var(--nav-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all $transition;
+    flex-shrink: 0;
+
+    &:hover {
+        background: var(--nav-active-bg);
+        color: var(--nav-text);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Hamburger button (mobile)
+// ---------------------------------------------------------------------------
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--nav-active-bg);
+    background: var(--nav-subtle-bg);
+    border-radius: $radius;
+    cursor: pointer;
+    padding: 0;
+    transition: background $transition;
+
+    &:hover {
+        background: var(--nav-active-bg);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    @media (max-width: $bp-lg) {
+        display: flex;
+        order: 10;
+    }
+}
+
+.nav-toggle__bar {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    background: var(--nav-muted);
+    border-radius: $radius-xs;
+    transition: all $transition;
+}
+
+// ---------------------------------------------------------------------------
+// Docs dropdown in nav
+// ---------------------------------------------------------------------------
+.nav-item--docs {
+    position: relative;
+
+    > a {
+        cursor: default;
+    }
+
+    .nav-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        left: 0;
+        background: var(--nav-bg);
+
+        // Invisible bridge fills the gap so hover doesn't break while moving mouse
+        &::before {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            height: 0.75rem;
+        }
+        border: 1px solid var(--nav-active-bg);
+        border-radius: $radius-md;
+        padding: $sp-2;
+        min-width: 180px;
+        box-shadow: $shadow-lg;
+        list-style: none;
+        gap: 0;
+
+        li a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: $radius;
+            font-size: 0.875rem;
+            color: var(--nav-muted);
+            transition: all $transition;
+
+            &:hover {
+                color: var(--nav-text);
+                background: var(--nav-hover-bg);
+            }
+        }
+    }
+
+    &:hover .nav-dropdown,
+    &:focus-within .nav-dropdown {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // Mobile: always show dropdown items inline
+    @media (max-width: $bp-lg) {
+        .nav-dropdown {
+            display: flex;
+            flex-direction: column;
+            position: static;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0 0 0 $sp-4;
+
+            li a {
+                font-size: $fs-sm;
+            }
+        }
+    }
+}
+

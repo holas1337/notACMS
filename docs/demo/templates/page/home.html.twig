@@ -1,0 +1,232 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ site_name }} — {{ site_description }}{% endblock %}
+{% block meta_description %}{{ content is not null ? content.description() : site_description }}{% endblock %}
+{% block og_title %}{{ site_name }}{% endblock %}
+
+{% block body %}
+
+{# ── Hero ── #}
+<section class="hero">
+    <div class="hero-glow-1" aria-hidden="true"></div>
+    <div class="hero-glow-2" aria-hidden="true"></div>
+    <div class="hero-grid"   aria-hidden="true"></div>
+    <div class="hero-inner">
+        <div class="hero-label">{{ 'home.hero_badge'|trans }}</div>
+        <h1>{{ 'home.hero_heading'|trans|raw }}</h1>
+        <p class="hero-sub">{{ 'home.hero_sub'|trans }}</p>
+        <div class="hero-ctas">
+            <a href="{{ content_url('manual', locale) }}" class="btn btn-primary">
+                <i class="ph ph-book-open" aria-hidden="true"></i>
+                {{ 'home.hero_cta'|trans }}
+            </a>
+            <a href="{{ site_social.github ?? '#' }}" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+                <i class="ph ph-github-logo" aria-hidden="true"></i>
+                GitHub
+            </a>
+        </div>
+        <div class="hero-meta" aria-label="Key stats">
+            <div class="hero-stat">
+                <div class="hero-stat-num amber">0</div>
+                <span class="hero-stat-label">{{ 'home.stat_db'|trans }}</span>
+            </div>
+            <div class="hero-stat-sep" aria-hidden="true"></div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">100%</div>
+                <span class="hero-stat-label">{{ 'home.stat_static'|trans }}</span>
+            </div>
+            <div class="hero-stat-sep" aria-hidden="true"></div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">
+                    <i class="ph ph-lightning" aria-hidden="true"></i>
+                    AI
+                </div>
+                <span class="hero-stat-label">{{ 'home.stat_ai'|trans }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ── What is notACMS? ── #}
+<section class="section">
+    <div class="container">
+        <div class="what-grid">
+            <div class="what-prose">
+                <span class="section-label">{{ 'home.what_label'|trans }}</span>
+                <h2 class="section-heading">{{ 'home.what_heading'|trans|raw }}</h2>
+                <p>{{ 'home.what_p1'|trans|raw }}</p>
+                <p>{{ 'home.what_p2'|trans|raw }}</p>
+                <p>{{ 'home.what_p3'|trans|raw }}</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-num">0<i class="ph ph-database" aria-hidden="true"></i></div>
+                    <div class="stat-card-label">{{ 'home.stat_db_label'|trans }}</div>
+                    <div class="stat-card-desc">{{ 'home.stat_db_desc'|trans }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-num"><i class="ph ph-lightning" aria-hidden="true"></i>1</div>
+                    <div class="stat-card-label">{{ 'home.stat_cmd_label'|trans }}</div>
+                    <div class="stat-card-desc">{{ 'home.stat_cmd_desc'|trans|raw }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-num">∞</div>
+                    <div class="stat-card-label">{{ 'home.stat_locales_label'|trans }}</div>
+                    <div class="stat-card-desc">{{ 'home.stat_locales_desc'|trans|raw }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-num">Apache 2.0</div>
+                    <div class="stat-card-label">{{ 'home.stat_license_label'|trans }}</div>
+                    <div class="stat-card-desc">{{ 'home.stat_license_desc'|trans }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ── Key Features ── #}
+<section class="section section--surface">
+    <div class="container">
+        <div class="features-header">
+            <span class="section-label">{{ 'home.features_label'|trans }}</span>
+            <h2 class="section-heading">{{ 'home.features_heading'|trans|raw }}</h2>
+            <p class="section-sub">{{ 'home.features_sub'|trans }}</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="ph ph-markdown-logo" aria-hidden="true"></i></div>
+                <div class="feature-title">{{ 'home.feat_md_title'|trans }}</div>
+                <div class="feature-desc">{{ 'home.feat_md_desc'|trans }}</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="ph ph-globe" aria-hidden="true"></i></div>
+                <div class="feature-title">{{ 'home.feat_i18n_title'|trans }}</div>
+                <div class="feature-desc">{{ 'home.feat_i18n_desc'|trans }}</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></div>
+                <div class="feature-title">{{ 'home.feat_search_title'|trans }}</div>
+                <div class="feature-desc">{{ 'home.feat_search_desc'|trans }}</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="ph ph-code" aria-hidden="true"></i></div>
+                <div class="feature-title">{{ 'home.feat_php_title'|trans }}</div>
+                <div class="feature-desc">{{ 'home.feat_php_desc'|trans }}</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ── How it Works ── #}
+<section class="section section--dark">
+    <div class="container">
+        <div class="how-grid">
+            <div>
+                <span class="section-label">{{ 'home.how_label'|trans }}</span>
+                <h2 class="section-heading">{{ 'home.how_heading'|trans|raw }}</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div>
+                            <div class="step-title">{{ 'home.step1_title'|trans }}</div>
+                            <div class="step-desc">{{ 'home.step1_desc'|trans|raw }}</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div>
+                            <div class="step-title">{{ 'home.step2_title'|trans }}</div>
+                            <div class="step-desc">{{ 'home.step2_desc'|trans|raw }}</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div>
+                            <div class="step-title">{{ 'home.step3_title'|trans }}</div>
+                            <div class="step-desc">{{ 'home.step3_desc'|trans|raw }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="terminal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot terminal-dot--close"></div>
+                    <div class="terminal-dot terminal-dot--minimize"></div>
+                    <div class="terminal-dot terminal-dot--expand"></div>
+                </div>
+                <div class="terminal-body">
+                    <div><span class="t-comment"># clone and start</span></div>
+                    <div><span class="t-prompt">$</span> <span class="t-cmd">git clone https://github.com/holas1337/notACMS</span></div>
+                    <div><span class="t-prompt">$</span> <span class="t-cmd">ddev start</span></div>
+                    <div>&nbsp;</div>
+                    <div><span class="t-comment"># write your first page</span></div>
+                    <div><span class="t-prompt">$</span> <span class="t-cmd">mkdir -p local/content/pages/about</span></div>
+                    <div><span class="t-prompt">$</span> <span class="t-cmd">echo "---\ntitle: About\n---\n# Hello" > local/content/pages/about/en.md</span></div>
+                    <div>&nbsp;</div>
+                    <div><span class="t-comment"># build and deploy</span></div>
+                    <div><span class="t-prompt">$</span> <span class="t-cmd">./notACMS deploy --prod</span></div>
+                    <div><span class="t-output">✓  Cleared cache</span></div>
+                    <div><span class="t-output">✓  Compiled assets</span></div>
+                    <div><span class="t-output">✓  Generated 12 pages</span></div>
+                    <div><span class="t-output">✓  Built search index</span></div>
+                    <div><span class="t-success">✓  Done in 2.4s</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ── Meta callout — Built with itself ── #}
+<section class="section">
+    <div class="container">
+        <div class="meta-callout">
+            <div class="meta-callout-text">
+                <p>{{ 'home.meta_text'|trans }}</p>
+                <small>{{ 'home.meta_sub'|trans }}</small>
+            </div>
+            <a href="{{ site_social.github ?? '#' }}" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+                <i class="ph ph-github-logo" aria-hidden="true"></i>
+                {{ 'home.meta_github'|trans }}
+            </a>
+        </div>
+    </div>
+</section>
+
+{# ── Latest Release ── #}
+{% if recentPosts is not empty %}
+<section class="section section--surface">
+    <div class="container">
+        <div class="releases-header">
+            <div>
+                <span class="section-label">{{ 'home.releases_label'|trans }}</span>
+                <h2 class="section-heading section-heading--tight">{{ 'home.releases_heading'|trans }}</h2>
+            </div>
+            <a href="{{ path('blog_list_' ~ locale) }}" class="all-releases-link">
+                {{ 'home.releases_all'|trans }} <i class="ph ph-arrow-right" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        {% set post = recentPosts|first %}
+        {{ include('components/release_card.html.twig', { post: post }) }}
+    </div>
+</section>
+{% endif %}
+
+{# ── CTA Banner ── #}
+<section class="section section--dark cta-section">
+    <div class="container">
+        <h2 class="section-heading">{{ 'home.cta_heading'|trans }}</h2>
+        <p>{{ 'home.cta_sub'|trans }}</p>
+        <div class="hero-ctas">
+            <a href="{{ content_url('manual', locale) }}" class="btn btn-primary">
+                {{ 'home.cta_manual'|trans }} <i class="ph ph-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a href="{{ site_social.github ?? '#' }}" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+                <i class="ph ph-github-logo" aria-hidden="true"></i>
+                GitHub
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

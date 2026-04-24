@@ -1,0 +1,325 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Styleguide | {{ site_name }}{% endblock %}
+{% block meta_description %}Design system reference — tokens, components, typography.{% endblock %}
+{% block og_title %}Styleguide{% endblock %}
+
+{% set current_path = app.request.pathInfo %}
+{% set doc_pages = [
+    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: 'site.manual'|trans },
+    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: 'site.architecture'|trans },
+    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: 'site.customization'|trans },
+    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: 'site.locales'|trans },
+    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: 'site.design_reference'|trans },
+] %}
+
+{% block body %}
+<div class="docs-wrapper">
+
+    {# ── Left Sidebar ── #}
+    {{ include('components/docs_sidebar.html.twig', { doc_pages: doc_pages, current_path: current_path }) }}
+
+    {# ── Main Content ── #}
+    <div class="docs-content">
+
+        <article data-pagefind-body>
+            <h1 class="docs-title">Styleguide</h1>
+            <p class="docs-description">Design system reference — tokens, components, typography.</p>
+
+            {# ================================================================
+               COLOR TOKENS
+            ================================================================= #}
+            <h2 id="color-tokens">Color Tokens<a href="#color-tokens" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>CSS custom properties defined in <code>assets/styles/_tokens.scss</code>. Override any token in <code>local/assets/styles/</code> to retheme the entire site.</p>
+            <div class="sg-swatches">
+                {% set swatches = [
+                    { var: '--bg',          label: 'Page background',      light: '#ffffff',             dark: '#0e0d0b' },
+                    { var: '--bg-surface',  label: 'Sidebar / surface',    light: '#f8f9fa',             dark: '#161410' },
+                    { var: '--bg-elevated', label: 'Buttons / inline code',light: '#f1f3f5',             dark: '#1e1c17' },
+                    { var: '--text',        label: 'Primary text',         light: '#212529',             dark: '#f8f9fa' },
+                    { var: '--text-muted',  label: 'Secondary text',       light: '#6c757d',             dark: '#9ca3af' },
+                    { var: '--border',      label: 'Dividers, borders',    light: '#dee2e6',             dark: '#2d2a24' },
+                    { var: '--accent',      label: 'Links, CTAs, active',  light: '#B45309',             dark: '#FFB000' },
+                    { var: '--accent-bg',   label: 'Accent background',    light: '#fffbeb',             dark: 'rgba(255,176,0,.08)' },
+                    { var: '--nav-bg',      label: 'Nav (always dark)',     light: 'rgba(14,13,11,.95)', dark: 'rgba(14,13,11,.95)' },
+                    { var: '--footer-bg',   label: 'Footer (always dark)', light: '#0e0d0b',             dark: '#0e0d0b' },
+                    { var: '--code-bg',     label: 'Code block bg',        light: '#0d1117',             dark: '#0d1117' },
+                ] %}
+                {% for s in swatches %}
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background:var({{ s.var }})"></div>
+                    <div class="sg-swatch-meta">
+                        <div class="sg-swatch-name">{{ s.var }}</div>
+                        <div class="sg-swatch-label">{{ s.label }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {# ================================================================
+               TYPOGRAPHY
+            ================================================================= #}
+            <h2 id="typography">Typography<a href="#typography" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p><strong>Inter</strong> for UI and body text. <strong>JetBrains Mono</strong> for code, labels, and metadata. Type scale defined in <code>assets/styles/_variables.scss</code>.</p>
+            <div class="sg-specimen">
+                <div style="font-size:2.25rem;font-weight:800;letter-spacing:-.04em;line-height:1.1;color:var(--text);margin-bottom:1.5rem">
+                    Heading 1 — The Static Site Generator
+                    <div style="font-size:.7rem;font-family:'JetBrains Mono',monospace;font-weight:400;letter-spacing:0;color:var(--text-muted);margin-top:.4rem">2.25rem · weight 800 · tracking −.04em</div>
+                </div>
+                <div style="font-size:1.5rem;font-weight:700;letter-spacing:-.03em;line-height:1.2;color:var(--text);padding-bottom:1rem;border-bottom:1px solid var(--border);margin-bottom:1rem">
+                    Heading 2 — Content Pipeline
+                    <div style="font-size:.7rem;font-family:'JetBrains Mono',monospace;font-weight:400;letter-spacing:0;color:var(--text-muted);margin-top:.3rem">1.5rem · weight 700 · border-bottom</div>
+                </div>
+                <div style="font-size:1.125rem;font-weight:700;letter-spacing:-.02em;color:var(--text);margin-bottom:.75rem">
+                    Heading 3 — ContentService
+                    <span style="font-size:.7rem;font-family:'JetBrains Mono',monospace;font-weight:400;letter-spacing:0;color:var(--text-muted);margin-left:.75rem">1.125rem · weight 700</span>
+                </div>
+                <div style="font-size:1rem;font-weight:600;letter-spacing:-.01em;color:var(--text);margin-bottom:1rem">
+                    Heading 4 — Configuration
+                    <span style="font-size:.7rem;font-family:'JetBrains Mono',monospace;font-weight:400;letter-spacing:0;color:var(--text-muted);margin-left:.75rem">1rem · weight 600</span>
+                </div>
+                <p style="font-size:1.0625rem;line-height:1.8;color:var(--text);margin-bottom:.75rem">Body text (1.0625rem · line-height 1.8) — Lorem ipsum dolor sit amet, consectetur adipiscing elit. notACMS renders all content to static HTML at build time, with no database or server-side processing at runtime.</p>
+                <p style="font-size:.9375rem;line-height:1.75;color:var(--text-muted);margin-bottom:.75rem">Muted text (.text-muted · 0.9375rem) — Secondary information, captions, metadata. Used for dates, excerpts, and supporting copy throughout the design.</p>
+                <p style="font-family:'JetBrains Mono',monospace;font-size:.8125rem;line-height:1.7;color:var(--text);margin:0">Mono (JetBrains Mono · 0.8125rem) — <code>./notACMS deploy --prod</code> · <code>_site.yaml</code> · <code>local/content/</code></p>
+            </div>
+
+            {# ================================================================
+               BUTTONS
+            ================================================================= #}
+            <h2 id="buttons">Buttons<a href="#buttons" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>Classes: <code>.btn</code> base + <code>.btn-primary</code> or <code>.btn-outline</code>. Designed for dark-background contexts (hero, CTA sections).</p>
+            <div class="sg-canvas sg-canvas--dark sg-row">
+                <a href="#" class="btn btn-primary" onclick="return false">
+                    <i class="ph ph-book-open" aria-hidden="true"></i> Get Started
+                </a>
+                <a href="#" class="btn btn-outline" onclick="return false">
+                    <i class="ph ph-github-logo" aria-hidden="true"></i> GitHub
+                </a>
+            </div>
+
+            {# ================================================================
+               LABELS & BADGES
+            ================================================================= #}
+            <h2 id="labels">Labels &amp; Badges<a href="#labels" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <div class="sg-specimen sg-row sg-row--col">
+                <div class="sg-label-row">
+                    <span class="section-label">Features</span>
+                    <code class="sg-hint">.section-label</code>
+                </div>
+                <div class="sg-label-row">
+                    <span class="hero-label">Open Source · PHP / Symfony · v1.1.0</span>
+                    <code class="sg-hint">.hero-label</code>
+                </div>
+                <div class="sg-label-row">
+                    <span class="release-badge">releases</span>
+                    <code class="sg-hint">.release-badge</code>
+                </div>
+                <div class="sg-label-row">
+                    <span class="post-badge">releases</span>
+                    <code class="sg-hint">.post-badge</code>
+                </div>
+                <div class="sg-label-row">
+                    <span class="tag-pill">open-source</span>
+                    <span class="tag-pill">symfony</span>
+                    <span class="tag-pill">php</span>
+                    <code class="sg-hint">.tag-pill</code>
+                </div>
+            </div>
+
+            {# ================================================================
+               CALLOUT
+            ================================================================= #}
+            <h2 id="callout">Callout<a href="#callout" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>Class: <code>.callout</code> + <code>.callout-icon</code> + <code>.callout-text</code>. Rendered from Markdown blockquotes via <code>_prose.scss</code>.</p>
+            <div class="callout">
+                <span class="callout-icon"><i class="ph ph-lightbulb" aria-hidden="true"></i></span>
+                <div class="callout-text"><strong>Tip:</strong> Place images as close to the content that uses them as possible. notACMS handles the path mapping during build.</div>
+            </div>
+
+            {# ================================================================
+               PROSE
+            ================================================================= #}
+            <h2 id="prose">Prose<a href="#prose" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>Markdown output is wrapped in <code>.prose</code>. Styles in <code>assets/styles/_prose.scss</code>.</p>
+            <div class="prose" style="max-width:none">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. notACMS renders content through a four-step pipeline: <strong>scan → parse → render → emit</strong>. Each step is an independent service.</p>
+                <ul>
+                    <li>Flat Markdown + YAML files — no database required</li>
+                    <li>Twig templates — full Symfony DI available</li>
+                    <li>CommonMark with GFM extensions and heading anchors</li>
+                </ul>
+                <ol>
+                    <li>Clone the repository</li>
+                    <li>Run <code>ddev start</code></li>
+                    <li>Run <code>./notACMS deploy --prod</code></li>
+                </ol>
+                <blockquote><p><strong>Tip:</strong> Override any template in <code>local/templates/</code> to customise output without touching core files.</p></blockquote>
+                <table>
+                    <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>title</code></td><td>string</td><td>Page title (required)</td></tr>
+                        <tr><td><code>slug</code></td><td>string</td><td>URL path override</td></tr>
+                        <tr><td><code>draft</code></td><td>bool</td><td>Hide from production builds</td></tr>
+                    </tbody>
+                </table>
+                <hr>
+                <pre><code class="language-bash"># Build and deploy
+./notACMS deploy --prod</code></pre>
+            </div>
+
+            {# ================================================================
+               FEATURE CARD
+            ================================================================= #}
+            <h2 id="feature-card">Feature Card<a href="#feature-card" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>Classes: <code>.feature-card</code> + <code>.feature-icon</code> + <code>.feature-title</code> + <code>.feature-desc</code></p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="ph ph-markdown-logo" aria-hidden="true"></i></div>
+                    <div class="feature-title">Markdown + YAML</div>
+                    <div class="feature-desc">Write content in Markdown with YAML frontmatter. CommonMark with headings, tables, callouts.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="ph ph-globe" aria-hidden="true"></i></div>
+                    <div class="feature-title">Multilingual</div>
+                    <div class="feature-desc">First-class i18n. Content co-located per locale. URL overrides per language.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></div>
+                    <div class="feature-title">Full-text Search</div>
+                    <div class="feature-desc">Pagefind integration. Static, zero-server-cost search indexed at build time.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="ph ph-code" aria-hidden="true"></i></div>
+                    <div class="feature-title">PHP / Symfony Core</div>
+                    <div class="feature-desc">Full Symfony DI, console commands, Twig templates, SCSS via AssetMapper.</div>
+                </div>
+            </div>
+
+            {# ================================================================
+               STAT CARD
+            ================================================================= #}
+            <h2 id="stat-card">Stat Card<a href="#stat-card" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>Classes: <code>.stat-card</code> + <code>.stat-card-num</code> + <code>.stat-card-label</code> + <code>.stat-card-desc</code></p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-num">0<i class="ph ph-database" aria-hidden="true"></i></div>
+                    <div class="stat-card-label">Database dependency</div>
+                    <div class="stat-card-desc">Content lives in flat Markdown + YAML files. No ORM, no migrations.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-num"><i class="ph ph-lightning" aria-hidden="true"></i>1</div>
+                    <div class="stat-card-label">Build command</div>
+                    <div class="stat-card-desc"><code>./notACMS deploy</code> outputs your complete site to <code>public/static/</code>.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-num">∞</div>
+                    <div class="stat-card-label">Locales supported</div>
+                    <div class="stat-card-desc">Add any language with a line in <code>_site.yaml</code>. Content co-located per locale.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-num">Apache 2.0</div>
+                    <div class="stat-card-label">Licensed</div>
+                    <div class="stat-card-desc">Fork it, extend it, make it yours. No vendor lock-in.</div>
+                </div>
+            </div>
+
+            {# ================================================================
+               RELEASE CARD
+            ================================================================= #}
+            <h2 id="release-card">Release Card<a href="#release-card" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>Classes: <code>.release-card</code> + <code>.release-card-meta</code> + <code>.release-badge</code> + <code>.release-date</code></p>
+            <a href="#" class="release-card" onclick="return false">
+                <div class="release-card-meta">
+                    <span class="release-badge">releases</span>
+                    <span class="release-date">Apr 15, 2025</span>
+                </div>
+                <h2>notACMS v1.1.0 — New design, docs, and DE locale</h2>
+                <p>This release is all about the meta-layer: the notACMS promotional site now runs on notACMS itself. New amber-phosphor design, full documentation, and German locale.</p>
+                <span class="read-more">Read post <i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+            </a>
+
+            {# ================================================================
+               PREV / NEXT NAV
+            ================================================================= #}
+            <h2 id="prev-next-nav">Prev / Next Nav<a href="#prev-next-nav" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>Classes: <code>.prev-next-nav</code> + <code>.prev-next-card</code> / <code>.prev-next-card--next</code> + <code>.prev-next-dir</code> + <code>.prev-next-title</code></p>
+            <nav class="prev-next-nav" aria-label="Example navigation">
+                <a href="#" class="prev-next-card" onclick="return false">
+                    <span class="prev-next-dir"><i class="ph ph-arrow-left" aria-hidden="true"></i> {{ 'site.nav_prev'|trans }}</span>
+                    <span class="prev-next-title">{{ 'site.architecture'|trans }}</span>
+                </a>
+                <a href="#" class="prev-next-card prev-next-card--next" onclick="return false">
+                    <span class="prev-next-dir">{{ 'site.nav_next'|trans }} <i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+                    <span class="prev-next-title">{{ 'site.locales'|trans }}</span>
+                </a>
+            </nav>
+
+            {# ================================================================
+               SEARCH OVERLAY
+            ================================================================= #}
+            <h2 id="search-overlay">Search Overlay<a href="#search-overlay" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>A full-screen overlay powered by <a href="https://pagefind.app" target="_blank" rel="noopener noreferrer">Pagefind</a>. Open via the <i class="ph ph-magnifying-glass" aria-hidden="true"></i> icon in the nav or press <kbd style="font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem">⌘K</kbd> / <kbd style="font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem">Ctrl+K</kbd> from anywhere.</p>
+            <div class="sg-specimen sg-row">
+                <button class="search-trigger" aria-controls="site-search" style="width:auto;padding:.6rem 1rem;gap:.5rem;border-radius:8px;font-size:.875rem;color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.06)">
+                    <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+                    Search…
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:.7rem;opacity:.5;margin-left:.5rem">⌘K</span>
+                </button>
+                <span style="font-size:.8125rem;color:var(--text-muted)">Lazy-loads Pagefind index on first open. Results include excerpt with highlighted matches.</span>
+            </div>
+
+            {# ================================================================
+               PHOSPHOR ICONS
+            ================================================================= #}
+            <h2 id="icons">Phosphor Icons<a href="#icons" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <p>Loaded via CDN. Usage: <code>&lt;i class="ph ph-{name}"&gt;&lt;/i&gt;</code></p>
+            {% set icons = [
+                { name: 'ph-book-open',        label: 'Manual' },
+                { name: 'ph-tree-structure',   label: 'Architecture' },
+                { name: 'ph-sliders',          label: 'Customization' },
+                { name: 'ph-globe',            label: 'Locales' },
+                { name: 'ph-palette',          label: 'Design Ref' },
+                { name: 'ph-rocket',           label: 'Releases' },
+                { name: 'ph-github-logo',      label: 'GitHub' },
+                { name: 'ph-arrow-right',      label: 'Arrow right' },
+                { name: 'ph-arrow-left',       label: 'Arrow left' },
+                { name: 'ph-arrow-square-out', label: 'External link' },
+                { name: 'ph-moon',             label: 'Theme (light)' },
+                { name: 'ph-sun',              label: 'Theme (dark)' },
+                { name: 'ph-lightbulb',        label: 'Tip callout' },
+                { name: 'ph-caret-down',       label: 'Dropdown' },
+                { name: 'ph-lightning',        label: 'Speed / stat' },
+                { name: 'ph-magnifying-glass', label: 'Search' },
+                { name: 'ph-code',             label: 'PHP / Code' },
+                { name: 'ph-markdown-logo',    label: 'Markdown' },
+                { name: 'ph-list',             label: 'Mobile nav' },
+                { name: 'ph-database',         label: 'Database' },
+                { name: 'ph-x',               label: 'Close' },
+            ] %}
+            <div class="sg-icon-grid">
+                {% for icon in icons %}
+                <div class="sg-icon-item">
+                    <i class="ph {{ icon.name }}" aria-hidden="true"></i>
+                    <span>{{ icon.label }}</span>
+                    <span class="sg-icon-name">{{ icon.name|replace({'ph-': ''}) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+        </article>
+    </div>
+
+    {# ── Right TOC ── #}
+    <aside class="docs-toc" aria-label="{{ 'site.on_this_page'|trans }}">
+        <span class="toc-label">{{ 'site.on_this_page'|trans }}</span>
+        <ul class="toc-list" id="docs-toc-list" aria-live="polite"></ul>
+    </aside>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('local/docs-sidebar.js') }}" defer></script>
+<script src="{{ asset('local/docs-toc.js') }}" defer></script>
+<script src="{{ asset('local/code-copy.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'search.title'|trans }} | {{ site_name }}{% endblock %}
+{% block og_title %}{{ 'search.title'|trans }}{% endblock %}
+
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block body %}
+<div class="search-page" data-pagefind-ignore="all">
+    <h1>{{ 'search.title'|trans }}</h1>
+    <div id="search"
+         data-placeholder="{{ 'search.placeholder'|trans }}"
+         data-zero-results="{{ 'search.no_results'|trans({'%query%': '[SEARCH_TERM]'}) }}"
+         data-read-more="{{ 'blog.read_more'|trans }}"
+         data-tag-base="{{ path('blog_tag_' ~ locale, {tag: 'tag-placeholder'}) }}"></div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('local/search.js') }}"></script>
+{% endblock %}

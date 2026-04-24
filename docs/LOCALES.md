@@ -16,7 +16,7 @@ The locale list is defined in `local/content/_site.yaml` under `site.locales`. T
 | `local/content/_routes.yaml` | Translated URL path segments for structural routes (listings, archive, search, etc.) |
 | `local/content/_tags.yaml` | Tag slug translations between locales |
 | `translations/messages.{locale}.yaml` | Core UI strings (nav labels, form labels, section headings, error messages) — generic, work for any site persona |
-| `local/translations/messages.{locale}.yaml` | Demo/persona-specific strings (e.g. `about.role`, `about.headline`, `about.skills.*`) — seeded from `docs/examples/translations/` on first bootstrap |
+| `local/translations/messages.{locale}.yaml` | Demo/persona-specific strings (e.g. `about.role`, `about.headline`, `about.skills.*`) — seeded from `docs/demo/translations/` on first bootstrap |
 | `config/packages/framework.yaml` | `default_locale` for Symfony internals (translator fallback) |
 | `config/packages/translation.yaml` | Translator paths: core `translations/` + `local/translations/` (merged on top) |
 | `local/docker/nginx/error-pages.conf` | Locale-specific error pages — add an `if` block per non-default locale |
@@ -26,7 +26,7 @@ The locale list is defined in `local/content/_site.yaml` under `site.locales`. T
 
 - **Default locale** (EN): no prefix — `/`, `/blog/`, `/contact/`
 - **Other locales**: `/{locale}/` prefix — `/pl/`, `/pl/wpisy/`, `/pl/kontakt/`
-- Translated path segments are defined in `local/content/_routes.yaml`. Routes not listed there get auto-prefixed: e.g. `/tag/{tag}/` → `/pl/tag/{tag}/`
+- Translated path segments are defined in `local/content/_routes.yaml`. Routes not listed there get auto-prefixed: e.g. `/feed/` → `/pl/feed/`
 
 ### Two URL resolution patterns in templates
 
@@ -87,6 +87,9 @@ routes:
   blog_category:
     pl: /wpisy/{category}/
     de: /beitraege/{category}/   # ← new
+  blog_tag:
+    pl: /wpisy/tag/{tag}/
+    de: /beitraege/tag/{tag}/    # ← new
   blog_archive:
     pl: /archiwum/{year}/{month}/
     de: /archiv/{year}/{month}/  # ← new
@@ -104,7 +107,7 @@ routes:
     de: /suche/                  # ← new
 ```
 
-Routes you can skip (auto-prefix with `/de/`): `blog_tag`, `rss`, `api_contact`, `error_404`, `error_500`, `static_page`, `home`.
+Routes you can skip (auto-prefix with `/de/`): `rss`, `api_contact`, `error_404`, `error_500`, `static_page`, `home`. Note that `blog_tag` is overridden in the shipped demo (`/pl/wpisy/tag/{tag}/`, `/de/beitraege/tag/{tag}/`) so its path nests under the translated `blog_list` segment — add a `de:` entry if you want the same nesting for your new locale.
 
 ### 3. `local/content/` — create content files
 
@@ -164,18 +167,18 @@ Tags identical to the canonical (EN) slug don't need entries.
 
 ### 6. `config/packages/translation.yaml` — translator path
 
-No changes needed. The file already adds `local/translations/` as an extra path on top of `translations/`:
+No changes needed. The file sets `local/translations/` as `default_path` (overrides take priority) with core `translations/` as an extra path (fallback):
 
 ```yaml
 framework:
     default_locale: en
     translator:
-        default_path: '%kernel.project_dir%/translations'
+        default_path: '%kernel.project_dir%/local/translations'
         paths:
-            - '%kernel.project_dir%/local/translations'
+            - '%kernel.project_dir%/translations'
 ```
 
-The new `translations/messages.de.yaml` is picked up automatically. If you add demo-specific strings for the new locale (e.g. `about.role` in German), put them in `docs/examples/translations/messages.de.yaml` — they will be seeded to `local/translations/` on first bootstrap.
+The new `translations/messages.de.yaml` is picked up automatically. If you add demo-specific strings for the new locale (e.g. `about.role` in German), put them in `docs/demo/translations/messages.de.yaml` — they will be seeded to `local/translations/` on first bootstrap.
 
 ### 7. `local/docker/nginx/` — production nginx
 

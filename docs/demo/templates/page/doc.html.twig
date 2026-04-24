@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ content.title() }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ content.description() ?: content.excerpt(meta_description_length) }}{% endblock %}
+{% block og_title %}{{ content.title() }}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "{{ content.title() }}",
+    "description": "{{ content.description() ?: content.excerpt(meta_description_length) }}",
+    "url": "{{ site_base_url }}{{ app.request.pathInfo }}"
+}
+</script>
+{% endblock %}
+
+{# Determine sidebar active state from current path #}
+{% set current_path = app.request.pathInfo %}
+{% set doc_pages = [
+    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: 'site.manual'|trans },
+    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: 'site.architecture'|trans },
+    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: 'site.customization'|trans },
+    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: 'site.locales'|trans },
+    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: 'site.design_reference'|trans },
+] %}
+
+{# Prev/next navigation — derived from doc_pages #}
+{% set current_slug = content.slug() ?? '' %}
+{% set current_idx = null %}
+{% for i, page in doc_pages %}
+    {% if page.slug is same as(current_slug) %}{% set current_idx = i %}{% endif %}
+{% endfor %}
+{% set prev_page = current_idx is not null and current_idx > 0 ? doc_pages[current_idx - 1] : null %}
+{% set next_page = current_idx is not null and current_idx < (doc_pages|length - 1) ? doc_pages[current_idx + 1] : null %}
+
+{% block body %}
+<div class="docs-wrapper">
+
+    {# ── Left Sidebar ── #}
+    {{ include('components/docs_sidebar.html.twig', { doc_pages: doc_pages, current_path: current_path }) }}
+
+    {# ── Main Content ── #}
+    <div class="docs-content">
+
+        <article data-pagefind-body>
+            <h1 class="docs-title" data-pagefind-meta="title">{{ content.title() }}</h1>
+            {% if content.description() %}
+            <p class="docs-description">{{ content.description() }}</p>
+            {% endif %}
+
+            <div class="page-body prose">
+                {{ content.htmlContent|srcset_media|raw }}
+            </div>
+
+            {# Prev / Next navigation #}
+            {{ include('components/prev_next_nav.html.twig', {
+                prev: prev_page ? { url: content_url(prev_page.dir, locale), title: prev_page.label } : null,
+                next: next_page ? { url: content_url(next_page.dir, locale), title: next_page.label } : null,
+                aria_label: 'Page navigation'
+            }) }}
+        </article>
+    </div>
+
+    {# ── Right TOC ── #}
+    <aside class="docs-toc" aria-label="{{ 'site.on_this_page'|trans }}">
+        <span class="toc-label">{{ 'site.on_this_page'|trans }}</span>
+        <ul class="toc-list" id="docs-toc-list" aria-live="polite"></ul>
+    </aside>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('local/docs-sidebar.js') }}" defer></script>
+<script src="{{ asset('local/docs-toc.js') }}" defer></script>
+<script src="{{ asset('local/code-copy.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,7 @@
+{# Extend core base and load the custom local stylesheet alongside the core one #}
+{% extends '@base/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ importmap('app') }}
+    {{ importmap('app-local') }}
+{% endblock %}

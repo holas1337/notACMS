@@ -1,26 +1,25 @@
 {% if sidebar is defined %}
 
-{# Recent posts #}
 {% if sidebar.recentPosts is not empty %}
-<div class="widget widget-recent-posts">
-    <h3 class="widget-title">{{ 'sidebar.recent_posts'|trans }}</h3>
-    {% for post in sidebar.recentPosts %}
-        {{ include('components/post_card_mini.html.twig') }}
-    {% endfor %}
+<div class="widget">
+    <h3>{{ 'sidebar.recent_posts'|trans }}</h3>
+    <ul>
+        {% for post in sidebar.recentPosts %}
+            <li>{{ include('components/post_card_mini.html.twig') }}</li>
+        {% endfor %}
+    </ul>
 </div>
 {% endif %}
 
-{# Categories #}
 {% if sidebar.categories is not empty %}
-<div class="widget widget-categories">
-    <h3 class="widget-title">{{ 'sidebar.categories'|trans }}</h3>
+<div class="widget">
+    <h3>{{ 'sidebar.categories'|trans }}</h3>
     <ul>
         {% for cat in sidebar.categories %}
         {% set cat_active = filter_type is defined and filter_type is same as('category') and cat.slug is same as(filter_value) %}
         <li{% if cat_active %} class="is-active"{% endif %}>
             <a href="{{ path('blog_category_' ~ locale, {category: cat.slug}) }}"{% if cat_active %} aria-current="page"{% endif %}>
-                {{ cat.slug }}
-                <span class="count">{{ cat.count }}</span>
+                {{ cat.slug }} ({{ cat.count }})
             </a>
         </li>
         {% endfor %}
@@ -28,18 +27,19 @@
 </div>
 {% endif %}
 
-{# Tags #}
 {% if sidebar.tags is not empty %}
-<div class="widget widget-tags">
-    <h3 class="widget-title">{{ 'sidebar.tags'|trans }}</h3>
-    <div class="tag-cloud">
+<div class="widget">
+    <h3>{{ 'sidebar.tags'|trans }}</h3>
+    <ul>
         {% for tag in sidebar.tags %}
         {% set tag_active = filter_type is defined and filter_type is same as('tag') and tag.slug is same as(filter_value) %}
-        <a href="{{ path('blog_tag_' ~ locale, {tag: tag.slug}) }}" class="tag-link{% if tag_active %} tag-link--active{% endif %}" data-count="{{ tag.count }}">
-            {{ tag.slug }}
-        </a>
+        <li{% if tag_active %} class="is-active"{% endif %}>
+            <a href="{{ path('blog_tag_' ~ locale, {tag: tag.slug}) }}"{% if tag_active %} aria-current="page"{% endif %}>
+                #{{ tag.slug }} ({{ tag.count }})
+            </a>
+        </li>
         {% endfor %}
-    </div>
+    </ul>
 </div>
 {% endif %}
 

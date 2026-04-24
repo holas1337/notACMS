@@ -31,6 +31,7 @@ final class SiteConfigExtension extends AbstractExtension implements GlobalsInte
             'image_variant_widths' => $this->siteConfigService->getImageVariantWidths(),
             'new_post_days' => $this->siteConfigService->getNewPostDays(),
             'coming_soon_reveal_days' => $this->siteConfigService->getComingSoonRevealDays(),
+            'meta_description_length' => $this->siteConfigService->getMetaDescriptionLength(),
         ];
     }
 }

@@ -1,0 +1,20 @@
+{# Collect other locales #}
+{% set other_locales = [] %}
+{% for l in site_locales_list %}
+    {% if l is not same as(locale) %}
+        {% set other_locales = other_locales|merge([l]) %}
+    {% endif %}
+{% endfor %}
+
+{% if other_locales is not empty %}
+
+{% set switch_urls = lang_switch_urls(other_locales) %}
+
+<div class="lang-switcher">
+    <span class="lang-switcher__link lang-switcher__link--active">{{ locale|upper }}</span>
+    {% for other in other_locales %}
+        <a href="{{ switch_urls[other] }}" class="lang-switcher__link lang-switch" hreflang="{{ other }}" lang="{{ other }}">{{ other|upper }}</a>
+    {% endfor %}
+</div>
+
+{% endif %}

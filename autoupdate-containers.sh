@@ -11,4 +11,4 @@ if [[ "${AUTO_UPDATE}" -ne 1 ]]; then
 fi
 
 echo "Updating containers"
-./deploy.sh --prod
+./notACMS deploy --prod

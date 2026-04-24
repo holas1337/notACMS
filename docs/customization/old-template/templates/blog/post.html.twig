@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ content.title() }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ content.description() ?: content.excerpt(meta_description_length) }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ content.title() }}{% endblock %}
+
+{% block og_article_meta %}
+<meta property="article:published_time" content="{{ content.date()|date('c') }}">
+{% if content.updatedDate() %}
+<meta property="article:modified_time" content="{{ content.updatedDate()|date('c') }}">
+{% endif %}
+<meta property="article:author" content="{{ site_base_url }}{{ content_url('about', locale) }}">
+{% if content.category() %}
+<meta property="article:section" content="{{ content.category() }}">
+{% endif %}
+{% for tag in content.tags() %}
+<meta property="article:tag" content="{{ tag }}">
+{% endfor %}
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ content.title()|e('js') }}",
+    "description": "{{ (content.description() ?: content.excerpt(meta_description_length))|e('js') }}",
+    "inLanguage": "{{ locale }}",
+    "datePublished": "{{ content.date()|date('c') }}"{% if content.updatedDate() %},
+    "dateModified": "{{ content.updatedDate()|date('c') }}"{% endif %},
+    "wordCount": {{ content.wordCount() }}{% if content.image() %},
+    "image": {
+        "@type": "ImageObject",
+        "url": "{{ site_base_url }}{{ content.image() }}",
+        "width": 1280,
+        "height": 720
+    }{% endif %}{% if content.category() %},
+    "articleSection": "{{ content.category()|e('js') }}"{% endif %}{% if content.tags() is not empty %},
+    "keywords": "{{ content.tags()|join(', ')|e('js') }}"{% endif %},
+    "author": {
+        "@type": "Person",
+        "name": "{{ site_author.name }}",
+        "url": "{{ site_base_url }}"
+    },
+    "publisher": {
+        "@type": "Person",
+        "name": "{{ site_author.name }}"
+    },
+    "mainEntityOfPage": "{{ site_base_url }}{{ app.request.pathInfo }}"
+}
+</script>
+{% endblock %}
+
+{% block body %}
+{% set crumbs = [
+    {label: 'nav.home'|trans, url: path('home_' ~ locale)},
+    {label: 'nav.blog'|trans, url: path('blog_list_' ~ locale)},
+] %}
+{% if content.category() %}
+    {% set crumbs = crumbs|merge([{label: content.category(), url: path('blog_category_' ~ locale, {category: content.category()})}]) %}
+{% endif %}
+{% set crumbs = crumbs|merge([{label: content.title()}]) %}
+{{ include('components/breadcrumb.html.twig', { breadcrumbs: crumbs }) }}
+
+<article class="post" data-pagefind-body>
+    <header class="post-header">
+        {% if content.image() %}
+        <div class="post-header-image">
+            {{ include('components/responsive_img.html.twig', {
+                src: content.image(),
+                alt: content.imageAlt(),
+                sizes: '(max-width: 768px) 100vw, 800px',
+                loading: 'eager',
+                fetchpriority: 'high'
+            }) }}
+        </div>
+        {% endif %}
+        <div class="post-header-body">
+            {% if content.isDraft() %}<div class="alert alert-warning">[DRAFT] This post is not published</div>{% endif %}
+            {% if content.isScheduled() %}<div class="alert alert-info">[PLANNED] Scheduled for {{ content.date()|date('Y-m-d') }}</div>{% endif %}
+            <h1 class="post-header__title" data-pagefind-meta="title">{{ content.title() }}</h1>
+            <p class="post-meta">
+                {% if content.category() %}
+                    <a class="post-meta-category" href="{{ path('blog_category_' ~ locale, {category: content.category()}) }}">{{ content.category() }}</a>
+                    <span hidden data-pagefind-meta="{{ 'blog.category'|trans|lower }}">{{ content.category() }}</span>
+                {% endif %}
+                {% if content.category() and content.date() %}<span class="post-meta-sep">&bull;</span>{% endif %}
+                {% if content.date() %}
+                    <time datetime="{{ content.date()|date('Y-m-d') }}" class="post-meta-date">{{ content.date()|date(site_locales[locale].date_format) }}</time>
+                    <span hidden data-pagefind-meta="date">{{ content.date()|date(site_locales[locale].date_format) }}</span>
+                {% endif %}
+                {% if content.updatedDate() %}
+                    <span class="post-meta-sep">&bull;</span>
+                    <time datetime="{{ content.updatedDate()|date('Y-m-d') }}" class="post-meta-updated">{{ 'blog.updated_on'|trans }}: {{ content.updatedDate()|date(site_locales[locale].date_format) }}</time>
+                {% endif %}
+                <span class="post-meta-sep">&bull;</span>
+                <span class="post-meta-reading-time">{{ 'blog.reading_time'|trans({'%count%': content.readingTime()}) }}</span>
+            </p>
+            {% if content.tags() is not empty %}
+                <span hidden data-pagefind-meta="tags">{{ content.tags()|join(',') }}</span>
+            {% endif %}
+        </div>
+    </header>
+
+    {{ include('components/series_nav.html.twig') }}
+
+    <div class="post-body">
+        {{ content.htmlContent|srcset_media|raw }}
+    </div>
+
+    <footer class="post-footer">
+        {% if content.tags() is not empty %}
+            <div class="post-tags-section" data-pagefind-ignore>
+                <span class="post-tags-label">{{ 'blog.tags'|trans }}:</span>
+                {% for tag in content.tags() %}
+                    <a href="{{ path('blog_tag_' ~ locale, {tag: tag}) }}" class="tag-link">{{ tag }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {{ include('components/share_buttons.html.twig', { title: content.title() }) }}
+    </footer>
+</article>
+
+{{ include('components/post_navigation.html.twig') }}
+
+{% if related_posts is not empty %}
+<section class="related-posts" data-pagefind-ignore>
+    <h2 class="related-posts__heading">{{ 'blog.related_posts'|trans }}</h2>
+    <div class="related-posts__grid">
+        {% for post in related_posts %}
+            {{ include('components/post_card_mini.html.twig') }}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('code-copy.js') }}" defer></script>
+<script src="{{ asset('copy-link.js') }}" defer></script>
+<script src="{{ asset('table-of-contents.js') }}" defer></script>
+<script src="{{ asset('reading-progress.js') }}" defer></script>
+{% endblock %}

@@ -128,6 +128,11 @@ final class SiteConfigService implements SiteConfigServiceInterface
         return (int) ($this->load()['coming_soon_reveal_days'] ?? self::DEFAULT_COMING_SOON_REVEAL_DAYS);
     }
 
+    public function getMetaDescriptionLength(): int
+    {
+        return (int) ($this->load()['meta_description_length'] ?? self::DEFAULT_META_DESCRIPTION_LENGTH);
+    }
+
     public function getContactFormConfig(): ContactFormConfig
     {
         $cf = $this->load()['contact_form'] ?? [];

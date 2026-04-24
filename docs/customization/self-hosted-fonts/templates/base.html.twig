@@ -1,0 +1,155 @@
+{# Full replacement of base.html.twig with self-hosted font preloads #}
+<!DOCTYPE html>
+<html lang="{{ locale ?? site_default_locale }}"
+      data-locales="{{ site_locales_list|join(',') }}"
+      data-default-locale="{{ site_default_locale }}"
+      data-code-copy-label="{{ 'code.copy'|trans }}"
+      data-code-copied-label="{{ 'code.copied'|trans }}"
+      data-code-copy-aria="{{ 'code.copy_aria'|trans }}"
+      data-toc-label="{{ 'toc.title'|trans }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ site_description }}{% endblock %}">
+    {% block robots %}<meta name="robots" content="max-image-preview:large, max-snippet:-1">{% endblock %}
+
+    {% block favicons %}
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
+    {% endblock %}
+
+    {% if content is defined and content is not null and content.directoryKey() %}
+        {% set tk = content.directoryKey() %}
+        {% if translation_map is defined and translation_map[tk] is defined %}
+            {% for lang, url in translation_map[tk] %}
+                <link rel="alternate" hreflang="{{ lang }}" href="{{ site_base_url }}{{ url }}">
+            {% endfor %}
+            {% if translation_map[tk][site_default_locale] is defined %}
+                <link rel="alternate" hreflang="x-default" href="{{ site_base_url }}{{ translation_map[tk][site_default_locale] }}">
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% block locale_redirect %}
+    <link rel="preload" href="{{ asset('locale-redirect.js') }}" as="script">
+    <script src="{{ asset('locale-redirect.js') }}"></script>
+    {% endblock %}
+
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:site_name" content="{{ site_name }}">
+    <meta property="og:title" content="{% block og_title %}{{ site_name }}{% endblock %}">
+    <meta property="og:description" content="{{ block('meta_description') }}">
+    {% if content is defined and content is not null and content.image() %}
+    <meta property="og:image" content="{{ site_base_url ~ content.image() }}">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
+    <meta property="og:image:type" content="image/webp">
+    {% else %}
+    {% block og_default_image %}
+    <meta property="og:image" content="{{ site_base_url ~ asset('images/og-default.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
+    {% endblock %}
+    {% endif %}
+    <meta property="og:url" content="{{ site_base_url }}{{ app.request.pathInfo }}">
+    <meta property="og:locale" content="{{ site_locales[locale].og_locale ?? locale }}">
+    {% for alt_locale in site_locales_list %}
+    {% if alt_locale is not same as(locale) %}
+    <meta property="og:locale:alternate" content="{{ site_locales[alt_locale].og_locale ?? alt_locale }}">
+    {% endif %}
+    {% endfor %}
+    {% block og_article_meta %}{% endblock %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ block('og_title') }}">
+    <meta name="twitter:description" content="{{ block('meta_description') }}">
+    <meta name="twitter:image" content="{{ content is defined and content is not null and content.image() ? site_base_url ~ content.image() : site_base_url ~ asset('images/og-default.jpg') }}">
+
+    <link rel="canonical" href="{{ site_base_url }}{{ app.request.pathInfo }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site_name }} RSS" href="{{ path('rss_' ~ locale) }}">
+
+    {% if cf_analytics_token %}
+    <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin>
+    {% endif %}
+
+    {# Preload critical font weights #}
+    <link rel="preload" href="{{ asset('fonts/inter-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('fonts/inter-600.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ asset('fonts/jetbrains-mono-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+
+    {% block head_preconnect %}{% endblock %}
+
+    {% block stylesheets %}
+        {{ importmap('app') }}
+        {{ importmap('app-local') }}
+    {% endblock %}
+
+    {% block structured_data %}
+    <script type="application/ld+json">{{ {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": site_name,
+        "url": site_base_url
+    }|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</script>
+    {% endblock %}
+</head>
+<body class="locale-{{ locale ?? site_default_locale }}">
+    <a href="#main-content" class="skip-link">{{ 'nav.skip_to_content'|trans }}</a>
+
+    <header class="site-header">
+        <div class="container">
+            <div class="site-header-inner">
+                <a href="{{ path('home_' ~ locale) }}" class="site-logo">
+                    <img src="{{ asset('images/logo.svg') }}" alt="{{ site_name }}">
+                </a>
+                {% block navigation %}
+                    {{ include('components/navigation.html.twig') }}
+                {% endblock %}
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main" id="main-content">
+        <div class="container">
+            <div class="content-layout">
+                <div class="content-main">
+                    {% block body %}{% endblock %}
+                </div>
+                <aside class="content-sidebar">
+                    {% block sidebar_top %}
+                    {{ include('components/sidebar_top.html.twig') }}
+                    {% endblock %}
+                    {% block sidebar_bottom %}
+                    {{ include('components/sidebar_bottom.html.twig') }}
+                    {% endblock %}
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <span>&copy; {{ "now"|date("Y") }} {{ site_name }}</span>
+            {% if content_url('privacy-policy', locale) is defined %}
+            <a href="{{ content_url('privacy-policy', locale) }}">{{ 'nav.privacy_policy'|trans }}</a>
+            {% endif %}
+        </div>
+    </footer>
+
+    {% block javascripts %}{% endblock %}
+
+    {{ include('components/cookie_banner.html.twig', {
+        privacy_url: content_url('privacy-policy', locale)
+    }) }}
+    <script src="{{ asset('cookie-banner.js') }}" defer></script>
+    <script src="{{ asset('nav-toggle.js') }}" defer></script>
+
+    {% if cf_analytics_token %}
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+                data-cf-beacon='{"token": "{{ cf_analytics_token }}"}'></script>
+    {% endif %}
+</body>
+</html>

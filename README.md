@@ -12,92 +12,41 @@
 
 ## Symfony-based, AI-friendly static site generator — Markdown content, multi-language, zero-database
 
+**Live demo: [notacms.holas.pl](https://notacms.holas.pl)**
+
 notACMS is a static site generator built on Symfony 7.4. Write content in Markdown with YAML frontmatter, configure your locales and site settings in a single YAML file, and deploy a fully pre-rendered HTML site served by nginx — no database, no runtime PHP (except an optional contact form). Customize templates, styles, and content without touching core files via the `local/` override system.
 
 ## What is notACMS?
 
 - **Static by default** — all pages are pre-rendered to HTML at build time; nginx serves them directly
-- **Multi-language** — any number of locales, configured in `local/content/_site.yaml`; the demo ships with English and Polish
+- **Multi-language** — any number of locales, configured in `local/content/_site.yaml`; the demo ships with English, German, and Polish
 - **Markdown content** — posts and pages are Markdown files with YAML frontmatter; no admin panel, no database
 - **`local/` overrides** — templates, SCSS, translations, nginx config, and content all live in `local/` so you never modify core files
+- **Two themes out of the box** — ship the minimal **bare** wireframe for custom builds, or the polished **demo** (amber-phosphor with dark mode, search overlay, docs sidebar) shown on the live site above
+
+> Upgrading from 1.0.0? See [UPGRADE-1.1.md](UPGRADE-1.1.md). A drop-in compatibility package at `docs/customization/old-template/` restores the 1.0.0 look.
 
 ## Quickstart
+
+Requires [DDEV](https://ddev.readthedocs.io/) and Node.js/npx (for Pagefind search index).
 
 ```bash
 git clone https://github.com/holas1337/notACMS my-site
 cd my-site
 ddev start
-ddev build   # bootstraps local/ with demo content, then builds the site
+ddev build          # seeds local/ from docs/demo/ (default) and builds the site
+# or
+ddev build --bare   # seed from docs/bare/ — minimal wireframe, build your own look on top
 ```
 
 Open `https://notacms.ddev.site` to see your site. Edit `local/content/_site.yaml` to configure your domain, locales, and site name.
 
-## Development
-**DDEV**
-```bash
-ddev start
-ddev build
-```
+**Theme choice on first build**:
 
-**Docker Compose (prod-like, local)**
-```bash
-./notACMS deploy --port 8081        # APP_ENV=dev, override port at runtime
-./notACMS deploy --prod --port 8081 # APP_ENV=prod, override port at runtime
-```
+- `--demo` (default) — copies the full demo design into `local/`: templates, SCSS, JS, translations, nginx, content. Matches the live site at notacms.holas.pl.
+- `--bare` — copies only minimal seed content into `local/content/`. Core bare templates and styles render the site. Use this when you plan to write your own theme.
 
-## Production
-```bash
-./notACMS deploy --prod              # deploy with APP_ENV=prod, uses NGINX_PORT from .env (default 8123)
-./notACMS deploy --prod --port 8081  # override port at runtime
-```
-
-Set `NGINX_PORT=80` in `.env.local` to expose on port 80.
-
-## Tech Stack
-
-- **PHP 8.5** + **Symfony 7.4** (minimal, no database)
-- **DDEV** for local development
-- **Markdown** content with YAML frontmatter — no database
-- **Twig** templates
-- **Pagefind** for client-side search (WASM, auto language split)
-- **Cloudflare Turnstile** captcha on contact form
-- **AssetMapper** for frontend assets (no Node.js build step)
-
-## Documentation
-
-| File | Contents |
-|---|---|
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Deep-dive into the content pipeline, routing, services, and templates |
-| [docs/EDITOR_GUIDE.md](docs/EDITOR_GUIDE.md) | How to write and publish posts and pages (frontmatter, images, drafts, series) |
-| [docs/STYLEGUIDE.md](docs/STYLEGUIDE.md) | Design tokens, components, and conventions for the living styleguide |
-| [docs/LOCALES.md](docs/LOCALES.md) | How to add, remove, or manage locales — config files, URL routing, translations, nginx |
-| [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) | How to override templates, JS, SCSS, and nginx config via the `local/` directory |
-
-## Architecture
-
-```
-Request → nginx → static HTML (95%+ of requests, no PHP)
-                → Symfony PHP-FPM (POST /api/contact only)
-```
-
-Markdown content → Symfony static site generator → pre-rendered HTML served by nginx. The default locale is served at `/`; additional locales at `/{locale}/`. Locale list and site settings are configured in `local/content/_site.yaml`. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full pipeline.
-
-## Build & Deploy
-
-```bash
-ddev build                  # full build: sass + assets + static HTML + pagefind search index
-./notACMS deploy --prod     # production: build Docker image, start services, full build
-./notACMS rebuild           # rebuild static HTML + search index (containers already running)
-./notACMS --help            # show all commands and options
-```
-
-## Code Quality
-
-```bash
-ddev test         # run PHPUnit test suite
-ddev code-check   # composer validate + audit + PHP CS Fixer (dry-run) + Rector (dry-run) + PHPStan + Twig lint
-ddev code-fix     # auto-fix PHP CS Fixer and Rector issues, then re-run code-check
-```
+Flags are mutually exclusive. Once `local/` has content, subsequent `ddev build` runs skip seeding.
 
 ## Key Commands
 
@@ -112,23 +61,41 @@ ddev code-fix     # auto-fix PHP CS Fixer and Rector issues, then re-run code-ch
 | `ddev code-fix` | Auto-fix PHP code style issues |
 | `ddev exec php bin/console sass:build --watch` | SCSS watch mode |
 
-### `./notACMS` — Production / development without DDEV (not recommended)
+### `./notACMS` — Production / development without DDEV
 
 | Command | Description |
 |---|---|
-| `./notACMS deploy --prod` | Production deploy: build image, start containers, full build |
+| `./notACMS deploy --prod` | Production deploy: build image, start containers, full build (seeds `--demo` by default) |
+| `./notACMS deploy --prod --bare` | Production deploy with bare wireframe theme |
+| `./notACMS deploy --prod --port 8081` | Override port at runtime |
 | `./notACMS deploy down` | Stop and remove containers |
 | `./notACMS rebuild` | Rebuild static HTML + search index (containers already running) |
+| `./notACMS rebuild --bare` | Rebuild and re-seed `local/content/` from `docs/bare/` |
 | `./notACMS --help` | Show all commands and options |
 
-## Requirements
+Set `NGINX_PORT=80` in `.env.local` to expose on port 80.
 
-- [DDEV](https://ddev.readthedocs.io/) (provides PHP 8.5, Composer, nginx)
-- Node.js/npx (for Pagefind only, at build time)
+## Tech Stack
 
-## Configuration
+- **PHP 8.5** + **Symfony 7.4** (minimal, no database)
+- **DDEV** for local development
+- **Markdown** content with YAML frontmatter
+- **Twig** templates
+- **Pagefind** for client-side search (WASM, auto language split)
+- **Cloudflare Turnstile** captcha on contact form
+- **AssetMapper** for frontend assets (no Node.js build step)
 
-`URL=example.site` in `.env` is used by Docker Compose and Certbot for the production nginx/TLS setup. It is the bare-domain equivalent of `base_url: "https://example.com"` in `local/content/_site.yaml`. PHP code reads `base_url` from `_site.yaml` via `SiteConfigService`; the `URL` env var is only for the container orchestration layer. Both values must be kept in sync when the domain changes.
+## Documentation
+
+| File | Contents |
+|---|---|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Content pipeline, routing, services, and templates |
+| [docs/EDITOR_GUIDE.md](docs/EDITOR_GUIDE.md) | How to write and publish posts and pages (frontmatter, images, drafts, series) |
+| [docs/STYLEGUIDE.md](docs/STYLEGUIDE.md) | Design tokens, components, and the living styleguide |
+| [docs/LOCALES.md](docs/LOCALES.md) | How to add, remove, or manage locales |
+| [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) | How to override templates, JS, SCSS, and nginx config via `local/` |
+| [docs/TESTING.md](docs/TESTING.md) | How to run tests, write new tests, and the coverage strategy |
+| [docs/TESTS.md](docs/TESTS.md) | Quick reference: test file map, fixtures, naming conventions |
 
 ## AI / MCP Servers
 
@@ -210,4 +177,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code standards, an
 
 ## Contact
 
-For the love of static sites by [holas](https://holas.pl).
+Built by a developer, for developers — [holas](https://holas.pl)

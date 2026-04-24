@@ -10,10 +10,15 @@
 
     const submitBtn = document.getElementById('contact-submit');
     const successBox = document.getElementById('contact-success');
+    const successBody = successBox && successBox.querySelector('.alert-body');
     const errorBox = document.getElementById('contact-error');
+    const errorBody = errorBox && errorBox.querySelector('.alert-body');
 
     function clearFieldErrors() {
-        form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        form.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+            el.removeAttribute('aria-invalid');
+        });
         form.querySelectorAll('.form-field__error').forEach(el => { el.textContent = ''; });
     }
 
@@ -37,7 +42,7 @@
             const json = await response.json();
 
             if (json.success) {
-                successBox.textContent = json.message || '';
+                if (successBody) successBody.textContent = json.message || '';
                 successBox.classList.remove('is-hidden');
                 form.reset();
                 submitBtn.disabled = false;
@@ -48,20 +53,23 @@
                         const errorEl = document.getElementById('error-' + field);
                         if (errorEl) errorEl.textContent = msg;
                         const input = form.querySelector('[name="contact[' + field + ']"]');
-                        if (input) input.classList.add('is-invalid');
+                        if (input) {
+                            input.classList.add('is-invalid');
+                            input.setAttribute('aria-invalid', 'true');
+                        }
                     }
                 }
 
                 // General error (Turnstile failure, server error, or summary)
                 if (json.error) {
-                    errorBox.textContent = json.error;
+                    if (errorBody) errorBody.textContent = json.error;
                     errorBox.classList.remove('is-hidden');
                 }
 
                 submitBtn.disabled = false;
             }
         } catch (_) {
-            errorBox.textContent = errorBox.dataset.genericError || 'Error. Please try again.';
+            if (errorBody) errorBody.textContent = 'Connection error. Please try again.';
             errorBox.classList.remove('is-hidden');
             submitBtn.disabled = false;
         }

@@ -25,4 +25,4 @@ ddev exec <cmd>      # Run PHP/Composer commands in container
 - `docs/EDITOR_GUIDE.md` — Frontmatter, images, series
 - `docs/STYLEGUIDE.md` — Design tokens, components
 - `local/docs/EDITOR_GUIDE.md` — Site-specific voice and content rules
-- `local/docs/STYLEGUIDE.md` — Local SCSS variables and component reference
+- `local/docs/STYLEGUIDE.md` — Local SCSS variables and component reference (if present)

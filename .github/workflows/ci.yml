@@ -30,15 +30,11 @@ jobs:
       - name: Seed demo content
         run: |
           if [ ! -f local/content/_site.yaml ]; then
-            mkdir -p local/content local/translations local/docker/nginx local/assets/images local/docs
-            cp -r docs/examples/content/. local/content/
-            cp docs/examples/translations/messages.en.yaml local/translations/messages.en.yaml
-            cp docs/examples/translations/messages.pl.yaml local/translations/messages.pl.yaml
-            cp docs/examples/nginx/redirects.conf local/docker/nginx/redirects.conf
-            cp docs/examples/nginx/error-pages.conf local/docker/nginx/error-pages.conf
-            cp docs/examples/docs/EDITOR_GUIDE.md local/docs/EDITOR_GUIDE.md
-            cp docs/examples/docs/STYLEGUIDE.md local/docs/STYLEGUIDE.md
-            cp assets/images/og-default.jpg local/assets/images/og-default.jpg
+            cp -r docs/demo/content/. local/content/
+            cp -r docs/demo/translations/. local/translations/
+            cp -r docs/demo/docker/nginx/. local/docker/nginx/
+            cp -r docs/demo/docs/. local/docs/
+            cp -r docs/demo/assets/. local/assets/
           fi
 
       - name: Install dependencies

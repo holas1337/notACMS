@@ -1,0 +1,67 @@
+site:
+  name: "# notACMS"
+  description: "AI-friendly static site generator. Zero database. Pure Markdown."
+  base_url: "https://notacms.holas.pl"
+  locales:
+    en:
+      label: "English"
+      og_locale: en_US
+      date_format: "M d, Y"
+      tagline: "static. simple. yours."
+    de:
+      label: "Deutsch"
+      og_locale: de_DE
+      date_format: "d.m.Y"
+      tagline: "statisch. einfach. deins."
+    pl:
+      label: "Polski"
+      og_locale: pl_PL
+      date_format: "d.m.Y"
+      tagline: "statyczny. prosty. twój."
+    fr:
+      label: "Français"
+      og_locale: fr_FR
+      date_format: "d/m/Y"
+      tagline: "statique. simple. vôtre."
+  author:
+    name: "# notACMS"
+    initials: "# n"
+    email: ""
+    url: "https://holas.pl/about/"
+    avatar: "/media/about/notacms-logo.svg"
+    skills:
+      Language:
+        - PHP 8.5
+        - JavaScript
+        - Markdown
+      Framework:
+        - Symfony 7.4
+        - Twig
+      Frontend:
+        - SCSS
+        - AssetMapper
+        - Pagefind
+      Infra:
+        - Docker
+        - DDEV
+        - nginx
+  social:
+    holaspl: "https://holas.pl"
+    github: "https://github.com/holas1337/notACMS"
+    linkedin: "https://www.linkedin.com/in/holas1337/"
+    drupal: "https://www.drupal.org/u/holas"
+  posts_per_page: 10
+  rss_limit: 20
+  recent_posts_limit: 5
+  related_posts_limit: 3
+  new_post_days: 90
+  coming_soon_reveal_days: 14
+  meta_description_length: 160
+  image_variant_widths: [640, 960]
+  image_quality: 82
+  image_magick_flags: "-strip -define webp:method=6"
+  contact_form:
+    email: "pawel.holik@droptica.com"
+    from: "noreply@notacms.dev"
+    from_name: "notACMS"
+    topic: "[notACMS]"

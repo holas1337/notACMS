@@ -9,6 +9,7 @@
         var zeroResults  = el.dataset.zeroResults || 'No results for [SEARCH_TERM]';
         var readMoreText = el.dataset.readMore     || 'Read more';
         var tagBaseUrl   = el.dataset.tagBase      || '/tag/tag-placeholder/';
+        var imageWidths  = (el.dataset.imageWidths || '640,960').split(',').map(Number);
 
         var inputWrap = document.createElement('div');
         inputWrap.className = 'search-page__form';
@@ -52,7 +53,7 @@
                 return;
             }
             resultsEl.innerHTML = items.map(function (r) {
-                var category = r.meta.kategoria || r.meta.category || '';
+                var category = r.meta.category || '';
                 var date     = r.meta.date || '';
                 var image    = r.meta.image || '';
                 var title    = r.meta.title || r.url;
@@ -72,18 +73,20 @@
                         '</div>';
                 }
 
+                var srcset = imageWidths.map(function (w) {
+                    return esc(image.replace('.webp', '-' + w + 'w.webp')) + ' ' + w + 'w';
+                }).join(', ') + ', ' + esc(image) + ' 1280w';
+
                 return '<article class="search-result">' +
                     (image ? '<div class="search-result__image"><a href="' + esc(r.url) + '">' +
                         '<img src="' + esc(image) +
-                        '" srcset="' + esc(image.replace('.webp', '-640w.webp')) + ' 640w, ' +
-                                       esc(image.replace('.webp', '-960w.webp')) + ' 960w, ' +
-                                       esc(image) + ' 1280w"' +
+                        '" srcset="' + srcset + '"' +
                         ' sizes="(max-width: 48em) 80px, 120px"' +
                         ' alt="' + esc(title) + '" loading="lazy"></a></div>' : '') +
                     '<div class="search-result__body">' +
                         '<h2 class="post-card-title"><a href="' + esc(r.url) + '">' + esc(title) + '</a></h2>' +
                         (metaParts.length ? '<p class="post-card-meta">' + metaParts.join('&nbsp;&bull;&nbsp;') + '</p>' : '') +
-                        '<p class="post-card-excerpt">' + esc(r.excerpt) + '</p>' +
+                        '<p class="post-card-excerpt">' + r.excerpt + '</p>' +
                         tagsHtml +
                         '<a href="' + esc(r.url) + '" class="read-more">' + esc(readMoreText) + ' &rarr;</a>' +
                     '</div>' +

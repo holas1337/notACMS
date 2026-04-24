@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="{{ locale ?? site_default_locale }}"
+      data-theme="light"
+      data-locales="{{ site_locales_list|join(',') }}"
+      data-default-locale="{{ site_default_locale }}"
+      data-code-copy-label="{{ 'code.copy'|trans }}"
+      data-code-copied-label="{{ 'code.copied'|trans }}"
+      data-code-copy-aria="{{ 'code.copy_aria'|trans }}"
+      data-toc-label="{{ 'toc.title'|trans }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# Anti-flash: apply saved theme immediately, before modules load #}
+    <script>(function(){try{var t=localStorage.getItem('notacms-theme');if(!t){t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ site_description }}{% endblock %}">
+    {% block robots %}<meta name="robots" content="max-image-preview:large, max-snippet:-1">{% endblock %}
+
+    {% block favicons %}
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
+    {% endblock %}
+
+    {# hreflang SEO tags #}
+    {% if content is defined and content is not null and content.directoryKey() %}
+        {% set tk = content.directoryKey() %}
+        {% if translation_map is defined and translation_map[tk] is defined %}
+            {% for lang, url in translation_map[tk] %}
+                <link rel="alternate" hreflang="{{ lang }}" href="{{ site_base_url }}{{ url }}">
+            {% endfor %}
+            {% if translation_map[tk][site_default_locale] is defined %}
+                <link rel="alternate" hreflang="x-default" href="{{ site_base_url }}{{ translation_map[tk][site_default_locale] }}">
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {# Browser language detection — sync, no defer/async, fires before content renders #}
+    {% block locale_redirect %}
+    <script src="{{ asset('local/locale-redirect.js') }}"></script>
+    {% endblock %}
+
+    {# Open Graph #}
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:site_name" content="{{ site_name }}">
+    <meta property="og:title" content="{% block og_title %}{{ site_name }}{% endblock %}">
+    <meta property="og:description" content="{{ block('meta_description') }}">
+    {% if content is defined and content is not null and content.image() %}
+    <meta property="og:image" content="{{ site_base_url ~ content.image() }}">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
+    <meta property="og:image:type" content="image/webp">
+    {% else %}
+    {% block og_default_image %}
+    <meta property="og:image" content="{{ site_base_url ~ asset('local/images/og-default.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
+    {% endblock %}
+    {% endif %}
+    <meta property="og:url" content="{{ site_base_url }}{{ app.request.pathInfo }}">
+    <meta property="og:locale" content="{{ site_locales[locale].og_locale ?? locale }}">
+    {% for alt_locale in site_locales_list %}
+    {% if alt_locale is not same as(locale) %}
+    <meta property="og:locale:alternate" content="{{ site_locales[alt_locale].og_locale ?? alt_locale }}">
+    {% endif %}
+    {% endfor %}
+    {% block og_article_meta %}{% endblock %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ block('og_title') }}">
+    <meta name="twitter:description" content="{{ block('meta_description') }}">
+    <meta name="twitter:image" content="{{ content is defined and content is not null and content.image() ? site_base_url ~ content.image() : site_base_url ~ asset('local/images/og-default.jpg') }}">
+
+    <link rel="canonical" href="{{ site_base_url }}{{ app.request.pathInfo }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site_name }} RSS" href="{{ path('rss_' ~ locale) }}">
+
+    {% if cf_analytics_token %}
+    <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin>
+    {% endif %}
+
+    {# Google Fonts: Inter + JetBrains Mono #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {% block head_preconnect %}{% endblock %}
+
+    {% block stylesheets %}
+        {{ importmap('app-local') }}
+    {% endblock %}
+
+    {# Phosphor Icons #}
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ site_name }}",
+        "url": "{{ site_base_url }}",
+        "author": {
+            "@type": "Person",
+            "name": "{{ site_author.name|e('js') }}",
+            "url": "{{ site_base_url }}"
+        }
+    }
+    </script>
+    {% endblock %}
+</head>
+<body class="locale-{{ locale ?? site_default_locale }}">
+    <a href="#main-content" class="skip-link">{{ 'nav.skip_to_content'|trans }}</a>
+
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="{{ path('home_' ~ locale) }}" class="site-logo" aria-label="{{ site_name }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 85" height="40" style="width: auto" aria-hidden="true">
+                    <path fill="#FFB000" d="M22.12 57L19.32 57L20.88 48.60L17.40 48.60L17.40 46L21.32 46L22.68 38.80L18.80 38.80L18.80 36.20L23.12 36.20L24.68 27.80L27.48 27.80L25.92 36.20L32.32 36.20L33.88 27.80L36.68 27.80L35.12 36.20L38.60 36.20L38.60 38.80L34.68 38.80L33.32 46L37.20 46L37.20 48.60L32.88 48.60L31.32 57L28.52 57L30.08 48.60L23.68 48.60L22.12 57ZM25.48 38.80L24.12 46L30.52 46L31.88 38.80L25.48 38.80Z"/>
+                    <path fill="#ffffff" d="M71.28 57L67.68 57L67.68 35L71.28 35L71.28 39.20L71.32 39.20Q71.60 37 73.12 35.80Q74.64 34.60 77.16 34.60L77.16 34.60Q80.48 34.60 82.44 36.64Q84.40 38.68 84.40 42.20L84.40 42.20L84.40 57L80.80 57L80.80 42.84Q80.80 40.32 79.54 38.98Q78.28 37.64 76.12 37.64L76.12 37.64Q73.88 37.64 72.58 39.04Q71.28 40.44 71.28 43L71.28 43L71.28 57ZM100 57.32L100 57.32Q96.04 57.32 93.70 55Q91.36 52.68 91.36 48.52L91.36 48.52L91.36 43.48Q91.36 39.28 93.68 36.98Q96 34.68 100 34.68L100 34.68Q104 34.68 106.32 36.98Q108.64 39.28 108.64 43.48L108.64 43.48L108.64 48.52Q108.64 52.68 106.30 55Q103.96 57.32 100 57.32ZM100 54.12L100 54.12Q102.36 54.12 103.70 52.80Q105.04 51.48 105.04 48.92L105.04 48.92L105.04 43.08Q105.04 40.52 103.70 39.20Q102.36 37.88 100 37.88L100 37.88Q97.68 37.88 96.32 39.20Q94.96 40.52 94.96 43.08L94.96 43.08L94.96 48.92Q94.96 51.48 96.32 52.80Q97.68 54.12 100 54.12ZM132.60 57L126.20 57Q123.48 57 121.84 55.42Q120.20 53.84 120.20 51.20L120.20 51.20L120.20 38.28L113.88 38.28L113.88 35L120.20 35L120.20 28.80L123.80 28.80L123.80 35L132.80 35L132.80 38.28L123.80 38.28L123.80 51.20Q123.80 52.32 124.46 53.02Q125.12 53.72 126.20 53.72L126.20 53.72L132.60 53.72L132.60 57ZM141.68 57L138 57L145.60 27.80L150.44 27.80L158 57L154.36 57L152.44 49.24L143.60 49.24L141.68 57ZM146.56 37.16L144.32 46.20L151.68 46.20L149.44 37.20Q148.80 34.64 148.44 32.92Q148.08 31.20 148 30.68L148 30.68Q147.92 31.20 147.56 32.92Q147.20 34.64 146.56 37.16L146.56 37.16ZM172.32 57.40L172.32 57.40Q168.32 57.40 166 55.16Q163.68 52.92 163.68 49L163.68 49L163.68 35.80Q163.68 31.88 166 29.64Q168.32 27.40 172.32 27.40L172.32 27.40Q176.24 27.40 178.56 29.66Q180.88 31.92 180.88 35.80L180.88 35.80L177.28 35.80Q177.28 33.32 175.98 31.98Q174.68 30.64 172.32 30.64L172.32 30.64Q169.96 30.64 168.62 31.98Q167.28 33.32 167.28 35.80L167.28 35.80L167.28 49Q167.28 51.48 168.62 52.82Q169.96 54.16 172.32 54.16L172.32 54.16Q174.68 54.16 175.98 52.82Q177.28 51.48 177.28 49L177.28 49L180.88 49Q180.88 52.88 178.56 55.14Q176.24 57.40 172.32 57.40ZM190.36 57L186.88 57L186.88 27.80L192.20 27.80L195.92 40.44L199.80 27.80L205.12 27.80L205.12 57L201.64 57L201.64 43.20Q201.64 41.24 201.70 38.70Q201.76 36.16 201.88 33.56Q202 30.96 202.16 28.88L202.16 28.88L197.44 43.96L194.32 43.96L189.80 29.24Q190.12 32.20 190.24 35.72Q190.36 39.24 190.36 43.20L190.36 43.20L190.36 57ZM220.16 57.40L220.16 57.40Q215.92 57.40 213.40 55.16Q210.88 52.92 210.88 49L210.88 49L214.48 49Q214.48 51.44 216.04 52.82Q217.60 54.20 220.16 54.20L220.16 54.20Q222.64 54.20 224.12 52.76Q225.60 51.32 225.60 49L225.60 49Q225.60 47.24 224.66 45.94Q223.72 44.64 221.96 44.16L221.96 44.16L217.52 42.92Q214.76 42.12 213.18 40.06Q211.60 38 211.60 35.20L211.60 35.20Q211.60 32.88 212.64 31.12Q213.68 29.36 215.56 28.38Q217.44 27.40 219.88 27.40L219.88 27.40Q222.36 27.40 224.26 28.38Q226.16 29.36 227.24 31.10Q228.32 32.84 228.32 35.12L228.32 35.12L224.72 35.12Q224.72 33.12 223.36 31.86Q222 30.60 219.88 30.60L219.88 30.60Q217.76 30.60 216.44 31.86Q215.12 33.12 215.12 35.12L215.12 35.12Q215.12 36.72 215.98 37.86Q216.84 39 218.40 39.44L218.40 39.44L222.96 40.72Q225.88 41.52 227.50 43.74Q229.12 45.96 229.12 49L229.12 49Q229.12 52.84 226.68 55.12Q224.24 57.40 220.16 57.40Z"/>
+                </svg>
+            </a>
+
+            <nav class="site-nav" aria-label="{{ 'nav.main'|trans }}">
+                {% block navigation %}
+                    {{ include('components/navigation.html.twig') }}
+                {% endblock %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-main" id="main-content">
+        {% block body %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="site-footer-inner">
+                <div class="footer-brand">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 85" height="24" style="width: auto" aria-hidden="true" role="presentation">
+                        <path fill="#FFB000" d="M22.12 57L19.32 57L20.88 48.60L17.40 48.60L17.40 46L21.32 46L22.68 38.80L18.80 38.80L18.80 36.20L23.12 36.20L24.68 27.80L27.48 27.80L25.92 36.20L32.32 36.20L33.88 27.80L36.68 27.80L35.12 36.20L38.60 36.20L38.60 38.80L34.68 38.80L33.32 46L37.20 46L37.20 48.60L32.88 48.60L31.32 57L28.52 57L30.08 48.60L23.68 48.60L22.12 57ZM25.48 38.80L24.12 46L30.52 46L31.88 38.80L25.48 38.80Z"/>
+                        <path fill="#ffffff" d="M71.28 57L67.68 57L67.68 35L71.28 35L71.28 39.20L71.32 39.20Q71.60 37 73.12 35.80Q74.64 34.60 77.16 34.60L77.16 34.60Q80.48 34.60 82.44 36.64Q84.40 38.68 84.40 42.20L84.40 42.20L84.40 57L80.80 57L80.80 42.84Q80.80 40.32 79.54 38.98Q78.28 37.64 76.12 37.64L76.12 37.64Q73.88 37.64 72.58 39.04Q71.28 40.44 71.28 43L71.28 43L71.28 57ZM100 57.32L100 57.32Q96.04 57.32 93.70 55Q91.36 52.68 91.36 48.52L91.36 48.52L91.36 43.48Q91.36 39.28 93.68 36.98Q96 34.68 100 34.68L100 34.68Q104 34.68 106.32 36.98Q108.64 39.28 108.64 43.48L108.64 43.48L108.64 48.52Q108.64 52.68 106.30 55Q103.96 57.32 100 57.32ZM100 54.12L100 54.12Q102.36 54.12 103.70 52.80Q105.04 51.48 105.04 48.92L105.04 48.92L105.04 43.08Q105.04 40.52 103.70 39.20Q102.36 37.88 100 37.88L100 37.88Q97.68 37.88 96.32 39.20Q94.96 40.52 94.96 43.08L94.96 43.08L94.96 48.92Q94.96 51.48 96.32 52.80Q97.68 54.12 100 54.12ZM132.60 57L126.20 57Q123.48 57 121.84 55.42Q120.20 53.84 120.20 51.20L120.20 51.20L120.20 38.28L113.88 38.28L113.88 35L120.20 35L120.20 28.80L123.80 28.80L123.80 35L132.80 35L132.80 38.28L123.80 38.28L123.80 51.20Q123.80 52.32 124.46 53.02Q125.12 53.72 126.20 53.72L126.20 53.72L132.60 53.72L132.60 57ZM141.68 57L138 57L145.60 27.80L150.44 27.80L158 57L154.36 57L152.44 49.24L143.60 49.24L141.68 57ZM146.56 37.16L144.32 46.20L151.68 46.20L149.44 37.20Q148.80 34.64 148.44 32.92Q148.08 31.20 148 30.68L148 30.68Q147.92 31.20 147.56 32.92Q147.20 34.64 146.56 37.16L146.56 37.16ZM172.32 57.40L172.32 57.40Q168.32 57.40 166 55.16Q163.68 52.92 163.68 49L163.68 49L163.68 35.80Q163.68 31.88 166 29.64Q168.32 27.40 172.32 27.40L172.32 27.40Q176.24 27.40 178.56 29.66Q180.88 31.92 180.88 35.80L180.88 35.80L177.28 35.80Q177.28 33.32 175.98 31.98Q174.68 30.64 172.32 30.64L172.32 30.64Q169.96 30.64 168.62 31.98Q167.28 33.32 167.28 35.80L167.28 35.80L167.28 49Q167.28 51.48 168.62 52.82Q169.96 54.16 172.32 54.16L172.32 54.16Q174.68 54.16 175.98 52.82Q177.28 51.48 177.28 49L177.28 49L180.88 49Q180.88 52.88 178.56 55.14Q176.24 57.40 172.32 57.40ZM190.36 57L186.88 57L186.88 27.80L192.20 27.80L195.92 40.44L199.80 27.80L205.12 27.80L205.12 57L201.64 57L201.64 43.20Q201.64 41.24 201.70 38.70Q201.76 36.16 201.88 33.56Q202 30.96 202.16 28.88L202.16 28.88L197.44 43.96L194.32 43.96L189.80 29.24Q190.12 32.20 190.24 35.72Q190.36 39.24 190.36 43.20L190.36 43.20L190.36 57ZM220.16 57.40L220.16 57.40Q215.92 57.40 213.40 55.16Q210.88 52.92 210.88 49L210.88 49L214.48 49Q214.48 51.44 216.04 52.82Q217.60 54.20 220.16 54.20L220.16 54.20Q222.64 54.20 224.12 52.76Q225.60 51.32 225.60 49L225.60 49Q225.60 47.24 224.66 45.94Q223.72 44.64 221.96 44.16L221.96 44.16L217.52 42.92Q214.76 42.12 213.18 40.06Q211.60 38 211.60 35.20L211.60 35.20Q211.60 32.88 212.64 31.12Q213.68 29.36 215.56 28.38Q217.44 27.40 219.88 27.40L219.88 27.40Q222.36 27.40 224.26 28.38Q226.16 29.36 227.24 31.10Q228.32 32.84 228.32 35.12L228.32 35.12L224.72 35.12Q224.72 33.12 223.36 31.86Q222 30.60 219.88 30.60L219.88 30.60Q217.76 30.60 216.44 31.86Q215.12 33.12 215.12 35.12L215.12 35.12Q215.12 36.72 215.98 37.86Q216.84 39 218.40 39.44L218.40 39.44L222.96 40.72Q225.88 41.52 227.50 43.74Q229.12 45.96 229.12 49L229.12 49Q229.12 52.84 226.68 55.12Q224.24 57.40 220.16 57.40Z"/>
+                    </svg>
+                    <p>{{ site_description }}</p>
+                </div>
+
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>{{ 'site.docs'|trans }}</h4>
+                        <ul>
+                            <li><a href="{{ content_url('manual', locale) }}">{{ 'site.manual'|trans }}</a></li>
+                            <li><a href="{{ content_url('architecture', locale) }}">{{ 'site.architecture'|trans }}</a></li>
+                            <li><a href="{{ content_url('customization', locale) }}">{{ 'site.customization'|trans }}</a></li>
+                            <li><a href="{{ content_url('locales', locale) }}">{{ 'site.locales'|trans }}</a></li>
+                            <li><a href="{{ content_url('styleguide', locale) }}">{{ 'site.design_reference'|trans }}</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>{{ 'site.project'|trans }}</h4>
+                        <ul>
+                            <li><a href="{{ path('blog_list_' ~ locale) }}">{{ 'site.releases'|trans }}</a></li>
+                            <li><a href="{{ site_social.github ?? '#' }}" target="_blank" rel="noopener noreferrer">
+                                {{ 'site.github'|trans }} <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
+                            </a></li>
+                            <li><a href="{{ content_url('privacy-policy', locale) }}">{{ 'nav.privacy_policy'|trans }}</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>{{ 'site.author'|trans }}</h4>
+                        <ul>
+                            <li><a href="{{ content_url('about', locale) }}">{{ 'site.about'|trans }}</a></li>
+                            <li><a href="{{ site_author.url ?? '#' }}" target="_blank" rel="noopener noreferrer">
+                                holas.pl <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; {{ "now"|date("Y") }} {{ site_name }}. {{ 'site.open_source'|trans }}.</p>
+                <p>{{ 'site.built_with'|trans }} &mdash; <a href="{{ site_social.github ?? '#' }}" target="_blank" rel="noopener noreferrer">{{ 'site.github'|trans }}</a></p>
+            </div>
+        </div>
+    </footer>
+
+    {% block javascripts %}{% endblock %}
+
+    {# ── Search overlay ── #}
+    <div class="search-overlay" id="site-search" aria-hidden="true" role="dialog" aria-modal="true" aria-label="{{ 'search.title'|trans }}">
+        <div class="search-overlay__panel">
+            <div class="search-overlay__header">
+                <i class="ph ph-magnifying-glass search-overlay__icon" aria-hidden="true"></i>
+                <input class="search-overlay__input"
+                       id="site-search-input"
+                       name="q"
+                       type="search"
+                       placeholder="{{ 'search.placeholder'|trans }}"
+                       autocomplete="off"
+                       spellcheck="false">
+                <button class="search-overlay__close" aria-label="{{ 'search.close'|trans }}">
+                    <i class="ph ph-x" aria-hidden="true"></i>
+                    <kbd>Esc</kbd>
+                </button>
+            </div>
+            <div class="search-overlay__results" id="search-overlay-results" aria-live="polite" aria-label="{{ 'search.title'|trans }}"></div>
+            <div class="search-overlay__footer">
+                <span><kbd>↑</kbd><kbd>↓</kbd> {{ 'search.hint_navigate'|trans }}</span>
+                <span><kbd>↵</kbd> {{ 'search.hint_open'|trans }}</span>
+                <span><kbd>Esc</kbd> {{ 'search.hint_close'|trans }}</span>
+                <span class="search-overlay__shortcut-hint"><kbd>⌘</kbd><kbd>K</kbd> / <kbd>Ctrl</kbd><kbd>K</kbd> {{ 'search.hint_anywhere'|trans }}</span>
+            </div>
+        </div>
+    </div>
+    <script src="{{ asset('local/search-overlay.js') }}" defer></script>
+
+    {{ include('components/cookie_banner.html.twig', {
+        privacy_url: content_url('privacy-policy', locale)
+    }) }}
+    <script src="{{ asset('local/cookie-banner.js') }}" defer></script>
+
+    {% if cf_analytics_token %}
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+                data-cf-beacon='{"token": "{{ cf_analytics_token }}"}'></script>
+    {% endif %}
+
+</body>
+</html>

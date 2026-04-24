@@ -1,0 +1,35 @@
+{#
+    Generic breadcrumb component.
+    Parameters:
+        breadcrumbs — array of {label, url?} items. Last item has no url (current page).
+#}
+<nav class="breadcrumb" aria-label="{{ 'breadcrumb.label'|trans }}">
+    {% for crumb in breadcrumbs %}
+        {% if crumb.url is defined and crumb.url and not loop.last %}
+            <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+        {% elseif loop.last %}
+            <span aria-current="page">{{ crumb.label }}</span>
+        {% else %}
+            <span>{{ crumb.label }}</span>
+        {% endif %}
+        {% if not loop.last %}
+            <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        {% endif %}
+    {% endfor %}
+</nav>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {% for crumb in breadcrumbs %}
+        {
+            "@type": "ListItem",
+            "position": {{ loop.index }},
+            "name": "{{ crumb.label|e('js') }}"{% if crumb.url is defined and crumb.url %},
+            "item": "{{ site_base_url }}{{ crumb.url }}"{% endif %}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+}
+</script>

@@ -1,0 +1,19 @@
+routes:
+  contact:
+    pl: /kontakt/
+  projects:
+    pl: /projekty/
+  blog_list:
+    pl: /wpisy/
+  blog_list_paginated:
+    pl: /wpisy/strona/{page}/
+  blog_category:
+    pl: /wpisy/{category}/
+  blog_tag:
+    pl: /wpisy/tag/{tag}/
+  blog_archive:
+    pl: /archiwum/{year}/{month}/
+  blog_archive_year:
+    pl: /archiwum/{year}/
+  search:
+    pl: /szukaj/

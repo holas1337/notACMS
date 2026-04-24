@@ -1,0 +1,89 @@
+{# ── Docs sidebar — shared by doc and styleguide templates ── #}
+{# Expects: doc_pages (array), current_path (string) #}
+
+{# ── Desktop sidebar ── #}
+<aside class="docs-sidebar" aria-label="{{ 'site.documentation'|trans }}">
+    <div class="sidebar-section">
+        <span class="sidebar-label">{{ 'site.documentation'|trans }}</span>
+        <ul class="sidebar-nav">
+            {% for page in doc_pages %}
+                {% set page_url = content_url(page.dir, locale) %}
+                <li>
+                    <a href="{{ page_url }}"
+                       {% if current_path starts with page_url %} class="is-active" aria-current="page"{% endif %}>
+                        <span class="sidebar-icon"><i class="ph {{ page.icon }}" aria-hidden="true"></i></span>
+                        {{ page.label }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="sidebar-section">
+        <span class="sidebar-label">{{ 'site.project'|trans }}</span>
+        <ul class="sidebar-nav">
+            <li>
+                <a href="{{ path('blog_list_' ~ locale) }}"
+                   {% if current_path starts with path('blog_list_' ~ locale) %} class="is-active" aria-current="page"{% endif %}>
+                    <span class="sidebar-icon"><i class="ph ph-rocket" aria-hidden="true"></i></span>
+                    {{ 'site.releases'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ site_social.github ?? '#' }}" target="_blank" rel="noopener noreferrer">
+                    <span class="sidebar-icon"><i class="ph ph-github-logo" aria-hidden="true"></i></span>
+                    {{ 'site.github'|trans }}
+                    <i class="ph ph-arrow-square-out sidebar-external-icon" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+
+{# ── Mobile sidebar toggle ── #}
+<button class="docs-sidebar-toggle"
+        aria-expanded="false"
+        aria-controls="docs-sidebar-mobile"
+        aria-label="{{ 'site.open_navigation'|trans }}">
+    <i class="ph ph-list" aria-hidden="true"></i>
+    {{ 'site.documentation'|trans }}
+</button>
+
+{# ── Mobile sidebar drawer ── #}
+<div class="docs-sidebar--mobile" id="docs-sidebar-mobile" aria-hidden="true">
+    <div class="sidebar-section">
+        <span class="sidebar-label">{{ 'site.documentation'|trans }}</span>
+        <ul class="sidebar-nav">
+            {% for page in doc_pages %}
+                {% set page_url = content_url(page.dir, locale) %}
+                <li>
+                    <a href="{{ page_url }}"
+                       {% if current_path starts with page_url %} class="is-active" aria-current="page"{% endif %}>
+                        <span class="sidebar-icon"><i class="ph {{ page.icon }}" aria-hidden="true"></i></span>
+                        {{ page.label }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="sidebar-section">
+        <span class="sidebar-label">{{ 'site.project'|trans }}</span>
+        <ul class="sidebar-nav">
+            <li>
+                <a href="{{ path('blog_list_' ~ locale) }}"
+                   {% if current_path starts with path('blog_list_' ~ locale) %} class="is-active" aria-current="page"{% endif %}>
+                    <span class="sidebar-icon"><i class="ph ph-rocket" aria-hidden="true"></i></span>
+                    {{ 'site.releases'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ site_social.github ?? '#' }}" target="_blank" rel="noopener noreferrer">
+                    <span class="sidebar-icon"><i class="ph ph-github-logo" aria-hidden="true"></i></span>
+                    {{ 'site.github'|trans }}
+                    <i class="ph ph-arrow-square-out sidebar-external-icon" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

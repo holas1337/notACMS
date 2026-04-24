@@ -7,10 +7,10 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 return static function (ContainerConfigurator $c): void {
     $rootSass = ['assets/styles/app.scss'];
 
-    // The local override file must be named local.scss (not app.scss) because
-    // symfonycasts_sass requires unique basenames across all root_sass entries.
-    if (file_exists(__DIR__ . '/../../local/assets/styles/local.scss')) {
-        $rootSass[] = 'local/assets/styles/local.scss';
+    // Local override entrypoint — named app_local.scss to avoid basename
+    // collision with core assets/styles/app.scss.
+    if (file_exists(__DIR__ . '/../../local/assets/styles/app_local.scss')) {
+        $rootSass[] = 'local/assets/styles/app_local.scss';
     }
 
     $c->extension('symfonycasts_sass', ['root_sass' => $rootSass]);

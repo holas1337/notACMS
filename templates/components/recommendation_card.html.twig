@@ -1,20 +1,21 @@
-<blockquote class="recommendation-card">
-    <p class="recommendation-quote">{{ rec.quote }}</p>
+<blockquote class="recommendation-card border-left">
+    <p>{{ rec.quote }}</p>
     {% if rec.text is defined and rec.text is not empty %}
     <button class="recommendation-expand" type="button"
-        aria-expanded="false"
-        data-expand="{{ expand_label }}"
-        data-collapse="{{ collapse_label }}">
-        {{ expand_label }}
-    </button>
+            data-expand="{{ expand_label }}"
+            data-collapse="{{ collapse_label }}"
+            aria-expanded="false">{{ expand_label }}</button>
     <div class="recommendation-full" hidden>
         {%- for para in rec.text|split('\n\n') %}
         <p>{{ para|trim }}</p>
         {%- endfor %}
     </div>
     {% endif %}
-    <footer class="recommendation-footer">
-        <span class="recommendation-author">{{ rec.name }}</span>
-        <span class="recommendation-role">{{ rec.role }}</span>
+    <footer>
+        <span>{{ rec.name }}</span>
+        {% if rec.role is defined %}<span>{{ rec.role }}</span>{% endif %}
+        {% if rec.url is defined and rec.url and via_label is defined %}
+        <a href="{{ rec.url }}" target="_blank" rel="noopener noreferrer">{{ via_label }}</a>
+        {% endif %}
     </footer>
 </blockquote>

@@ -1,0 +1,25 @@
+{% if total_pages > 1 %}
+<nav aria-label="{{ 'pagination.label'|trans }}">
+    <ul class="pagination">
+        <li class="page-item{% if current_page <= 1 %} disabled{% endif %}">
+            {% if current_page > 1 %}
+                <a class="page-link" href="{{ current_page - 1 > 1 ? path(paginated_route, {page: current_page - 1}) : base_url }}" rel="prev">&laquo; {{ 'pagination.prev'|trans }}</a>
+            {% else %}
+                <span class="page-link" aria-disabled="true">&laquo; {{ 'pagination.prev'|trans }}</span>
+            {% endif %}
+        </li>
+
+        <li class="page-item disabled">
+            <span class="page-link">{{ 'pagination.page'|trans }} {{ current_page }} {{ 'pagination.of'|trans }} {{ total_pages }}</span>
+        </li>
+
+        <li class="page-item{% if current_page >= total_pages %} disabled{% endif %}">
+            {% if current_page < total_pages %}
+                <a class="page-link" href="{{ path(paginated_route, {page: current_page + 1}) }}" rel="next">{{ 'pagination.next'|trans }} &raquo;</a>
+            {% else %}
+                <span class="page-link" aria-disabled="true">{{ 'pagination.next'|trans }} &raquo;</span>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
+{% endif %}

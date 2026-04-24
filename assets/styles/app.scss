@@ -1,14 +1,26 @@
 // =============================================================================
-// app.scss — entrypoint. Import order matters (variables first, then base,
-// then layout, then components, then feature partials, then page-specific).
+// app.scss — entrypoint. Import order matters:
+//   1. tokens    — CSS custom properties (:root / [data-theme="dark"])
+//   2. variables — SCSS compile-time constants (spacing, breakpoints, fonts)
+//   3. base      — reset, html/body, transitions
+//   4. layout    — containers, header, footer, breadcrumb, page-header
+//   5. nav       — navigation, dropdown, hamburger, theme toggle
+//   6. components — named reusable UI components (callout, feature-card, etc.)
+//   7. prose     — .prose / .prose--post rendered Markdown styles
+//   8. pages     — homepage sections, hero, steps, CTA, post header
+//   9. blog      — blog utilities (progress bar, code-copy)
+//  10. styleguide — sg-* Design Reference scaffold classes
+//  11. utilities — atomic utility classes
 // =============================================================================
 
+@import 'tokens';
 @import 'variables';
 @import 'base';
 @import 'layout';
 @import 'nav';
 @import 'components';
-@import 'blog';
-@import 'sidebar';
+@import 'prose';
 @import 'pages';
+@import 'blog';
 @import 'styleguide';
+@import 'utilities';

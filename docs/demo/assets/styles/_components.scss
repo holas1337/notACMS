@@ -1,0 +1,609 @@
+// =============================================================================
+// Components — named, reusable UI components.
+// Each has a documented name matching the Design Reference page.
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// .callout — tip / deploy callout block inside prose
+// ---------------------------------------------------------------------------
+.callout {
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: $radius-md;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.callout-icon {
+    font-size: 1.125rem;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+}
+
+.callout-text {
+    font-size: 0.9375rem;
+    color: var(--text);
+    line-height: 1.6;
+
+    strong {
+        color: var(--accent);
+    }
+    a {
+        color: var(--accent);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// .feature-card — homepage feature grid cards
+// ---------------------------------------------------------------------------
+.feature-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: $radius-lg;
+    padding: 1.5rem;
+    transition: border-color $transition;
+
+    &:hover {
+        border-color: var(--accent);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+}
+
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: $radius;
+    background: var(--accent-bg);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: $sp-3;
+    flex-shrink: 0;
+}
+
+.feature-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+}
+
+.feature-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+// ---------------------------------------------------------------------------
+// .prev-next-nav — prev/next navigation (docs + posts)
+// ---------------------------------------------------------------------------
+.prev-next-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $sp-3;
+    margin-top: $sp-6;
+    padding-top: $sp-5;
+    border-top: 1px solid var(--border);
+
+    @media (max-width: $bp-sm) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.prev-next-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: $radius-md;
+    text-decoration: none;
+    transition:
+        border-color $transition,
+        background $transition;
+    color: var(--text);
+
+    &:hover {
+        border-color: var(--accent);
+        background: var(--accent-bg);
+        text-decoration: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    &--next {
+        text-align: right;
+    }
+}
+
+.prev-next-dir {
+    font-family: $font-mono;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+
+    .prev-next-card--next & {
+        justify-content: flex-end;
+    }
+}
+
+.prev-next-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+// ---------------------------------------------------------------------------
+// .release-card — blog list cards
+// ---------------------------------------------------------------------------
+.release-card {
+    border: 1px solid var(--border);
+    border-radius: $radius-xl;
+    padding: $sp-5;
+    background: var(--bg);
+    transition:
+        border-color $transition,
+        background $transition;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+
+    &:hover {
+        border-color: var(--accent);
+        background: var(--bg-surface);
+        text-decoration: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    h2 {
+        font-size: 1.1875rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        margin-bottom: 0.6rem;
+        line-height: 1.3;
+    }
+
+    p {
+        font-size: 0.9375rem;
+        color: var(--text-muted);
+        line-height: 1.75;
+        margin-bottom: 1.25rem;
+    }
+}
+
+.release-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: $sp-3;
+    flex-wrap: wrap;
+}
+
+.release-date {
+    font-family: $font-mono;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.release-badge,
+.post-badge {
+    font-family: $font-mono;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 0.2rem 0.55rem;
+    border-radius: $radius-sm;
+    border: 1px solid var(--accent-border);
+}
+
+.release-tag,
+.post-tag-label {
+    font-family: $font-mono;
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg-elevated);
+    padding: 0.2rem 0.5rem;
+    border-radius: $radius-sm;
+}
+
+.release-tag {
+    letter-spacing: 0.03em;
+}
+
+.read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+// ---------------------------------------------------------------------------
+// .about-profile — author card on about page
+// ---------------------------------------------------------------------------
+.about-profile {
+    display: flex;
+    gap: $sp-5;
+    align-items: flex-start;
+    padding: $sp-5;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: $radius-xl;
+    margin-bottom: $sp-6;
+
+    @media (max-width: $bp-sm) {
+        flex-direction: column;
+    }
+}
+
+.about-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-mono;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: white;
+    border: 2px solid var(--accent);
+}
+
+.about-info {
+    h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+    }
+
+    p {
+        font-size: 0.9375rem;
+        color: var(--text-muted);
+        margin-bottom: 0.85rem;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// .about-skills — skill category list on about page
+// ---------------------------------------------------------------------------
+.about-skills {
+    margin-bottom: $sp-6;
+
+    &__title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: $sp-4;
+    }
+
+    dl {
+        display: flex;
+        flex-direction: column;
+        gap: $sp-3;
+        margin: 0;
+    }
+
+    &__group {
+        display: flex;
+        gap: $sp-4;
+        align-items: flex-start;
+
+        @media (max-width: $bp-sm) {
+            flex-direction: column;
+            gap: $sp-2;
+        }
+    }
+
+    dt {
+        font-family: $font-mono;
+        font-size: $fs-sm;
+        font-weight: 600;
+        color: var(--text-muted);
+        min-width: 110px;
+        padding-top: 0.2rem;
+        flex-shrink: 0;
+    }
+
+    dd {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 0;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// .recommendation-card — testimonial quote on about page
+// ---------------------------------------------------------------------------
+.about-recommendations {
+    margin-bottom: $sp-6;
+
+    &__title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: $sp-4;
+    }
+}
+
+.recommendation-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: $radius-lg;
+    padding: $sp-5;
+    margin: 0 0 $sp-3;
+}
+
+.recommendation-quote {
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.75;
+    margin: 0 0 $sp-3;
+
+    &::before {
+        content: "\201C";
+    }
+    &::after {
+        content: "\201D";
+    }
+}
+
+.recommendation-expand {
+    background: transparent;
+    border: 1px solid var(--accent-border);
+    border-radius: $radius;
+    color: var(--accent);
+    font-size: $fs-sm;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    cursor: pointer;
+    margin-bottom: $sp-3;
+    transition: all $transition;
+
+    &:hover {
+        background: var(--accent-bg);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+}
+
+.recommendation-full {
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin-bottom: $sp-3;
+
+    p + p {
+        margin-top: 0.75rem;
+    }
+}
+
+.recommendation-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.recommendation-author {
+    font-size: $fs-sm;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.recommendation-role {
+    font-family: $font-mono;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+// ---------------------------------------------------------------------------
+// Post meta / tags (blog post)
+// ---------------------------------------------------------------------------
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.post-date {
+    font-family: $font-mono;
+    font-size: $fs-sm;
+    color: var(--text-muted);
+}
+
+.post-tags {
+    display: flex;
+    align-items: center;
+    gap: $sp-2;
+    flex-wrap: wrap;
+    margin-top: $sp-6;
+    padding-top: $sp-5;
+    border-top: 1px solid var(--border);
+}
+
+.post-tags-label {
+    font-family: $font-mono;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+}
+
+.tag-pill {
+    font-family: $font-mono;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg-elevated);
+    padding: 0.25rem 0.6rem;
+    border-radius: $radius-pill;
+    border: 1px solid var(--border);
+}
+
+// ---------------------------------------------------------------------------
+// .cookie-banner — GDPR consent bar at bottom of page
+// ---------------------------------------------------------------------------
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+
+    &.is-hidden {
+        display: none;
+    }
+
+    &__inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    &__text {
+        flex: 1;
+        min-width: 200px;
+        color: var(--text-muted);
+        margin: 0;
+
+        a {
+            color: var(--accent);
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    &__accept {
+        background: var(--hero-accent);
+        color: var(--on-accent);
+        border: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: $radius;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background $transition;
+
+        &:hover {
+            background: var(--hero-accent-h);
+        }
+    }
+
+    &__dismiss {
+        background: transparent;
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        width: 28px;
+        height: 28px;
+        border-radius: $radius;
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all $transition;
+
+        &:hover {
+            color: var(--text);
+            border-color: var(--text-muted);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// .pagination — blog list page navigation
+// ---------------------------------------------------------------------------
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $sp-2;
+    list-style: none;
+    margin-top: $sp-6;
+    padding-top: $sp-5;
+    border-top: 1px solid var(--border);
+}
+
+.page-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: $font-mono;
+    font-size: $fs-sm;
+    color: var(--text-muted);
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: $radius;
+    text-decoration: none;
+    transition: all $transition;
+}
+
+a.page-link {
+    color: var(--accent);
+
+    &:hover {
+        background: var(--accent-bg);
+        border-color: var(--accent);
+        text-decoration: none;
+    }
+
+    &:focus-visible {
+        background: var(--accent-bg);
+        border-color: var(--accent);
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+}
+
+.page-item.disabled .page-link {
+    opacity: 0.5;
+}
+

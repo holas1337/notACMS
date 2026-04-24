@@ -5,6 +5,7 @@ DIR="$(dirname "$(dirname "$(readlink -f "$0")")")"
 cd "${DIR}"
 
 PROD=false
+THEME="demo"
 COMMAND=""
 PORT=""
 args=("$@")
@@ -19,6 +20,8 @@ for ((i=0; i<${#args[@]}; i++)); do
     echo "  (none)          Full deploy: stop, build, start, compile, rebuild content"
     echo ""
     echo "Options:"
+    echo "  --bare          Seed bare wireframe content (no demo templates/assets)"
+    echo "  --demo          Seed full demo content + templates + assets (default)"
     echo "  --prod          Build and run in production mode (APP_ENV=prod, no dev dependencies)"
     echo "  --port <port>   Override the nginx port (sets NGINX_PORT)"
     echo "  -h, --help      Show this help message"
@@ -28,6 +31,8 @@ for ((i=0; i<${#args[@]}; i++)); do
   [[ "${args[$i]}" == "down" ]] && COMMAND="down"
   [[ "${args[$i]}" == "restart" ]] && COMMAND="restart"
   [[ "${args[$i]}" == "--prod" ]] && PROD=true
+  [[ "${args[$i]}" == "--bare" ]] && THEME="bare"
+  [[ "${args[$i]}" == "--demo" ]] && THEME="demo"
   if [[ "${args[$i]}" == "--port" ]]; then
     PORT="${args[$i+1]:-}"
   fi
@@ -54,6 +59,11 @@ fi
 
 COMPOSE_CMD="docker compose --env-file .env $ENV_LOCAL_FLAG"
 
+RUNTIME_PROFILE=""
+if [[ "${RUNTIME_PHP_ENABLED:-true}" == "true" ]]; then
+    RUNTIME_PROFILE="--profile runtime"
+fi
+
 # --- down ---
 if [[ "$COMMAND" == "down" ]]; then
   echo "==> Stopping containers"
@@ -64,7 +74,7 @@ fi
 # --- up (no rebuild) ---
 if [[ "$COMMAND" == "up" ]]; then
   echo "==> Starting services"
-  $COMPOSE_CMD up -d
+    $COMPOSE_CMD $RUNTIME_PROFILE up -d
   exit 0
 fi
 
@@ -72,7 +82,7 @@ fi
 if [[ "$COMMAND" == "restart" ]]; then
   echo "==> Restarting containers"
   $COMPOSE_CMD down
-  $COMPOSE_CMD up -d
+  $COMPOSE_CMD $RUNTIME_PROFILE up -d
   exit 0
 fi
 
@@ -84,87 +94,73 @@ $COMPOSE_CMD down
 echo "==> Ensuring external networks exist"
 docker network inspect web >/dev/null 2>&1 || docker network create web
 
-echo "==> Bootstrapping content"
-if [ ! -f local/content/_site.yaml ]; then
-    echo "    local/content/ is empty — seeding from docs/examples/content/"
-    cp -r docs/examples/content/. local/content/
+# ── Helpers ──────────────────────────────────────────────────────────
+
+dir_is_empty() {
+    local dir="$1"
+    [ -d "$dir" ] || return 0
+    local non_gitkeep
+    non_gitkeep="$(find "$dir" -type f ! -name '.gitkeep' 2>/dev/null)"
+    [ -z "$non_gitkeep" ]
+}
+
+local_has_content() {
+    local subdirs=(content translations assets docs src templates docker)
+    for sub in "${subdirs[@]}"; do
+        if ! dir_is_empty "local/$sub"; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# ── Seed logic ───────────────────────────────────────────────────────
+
+SEED_SOURCE="docs/${THEME}"
+
+if [ ! -d local ]; then
+    echo "==> local/ does not exist — creating and seeding from ${SEED_SOURCE}/"
+    mkdir -p local
+    cp -r "${SEED_SOURCE}/." local/
+elif local_has_content; then
+    TIMESTAMP="$(date '+%Y-%m-%d-%H%M%S')"
+    echo "==> local/ has content — backing up to local-${TIMESTAMP}/"
+    mv local "local-${TIMESTAMP}"
+    mkdir -p local
+    cp -r "${SEED_SOURCE}/." local/
 else
-    echo "    local/content/ already exists — skipping"
+    echo "==> local/ exists but is empty — seeding from ${SEED_SOURCE}/"
+    cp -r "${SEED_SOURCE}/." local/
 fi
 
-echo "==> Bootstrapping translations"
-if [ ! -f local/translations/messages.en.yaml ] && [ ! -f local/translations/messages.pl.yaml ]; then
-    echo "    local/translations/ is empty — seeding from docs/examples/translations/"
-    cp docs/examples/translations/messages.en.yaml local/translations/messages.en.yaml
-    cp docs/examples/translations/messages.pl.yaml local/translations/messages.pl.yaml
-else
-    echo "    local/translations/ already exists — skipping"
-fi
-
-echo "==> Bootstrapping nginx config"
-if [ ! -f local/docker/nginx/redirects.conf ]; then
-    echo "    local/docker/nginx/ is empty — seeding from docs/examples/nginx/"
-    mkdir -p local/docker/nginx
-    cp docs/examples/nginx/redirects.conf local/docker/nginx/redirects.conf
-else
-    echo "    local/docker/nginx/redirects.conf already exists — skipping"
-fi
-if [ ! -f local/docker/nginx/error-pages.conf ]; then
-    echo "    seeding local/docker/nginx/error-pages.conf from docs/examples/nginx/"
-    mkdir -p local/docker/nginx
-    cp docs/examples/nginx/error-pages.conf local/docker/nginx/error-pages.conf
-else
-    echo "    local/docker/nginx/error-pages.conf already exists — skipping"
-fi
-
-echo "==> Bootstrapping local assets"
 if [ ! -f local/assets/images/og-default.jpg ]; then
-    echo "    local/assets/images/ missing og-default.jpg — seeding from assets/images/"
     mkdir -p local/assets/images
     cp assets/images/og-default.jpg local/assets/images/og-default.jpg
-else
-    echo "    local/assets/images/og-default.jpg already exists — skipping"
-fi
-
-echo "==> Bootstrapping local docs"
-if [ ! -f local/docs/EDITOR_GUIDE.md ]; then
-    echo "    local/docs/EDITOR_GUIDE.md missing — seeding from docs/examples/docs/"
-    mkdir -p local/docs
-    cp docs/examples/docs/EDITOR_GUIDE.md local/docs/EDITOR_GUIDE.md
-else
-    echo "    local/docs/EDITOR_GUIDE.md already exists — skipping"
-fi
-if [ ! -f local/docs/STYLEGUIDE.md ]; then
-    echo "    local/docs/STYLEGUIDE.md missing — seeding from docs/examples/docs/"
-    mkdir -p local/docs
-    cp docs/examples/docs/STYLEGUIDE.md local/docs/STYLEGUIDE.md
-else
-    echo "    local/docs/STYLEGUIDE.md already exists — skipping"
 fi
 
 echo "==> Building PHP image"
-$COMPOSE_CMD build --pull
+$COMPOSE_CMD build --pull php
 
 echo "==> Starting services"
-$COMPOSE_CMD up -d
+$COMPOSE_CMD $RUNTIME_PROFILE up -d
 
 echo "==> Installing dependencies"
-$COMPOSE_CMD exec $APP_ENV_FLAG php composer install $COMPOSER_FLAGS
+$COMPOSE_CMD run --rm $APP_ENV_FLAG php composer install $COMPOSER_FLAGS
 
 echo "==> Clearing cache"
-$COMPOSE_CMD exec $APP_ENV_FLAG php php bin/console cache:clear
+$COMPOSE_CMD run --rm $APP_ENV_FLAG php php bin/console cache:clear
 
 echo "==> Removing dart-sass binary (architecture-specific)"
-$COMPOSE_CMD exec $APP_ENV_FLAG php rm -rf var/dart-sass
+$COMPOSE_CMD run --rm $APP_ENV_FLAG php rm -rf var/dart-sass
 
 echo "==> Compiling SCSS"
-$COMPOSE_CMD exec $APP_ENV_FLAG php php bin/console sass:build
+$COMPOSE_CMD run --rm $APP_ENV_FLAG php php bin/console sass:build
 
 echo "==> Clearing compiled assets"
-$COMPOSE_CMD exec $APP_ENV_FLAG php rm -rf public/assets
+$COMPOSE_CMD run --rm $APP_ENV_FLAG php rm -rf public/assets
 
 echo "==> Compiling assets"
-$COMPOSE_CMD exec $APP_ENV_FLAG php php bin/console asset-map:compile
+$COMPOSE_CMD run --rm $APP_ENV_FLAG php php bin/console asset-map:compile
 
 echo "==> Rebuilding content and search index"
-scripts/rebuild-content.sh $($PROD && echo "--prod")
+scripts/rebuild-content.sh $($PROD && echo "--prod") $( [[ "$THEME" == "bare" ]] && echo "--bare" )

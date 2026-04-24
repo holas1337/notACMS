@@ -1,39 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ site_name }} — {{ content is not null ? content.title() : 'Demo blog' }}{% endblock %}
-{% block meta_description %}{{ content is not null ? content.description() : '' }}{% endblock %}
+{% block title %}{{ site_name }} — {{ content is not null ? content.title() : site_name }}{% endblock %}
+{% block meta_description %}{{ content is not null ? content.description() : site_description }}{% endblock %}
 {% block og_title %}{{ content is not null ? content.title() : site_name }}{% endblock %}
 
 {% block body %}
 <section class="home-hero">
     {% if content is not null %}
-        <h1 class="home-hero__title">{{ content.title() }}</h1>
-        <p class="home-hero__subtitle">{{ content.description() }}</p>
-        <div class="home-hero__actions">
-            <a href="{{ path('blog_list_' ~ locale) }}" class="btn btn-primary">{{ 'blog.all_posts'|trans }}</a>
-            <a href="{{ content_url('about', locale) }}" class="btn btn-outline-secondary">{{ 'nav.about'|trans }}</a>
-        </div>
+        <h1>{{ content.title() }}</h1>
+        {% if content.description() %}
+            <p>{{ content.description() }}</p>
+        {% endif %}
     {% else %}
-        <h1 class="home-hero__title">{{ site_name }}</h1>
-        <div class="home-hero__actions">
-            <a href="{{ path('blog_list_' ~ locale) }}" class="btn btn-primary">{{ 'blog.all_posts'|trans }}</a>
-        </div>
+        <h1>{{ site_name }}</h1>
+    {% endif %}
+
+    <ul class="home-actions">
+        <li><a href="{{ path('blog_list_' ~ locale) }}" class="btn btn-primary">{{ 'blog.all_posts'|trans }}</a></li>
+        <li><a href="{{ content_url('about', locale) }}" class="btn btn-outline">{{ 'nav.about'|trans }}</a></li>
+    </ul>
+</section>
+
+{% if content is not null and content.htmlContent %}
+<section class="home-section">
+    <div class="page-body prose">
+        {{ content.htmlContent|srcset_media|raw }}
+    </div>
+</section>
+{% endif %}
+
+<section class="home-section">
+    <h2>{{ 'sidebar.recent_posts'|trans }}</h2>
+    {% if recentPosts is not empty %}
+        {% for post in recentPosts %}
+            {{ include('components/post_card.html.twig', { post: post, featured: post.isPinned() }) }}
+        {% endfor %}
+    {% else %}
+        <p>{{ 'blog.no_posts'|trans }}</p>
     {% endif %}
 </section>
 
-<section class="home-section">
-    <h2 class="home-section__title">
-        {{ 'sidebar.recent_posts'|trans }}
-        <a href="{{ path('blog_list_' ~ locale) }}" class="home-section__all-link">{{ 'blog.all_posts'|trans }} &rarr;</a>
-    </h2>
-    <div class="post-list">
-    {% for post in recentPosts %}
-        {% with { post: post, featured: post.isPinned(), lcp: loop.index0 is same as(0) } %}
-            {{ include('components/post_card.html.twig') }}
-        {% endwith %}
-    {% else %}
-        <p class="no-posts">{{ 'blog.no_posts'|trans }}</p>
-    {% endfor %}
-    </div>
+<section class="home-cta">
+    <p>{{ 'home.cta_text'|trans({'%site_name%': site_name}) }}</p>
+    <a href="{{ path('blog_list_' ~ locale) }}" class="btn btn-primary">{{ 'blog.all_posts'|trans }}</a>
 </section>
+{% endblock %}
+
+{% block javascripts %}
+{% if content is not null and content.htmlContent %}
+<script src="{{ asset('lightbox.js') }}" defer></script>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,240 @@
+// =============================================================================
+// Prose — .prose wrapper for rendered Markdown content.
+// Used on doc pages, blog posts, and default pages.
+// =============================================================================
+
+.prose {
+    // ---------------------------------------------------------------------------
+    // Headings
+    // ---------------------------------------------------------------------------
+    h2 {
+        font-size: $fs-xl;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        margin: 3rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+        scroll-margin-top: $nav-height + 16px;
+        line-height: 1.3;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    h3 {
+        font-size: $fs-lg;
+        font-weight: 700;
+        color: var(--text);
+        margin: 2rem 0 0.75rem;
+        scroll-margin-top: $nav-height + 16px;
+    }
+
+    h4 {
+        font-size: $fs-base;
+        font-weight: 700;
+        color: var(--text);
+        margin: 1.5rem 0 0.5rem;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Body text
+    // ---------------------------------------------------------------------------
+    p {
+        font-size: $fs-lg;
+        color: var(--text-muted);
+        line-height: 1.8;
+        margin-bottom: 1.25rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    strong {
+        color: var(--text);
+    }
+    em {
+        color: var(--text-muted);
+    }
+
+    a {
+        color: var(--accent);
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Lists
+    // ---------------------------------------------------------------------------
+    ul,
+    ol {
+        padding-left: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    li {
+        font-size: $fs-lg;
+        color: var(--text-muted);
+        line-height: 1.8;
+        margin-bottom: 0.35rem;
+
+        strong {
+            color: var(--text);
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Blockquote
+    // ---------------------------------------------------------------------------
+    blockquote {
+        border-left: 3px solid var(--accent);
+        padding: 0.75rem 1.25rem;
+        background: var(--accent-bg);
+        border-radius: 0 $radius $radius 0;
+        margin: 1.5rem 0;
+
+        p {
+            color: var(--text);
+            font-style: italic;
+            margin: 0;
+            font-size: $fs-base;
+        }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Horizontal rule
+    // ---------------------------------------------------------------------------
+    hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 2.5rem 0;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Inline code
+    // ---------------------------------------------------------------------------
+    p code,
+    li code,
+    td code {
+        font-family: $font-mono;
+        font-size: $fs-sm;
+        background: var(--bg-elevated);
+        color: var(--text);
+        padding: 0.15em 0.4em;
+        border-radius: $radius-sm;
+        word-break: break-word;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Code blocks
+    // ---------------------------------------------------------------------------
+    pre {
+        background: var(--code-bg);
+        border: 1px solid var(--code-border);
+        border-radius: $radius-md;
+        padding: 1.25rem 1.5rem;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+        position: relative;
+
+        code {
+            font-family: $font-mono;
+            font-size: 0.8rem;
+            color: var(--code-text);
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            word-break: normal;
+            line-height: 1.8;
+        }
+    }
+
+    .code-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-family: $font-mono;
+        font-size: 0.68rem;
+        color: var(--code-comment);
+        padding: 0.3rem 0.75rem;
+        background: var(--code-label-bg);
+        border-bottom-left-radius: $radius;
+        border-top-right-radius: $radius-md;
+        border-left: 1px solid var(--code-border);
+        border-bottom: 1px solid var(--code-border);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Tables
+    // ---------------------------------------------------------------------------
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+        font-size: 0.9375rem;
+        display: block;
+        overflow-x: auto;
+    }
+
+    th {
+        text-align: left;
+        font-family: $font-mono;
+        font-size: $fs-xs;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        padding: 0.6rem $sp-3;
+        border-bottom: 2px solid var(--border);
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 0.75rem $sp-3;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-muted);
+        vertical-align: top;
+
+        &:first-child {
+            font-family: $font-mono;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        strong {
+            color: var(--text);
+        }
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Callouts (inside prose)
+    // ---------------------------------------------------------------------------
+    .callout {
+        // inherits from _components.scss
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Blog post prose — slightly larger body text
+// ---------------------------------------------------------------------------
+.prose--post {
+    @extend .prose;
+
+    p,
+    li {
+        font-size: $fs-lg;
+        line-height: 1.85;
+    }
+}
+

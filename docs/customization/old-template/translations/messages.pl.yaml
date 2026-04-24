@@ -1,0 +1,133 @@
+header:
+  tagline: "blog demo"
+
+nav:
+  skip_to_content: "Przejdź do treści"
+  home: "Strona główna"
+  blog: "Wpisy"
+  projects: "Realizacje"
+  about: "O mnie"
+  contact: "Kontakt"
+  privacy_policy: "Polityka prywatności"
+  search: "Szukaj"
+  menu: "menu"
+
+blog:
+  read_more: "Czytaj dalej"
+  published_on: "Opublikowano"
+  updated_on: "Zaktualizowano"
+  category: "Kategoria"
+  tags: "Tagi"
+  no_posts: "Brak wpisów w tej kategorii."
+  archive: "Archiwum"
+  all_posts: "Wszystkie wpisy"
+  comments_disabled: "Komentarze są wyłączone."
+  share: "Udostępnij"
+  share_on_x: "Udostępnij na X"
+  share_on_linkedin: "Udostępnij na LinkedIn"
+  share_on_facebook: "Udostępnij na Facebooku"
+  share_via_email: "Udostępnij przez e-mail"
+  copy_link: "Kopiuj link"
+  copied: "Skopiowano!"
+  reading_time: "%count% min czytania"
+  related_posts: "Powiązane wpisy"
+  meta:
+    index: "Artykuły o web developmencie, PHP, Symfony i nie tylko."
+    category: "Wpisy w kategorii %category%."
+    tag: "Wpisy z tagiem #%tag%."
+    archive_month: "Wpisy z %date%."
+    archive_year: "Wpisy z roku %year%."
+  post_navigation: "Nawigacja między wpisami"
+  nav_prev: "← Poprzedni"
+  nav_next: "Następny →"
+  series_part: "Część %part% z %total%"
+  series_nav_label: "Seria artykułów"
+
+sidebar:
+  recent_posts: "Ostatnie wpisy"
+  categories: "Kategorie"
+  tags: "Tagi"
+  archive: "Archiwum"
+  search: "Szukaj"
+  contact: "kontakt"
+  contact_intro: "Budujesz coś z PHP lub Symfony?"
+  contact_cta: "→ skontaktuj się"
+
+search:
+  title: "Szukaj"
+  placeholder: "Szukaj na stronie..."
+  no_results: "Nie znaleziono wyników dla \"%query%\"."
+  results_for: "Wyniki dla: \"%query%\""
+
+contact:
+  title: "Kontakt"
+  intro: "Skontaktuj się ze mną"
+  about_nudge: "Chcesz wiedzieć więcej? <a href=\"%about_url%\">Przeczytaj o mnie i moich projektach</a>"
+  form:
+    name: "Imię i nazwisko"
+    email: "Adres e-mail"
+    website: "Strona WWW (opcjonalnie)"
+    subject: "Temat"
+    message: "Wiadomość"
+    send: "Wyślij"
+    sending: "Wysyłanie..."
+    success: "Wiadomość została wysłana. Dziękuję!"
+    error: "Wystąpił błąd. Spróbuj ponownie."
+
+pagination:
+  next: "Następna"
+  prev: "Poprzednia"
+  page: "Strona"
+  of: "z"
+
+language: ~
+
+cookie:
+  banner_text: "Ta strona używa jednego funkcjonalnego pliku cookie do zapamiętania Twojego wyboru."
+  learn_more: "Polityka prywatności"
+  accept: "Akceptuję"
+  dismiss: "Zamknij"
+
+about:
+  skills_title: "Specjalizacja"
+  skills:
+    skill1: "Nauki przyrodnicze"
+    skill2: "Praca terenowa"
+    skill3: "Inwentaryzacja i planowanie"
+  cta_link: "Napisz do mnie"
+  recommendations_title: "Polecenia"
+  recommendation_via: "przez LinkedIn"
+  recommendation_expand: "czytaj całe polecenie →"
+  recommendation_collapse: "zwiń ↑"
+
+projects:
+  view_all: "Zobacz wszystkie %count% realizacje"
+
+footer:
+  copyright: "Wszelkie prawa zastrzeżone"
+  built_with: "Zbudowane z"
+
+error:
+  title: "Błąd"
+  go_home: "Wróć na stronę główną"
+
+coming_soon:
+  title: "Już wkrótce"
+  heading: "Już wkrótce"
+  description: "Ten wpis nie został jeszcze opublikowany."
+  publishing: "Publikacja"
+
+code:
+  copy: "kopiuj"
+  copied: "skopiowano!"
+  copy_aria: "Kopiuj kod"
+
+toc:
+  title: "Spis treści"
+
+badge:
+  draft: "[SZKIC]"
+  planned: "[ZAPLANOWANY]"
+  pinned: "[PRZYPIĘTY]"
+  new: "[NOWY]"
+  updated: "[ZAKTUALIZOWANY]"

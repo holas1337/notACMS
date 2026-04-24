@@ -1,129 +1,104 @@
-header:
-  tagline: "blog demo"
-
 nav:
-  skip_to_content: "Przejdź do treści"
-  home: "Strona główna"
-  blog: "Wpisy"
-  projects: "Realizacje"
-  about: "O mnie"
-  contact: "Kontakt"
-  privacy_policy: "Polityka prywatności"
-  search: "Szukaj"
-  menu: "menu"
-
+  skip_to_content: Przejdź do treści
+  home: Strona główna
+  blog: Blog
+  about: O projekcie
+  contact: Kontakt
+  privacy_policy: Polityka prywatności
+  menu: menu
+  main: Nawigacja główna
+  prev: ← Poprzedni
+  next: Następny →
 blog:
-  read_more: "Czytaj dalej"
-  published_on: "Opublikowano"
-  updated_on: "Zaktualizowano"
-  category: "Kategoria"
-  tags: "Tagi"
-  no_posts: "Brak wpisów w tej kategorii."
-  archive: "Archiwum"
-  all_posts: "Wszystkie wpisy"
-  comments_disabled: "Komentarze są wyłączone."
-  share: "Udostępnij"
-  share_on_x: "Udostępnij na X"
-  share_on_linkedin: "Udostępnij na LinkedIn"
-  share_on_facebook: "Udostępnij na Facebooku"
-  share_via_email: "Udostępnij przez e-mail"
-  copy_link: "Kopiuj link"
-  copied: "Skopiowano!"
-  reading_time: "%count% min czytania"
-  related_posts: "Powiązane wpisy"
+  read_more: Czytaj dalej
+  updated_on: Zaktualizowano
+  category: Kategoria
+  tags: Tagi
+  no_posts: Brak wpisów.
+  archive: Archiwum
+  all_posts: Wszystkie wpisy
+  share: Udostępnij
+  share_on_x: Udostępnij na X
+  share_on_linkedin: Udostępnij na LinkedIn
+  share_on_facebook: Udostępnij na Facebooku
+  share_via_email: Udostępnij przez e-mail
+  copy_link: Kopiuj link
+  copied: Skopiowano!
+  reading_time: '%count% min czytania'
+  related_posts: Powiązane wpisy
   meta:
-    index: "Artykuły o web developmencie, PHP, Symfony i nie tylko."
-    category: "Wpisy w kategorii %category%."
-    tag: "Wpisy z tagiem #%tag%."
-    archive_month: "Wpisy z %date%."
-    archive_year: "Wpisy z roku %year%."
-  post_navigation: "Nawigacja między wpisami"
-  nav_prev: "← Poprzedni"
-  nav_next: "Następny →"
-  series_part: "Część %part% z %total%"
-  series_nav_label: "Seria artykułów"
-
+    index: Artykuły i wpisy.
+    category: Wpisy w kategorii %category%.
+    tag: 'Wpisy z tagiem #%tag%.'
+    archive_month: Wpisy z %date%.
+    archive_year: Wpisy z roku %year%.
+  post_navigation: Nawigacja między wpisami
+  series_part: Część %part% z %total%
+  series_nav_label: Seria artykułów
 sidebar:
-  recent_posts: "Ostatnie wpisy"
-  categories: "Kategorie"
-  tags: "Tagi"
-  archive: "Archiwum"
-  search: "Szukaj"
-  contact: "kontakt"
-  contact_intro: "Budujesz coś z PHP lub Symfony?"
-  contact_cta: "→ skontaktuj się"
-
+  recent_posts: Ostatnie wpisy
+  categories: Kategorie
+  tags: Tagi
+  archive: Archiwum
+  search: Szukaj
 search:
-  title: "Szukaj"
-  placeholder: "Szukaj na stronie..."
-  no_results: "Nie znaleziono wyników dla \"%query%\"."
-  results_for: "Wyniki dla: \"%query%\""
-
+  title: Szukaj
+  placeholder: Szukaj na stronie...
+  no_results: 'Nie znaleziono wyników dla "%query%".'
 contact:
-  title: "Kontakt"
-  intro: "Skontaktuj się ze mną"
-  about_nudge: "Chcesz wiedzieć więcej? <a href=\"%about_url%\">Przeczytaj o mnie i moich projektach</a>"
+  title: Kontakt
+  about_nudge: 'Chcesz wiedzieć więcej? <a href="%about_url%">Dowiedz się o notACMS</a>'
   form:
-    name: "Imię i nazwisko"
-    email: "Adres e-mail"
-    website: "Strona WWW (opcjonalnie)"
-    subject: "Temat"
-    message: "Wiadomość"
-    send: "Wyślij"
-    sending: "Wysyłanie..."
-    success: "Wiadomość została wysłana. Dziękuję!"
-    error: "Wystąpił błąd. Spróbuj ponownie."
-
+    name: Imię i nazwisko
+    email: Adres e-mail
+    website: Strona WWW (opcjonalnie)
+    subject: Temat
+    message: Wiadomość
+    send: Wyślij
+    success: Wiadomość została wysłana. Dziękujemy!
+    error: Coś poszło nie tak. Sprawdź dane i spróbuj ponownie.
 pagination:
-  next: "Następna"
-  prev: "Poprzednia"
-  page: "Strona"
-  of: "z"
-
-language: ~
-
+  label: Paginacja
+  next: Następna
+  prev: Poprzednia
+  page: Strona
+  of: z
 cookie:
-  banner_text: "Ta strona używa jednego funkcjonalnego pliku cookie do zapamiętania Twojego wyboru."
-  learn_more: "Polityka prywatności"
-  accept: "Akceptuję"
-  dismiss: "Zamknij"
-
+  banner_text: Ta strona używa jednego pliku cookie do zapamiętania Twojego wyboru.
+  accept: Akceptuję
+  dismiss: Zamknij
 about:
-  skills_title: "Specjalizacja"
-  cta_link: "Napisz do mnie"
-  recommendations_title: "Polecenia"
-  recommendation_via: "przez LinkedIn"
-  recommendation_expand: "czytaj całe polecenie →"
-  recommendation_collapse: "zwiń ↑"
-
+  role: Programista
+  headline: Przyjazny dla AI generator stron statycznych oparty na Symfony
+  skills_title: Specjalizacja
+  cta_link: Napisz do nas
+  cta_text: "Chcesz współpracować?"
+  recommendations_title: Polecenia
+  recommendation_via: przez LinkedIn
+  recommendation_expand: czytaj całe polecenie →
+  recommendation_collapse: zwiń ↑
 projects:
-  view_all: "Zobacz wszystkie %count% realizacje"
-
-footer:
-  copyright: "Wszelkie prawa zastrzeżone"
-  built_with: "Zbudowane z"
-
+  view_all: Zobacz wszystkie %count% realizacje
 error:
-  title: "Błąd"
-  go_home: "Wróć na stronę główną"
-
+  title: Błąd
+  go_home: Wróć na stronę główną
 coming_soon:
-  title: "Już wkrótce"
-  heading: "Już wkrótce"
-  description: "Ten wpis nie został jeszcze opublikowany."
-  publishing: "Publikacja"
-
+  title: Już wkrótce
+  heading: Już wkrótce
+  description: Ten wpis nie został jeszcze opublikowany.
 code:
-  copy: "kopiuj"
-  copied: "skopiowano!"
-  copy_aria: "Kopiuj kod"
-
+  copy: kopiuj
+  copied: skopiowano!
+  copy_aria: Kopiuj kod
 toc:
-  title: "Spis treści"
-
+  title: Spis treści
 badge:
-  draft: "[SZKIC]"
-  planned: "[ZAPLANOWANY]"
-  pinned: "[PRZYPIĘTY]"
-  new: "[NOWY]"
-  updated: "[ZAKTUALIZOWANY]"
+  draft: '[SZKIC]'
+  planned: '[ZAPLANOWANY]'
+  pinned: '[PRZYPIĘTY]'
+  new: '[NOWY]'
+  updated: '[ZAKTUALIZOWANY]'
+home:
+  cta_text: Zacznij budować z %site_name%.
+common:
+  privacy_policy: Polityka prywatności

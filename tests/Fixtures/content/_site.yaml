@@ -1,0 +1,34 @@
+site:
+  name: "Test Site"
+  description: "Test site description"
+  base_url: "https://test.dev"
+  locales:
+    en:
+      label: "English"
+      og_locale: en_US
+      date_format: "M d, Y"
+    pl:
+      label: "Polski"
+      og_locale: pl_PL
+      date_format: "d.m.Y"
+  author:
+    name: "Test Author"
+    initials: "TA"
+    email: "test@example.com"
+    url: "https://test.dev/about/"
+  social:
+    github: "https://github.com/test/test"
+  posts_per_page: 10
+  rss_limit: 20
+  recent_posts_limit: 6
+  related_posts_limit: 3
+  new_post_days: 90
+  coming_soon_reveal_days: 14
+  image_variant_widths: [640, 960]
+  image_quality: 82
+  image_magick_flags: "-strip"
+  contact_form:
+    email: "test@example.com"
+    from: "noreply@test.dev"
+    from_name: "Test"
+    topic: "[Test]"

@@ -1,0 +1,29 @@
+{# Prev/next navigation — shared by doc and post templates.
+   Expects: prev (object|null), next (object|null), aria_label (string) #}
+{% if prev or next %}
+<nav class="prev-next-nav" aria-label="{{ aria_label }}">
+    {% if prev %}
+    <a href="{{ prev.url }}" class="prev-next-card">
+        <span class="prev-next-dir">
+            <i class="ph ph-arrow-left" aria-hidden="true"></i>
+            {{ 'site.nav_prev'|trans }}
+        </span>
+        <span class="prev-next-title">{{ prev.title }}</span>
+    </a>
+    {% else %}
+    <div></div>
+    {% endif %}
+
+    {% if next %}
+    <a href="{{ next.url }}" class="prev-next-card prev-next-card--next">
+        <span class="prev-next-dir">
+            {{ 'site.nav_next'|trans }}
+            <i class="ph ph-arrow-right" aria-hidden="true"></i>
+        </span>
+        <span class="prev-next-title">{{ next.title }}</span>
+    </a>
+    {% else %}
+    <div></div>
+    {% endif %}
+</nav>
+{% endif %}

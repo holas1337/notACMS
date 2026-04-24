@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'contact.title'|trans }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ 'contact.meta_description'|trans }}{% endblock %}
+{% block og_title %}{{ 'contact.title'|trans }}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "{{ 'contact.title'|trans }}",
+    "url": "{{ site_base_url }}{{ app.request.pathInfo }}",
+    "mainEntity": {
+        "@type": "Person",
+        "name": "{{ site_author.name|e('js') }}",
+        "url": "{{ site_base_url }}"
+    }
+}
+</script>
+{% endblock %}
+
+{% block body %}
+<article class="page-content" data-pagefind-body>
+    {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
+        { label: site_name, url: path('home_' ~ locale) },
+        { label: 'contact.title'|trans }
+    ] }) }}
+    <header class="page-header">
+        <h1>{{ 'contact.title'|trans }}</h1>
+    </header>
+
+    <div class="contact-form">
+        {% if content is not null %}
+            <div class="contact-intro prose">{{ content.htmlContent|raw }}</div>
+        {% endif %}
+
+        <p class="contact-nudge">{{ ('contact.about_nudge'|trans({'%about_url%': content_url('about', locale)}))|raw }}</p>
+
+        <div id="contact-success" class="alert alert-success is-hidden" aria-live="polite" aria-atomic="true">
+            <i class="ph ph-check-circle" aria-hidden="true"></i>
+            <span class="alert-body"></span>
+        </div>
+        <div id="contact-error" class="alert alert-danger is-hidden" aria-live="assertive" aria-atomic="true">
+            <i class="ph ph-warning-circle" aria-hidden="true"></i>
+            <span class="alert-body"></span>
+        </div>
+
+        {{ form_start(form, {
+            action: path('api_contact_' ~ locale),
+            attr: { id: 'contact-form', novalidate: 'novalidate', 'data-connection-error': 'contact.connection_error'|trans }
+        }) }}
+
+        <div class="mb-3">
+            {{ form_label(form.name, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.name, {attr: {class: 'form-control', 'aria-describedby': 'error-name', autocomplete: 'name'}}) }}
+            <span class="text-danger form-field__error" id="error-name" role="alert"></span>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.email, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.email, {attr: {class: 'form-control', 'aria-describedby': 'error-email', autocomplete: 'email'}}) }}
+            <span class="text-danger form-field__error" id="error-email" role="alert"></span>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.website, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.website, {attr: {class: 'form-control', 'aria-describedby': 'error-website', autocomplete: 'url'}}) }}
+            <span class="text-danger form-field__error" id="error-website" role="alert"></span>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.subject, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.subject, {attr: {class: 'form-control', 'aria-describedby': 'error-subject'}}) }}
+            <span class="text-danger form-field__error" id="error-subject" role="alert"></span>
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.message, null, { label_attr: { class: 'form-label' } }) }}
+            {{ form_widget(form.message, {attr: {class: 'form-control', 'aria-describedby': 'error-message'}}) }}
+            <span class="text-danger form-field__error" id="error-message" role="alert"></span>
+        </div>
+
+        {# Cloudflare Turnstile widget #}
+        <div class="contact-turnstile mb-3">
+            <div class="cf-turnstile"
+                 data-sitekey="{{ turnstile_site_key }}"
+                 data-callback="onTurnstileSuccess"
+                 data-theme="auto"></div>
+        </div>
+
+        {{ form_widget(form.turnstile_token) }}
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary" id="contact-submit">
+                {{ 'contact.form.send'|trans }}
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</article>
+{% endblock %}
+
+{% block head_preconnect %}
+<link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="{{ asset('local/contact.js') }}" defer></script>
+{% endblock %}

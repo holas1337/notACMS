@@ -1,627 +1,100 @@
-// =============================================================================
-// Blog — post cards, post prose content, meta, TOC, series nav,
-//         prev/next nav, share buttons, code copy button, lightbox
-// Class naming: single hyphen for post-card-*,
-// BEM __ only where original used it: post-card-mini__*, post-navigation__*)
-// =============================================================================
-
-// ---------------------------------------------------------------------------
-// Post card (used in listings)
-// ---------------------------------------------------------------------------
-.post-card {
-    display: flex;
-    flex-direction: column;
-    background-color: $color-white;
-    border: 1px solid $color-border;
-    border-radius: $radius;
-    overflow: hidden;
-    box-shadow: $shadow-sm;
-    transition: box-shadow $transition, transform $transition;
-    height: 100%;
-
-    &:hover {
-        box-shadow: $shadow;
-        transform: translateY(-2px);
-    }
-}
-
-.post-card-image {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-}
-
-.post-card-body {
-    padding: $sp-3;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.post-card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $sp-2;
-    font-size: $fs-sm;
-    color: $color-muted;
-    margin-bottom: $sp-2;
-
-    .meta-category {
-        color: $color-primary;
-        font-weight: 500;
-    }
-}
-
-.post-card-title {
-    font-size: $fs-lg;
-    font-weight: 600;
-    margin-bottom: $sp-2;
-    line-height: 1.3;
-
-    a {
-        color: $color-dark;
-        text-decoration: none;
-
-        &:hover {
-            color: $color-primary;
-        }
-    }
-}
-
-.post-card-badge {
-    display: inline-block;
-    padding: 0.2em 0.5em;
-    font-size: 0.7em;
-    font-weight: 600;
-    border-radius: $radius-pill;
-    vertical-align: middle;
-    margin-left: $sp-1;
-    background-color: $color-primary;
-    color: $color-white;
-
-    &.post-card-badge--new     { background-color: $color-success; }
-    &.post-card-badge--updated { background-color: $color-info; color: $color-dark; }
-    &.post-card-badge--draft   { background-color: $color-warning; color: $color-dark; }
-    &.post-card-badge--planned { background-color: $color-secondary; }
-}
-
-.post-card-excerpt {
-    font-size: $fs-sm;
-    color: $color-muted;
-    margin-bottom: $sp-3;
-    flex: 1;
-}
-
-.post-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: $sp-2;
-    margin-top: auto;
-}
-
-.read-more {
-    font-size: $fs-sm;
-    font-weight: 500;
-    color: $color-primary;
-    text-decoration: none;
-
-    &:hover {
-        text-decoration: underline;
-    }
-}
-
-// Post tags in card footer
-.post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $sp-2;
-
-    .tag {
-        font-size: 0.75rem;
-        color: $color-muted;
-        text-decoration: none;
-        background-color: $color-light;
-        border: 1px solid $color-border;
-        border-radius: $radius-pill;
-        padding: 0.15em 0.5em;
-        transition: background-color $transition, color $transition;
-
-        &:hover {
-            background-color: $color-primary;
-            color: $color-white;
-            border-color: $color-primary;
-        }
-    }
-}
-
-// Post card grid
-.post-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    column-gap: $sp-4;
-    row-gap: $sp-5;
-
-    @media (min-width: $bp-md) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-// Draft card variant — grayed out to signal unpublished state
-.post-card--draft {
-    filter: grayscale(60%);
-    opacity: 0.7;
-}
-
-// Scheduled card variant — green outline to signal upcoming publication
-.post-card--scheduled {
-    outline: 3px solid $color-success;
-    outline-offset: -3px;
-}
-
-// Featured card variant
-.post-card--featured {
-    border-color: $color-primary;
-
-    .post-card-image {
-        aspect-ratio: 16 / 7;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Post card mini (sidebar recent posts)
-// ---------------------------------------------------------------------------
-.post-card-mini {
-    display: flex;
-    gap: $sp-2;
-    padding: $sp-2 0;
-    border-bottom: 1px solid $color-border;
-
-    &:last-child {
-        border-bottom: none;
-    }
-}
-
-.post-card-mini__image {
-    flex-shrink: 0;
-    width: 60px;
-    height: 45px;
-    object-fit: cover;
-    border-radius: $radius-sm;
-    overflow: hidden;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-}
-
-.post-card-mini__body {
-    flex: 1;
-    min-width: 0;
-}
-
-.post-card-mini__title {
-    display: block;
-    font-size: $fs-sm;
-    font-weight: 500;
-    line-height: 1.3;
-    margin-bottom: $sp-1;
-    color: $color-dark;
-    text-decoration: none;
-
-    &:hover {
-        color: $color-primary;
-    }
-}
-
-.post-card-mini__meta {
-    font-size: 0.75rem;
-    color: $color-muted;
-}
-
-// ---------------------------------------------------------------------------
-// Post meta line (date · category · reading time)
-// ---------------------------------------------------------------------------
-.post-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $sp-2;
-    font-size: $fs-sm;
-    color: $color-muted;
-    margin-bottom: $sp-3;
-
-    a {
-        color: $color-muted;
-        text-decoration: none;
-
-        &:hover {
-            color: $color-primary;
-        }
-    }
-
-    .meta-category {
-        color: $color-primary;
-        font-weight: 500;
-    }
-
-    .post-meta-sep {
-        color: $color-border;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Post header (title + meta on single post page)
-// ---------------------------------------------------------------------------
-.post-header {
-    margin-bottom: $sp-4;
-}
-
-.post-header__title {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: $sp-3;
-    color: $color-dark;
-
-    @media (min-width: $bp-md) {
-        font-size: 2.25rem;
-    }
-}
-
-.post-header__featured-image {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: $radius;
-    margin-bottom: $sp-4;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: $radius;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Post prose (article body content)
-// ---------------------------------------------------------------------------
-.post-body {
-    font-size: $fs-base;
-    line-height: 1.7;
-    color: $color-body;
-
-    h2,
-    h3,
-    h4 {
-        margin-top: $sp-5;
-        margin-bottom: $sp-3;
-        scroll-margin-top: 80px;
-    }
-
-    h2 { font-size: $fs-xxl; }
-    h3 { font-size: $fs-xl; }
-
-    // Heading permalink anchors (HeadingPermalink extension)
-    .heading-permalink {
-        font-size: 0.75em;
-        margin-left: $sp-2;
-        color: $color-border;
-        text-decoration: none;
-        opacity: 0;
-        transition: opacity $transition;
-    }
-
-    h2:hover .heading-permalink,
-    h3:hover .heading-permalink,
-    h4:hover .heading-permalink {
-        opacity: 1;
-        color: $color-muted;
-    }
-
-    img {
-        max-width: 100%;
-        height: auto;
-        border-radius: $radius;
-        margin: $sp-3 0;
-    }
-
-    a[data-full] {
-        display: inline-block;
-        cursor: zoom-in;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Post tags section (below post body)
-// ---------------------------------------------------------------------------
-.post-tags-section {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $sp-2;
-    margin: $sp-4 0;
-    padding-top: $sp-3;
-    border-top: 1px solid $color-border;
-    font-size: $fs-sm;
-
-    .post-tags-label {
-        color: $color-muted;
-        font-weight: 500;
-    }
-
-    .tag-link {
-        display: inline-block;
-        padding: 0.2em 0.6em;
-        font-size: $fs-sm;
-        color: $color-secondary;
-        background-color: $color-light;
-        border: 1px solid $color-border;
-        border-radius: $radius-pill;
-        text-decoration: none;
-        transition: background-color $transition, color $transition, border-color $transition;
-
-        &:hover {
-            background-color: $color-primary;
-            color: $color-white;
-            border-color: $color-primary;
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Table of contents (injected by table-of-contents.js into .toc-wrapper)
-// ---------------------------------------------------------------------------
-.toc-wrapper {
-    margin: $sp-4 0;
-    padding: $sp-3;
-    background-color: $color-light;
-    border: 1px solid $color-border;
-    border-radius: $radius;
-    font-size: $fs-sm;
-
-    .toc-title {
-        font-weight: 600;
-        font-size: $fs-base;
-        margin-bottom: $sp-2;
-        color: $color-dark;
-    }
-
-    ul {
-        margin: 0;
-        padding-left: $sp-3;
-    }
-
-    li {
-        margin-bottom: $sp-1;
-    }
-
-    a {
-        color: $color-muted;
-        text-decoration: none;
-
-        &:hover {
-            color: $color-primary;
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Series navigation box
-// ---------------------------------------------------------------------------
-.series-nav {
-    margin-bottom: $sp-4;
-    padding: $sp-3;
-    background-color: $color-series-bg;
-    border: 1px solid $color-series-border;
-    border-radius: $radius;
-    color: $color-series-text;
-    font-size: $fs-sm;
-
-    .series-nav__title {
-        font-weight: 600;
-        margin-bottom: $sp-2;
-        font-size: $fs-base;
-        cursor: pointer;
-        list-style: none;
-
-        &::marker,
-        &::-webkit-details-marker {
-            display: none;
-        }
-    }
-
-    ol {
-        margin: 0;
-        padding-left: $sp-4;
-    }
-
-    li {
-        margin-bottom: $sp-1;
-    }
-
-    a {
-        color: $color-series-link;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
-    .series-nav__item--current span {
-        font-weight: 600;
-        color: $color-series-text;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Post prev/next navigation
-// ---------------------------------------------------------------------------
-.post-navigation {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: $sp-3;
-    margin-top: $sp-5;
-    padding-top: $sp-4;
-    border-top: 1px solid $color-border;
-}
-
-.post-navigation__item {
-    display: flex;
-    flex-direction: column;
-    gap: $sp-1;
-    text-decoration: none;
-
-    &.post-navigation__item--next {
-        text-align: right;
-        align-items: flex-end;
-    }
-}
-
-.post-navigation__label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    color: $color-muted;
-}
-
-.post-navigation__title {
-    font-size: $fs-sm;
-    font-weight: 500;
-    color: $color-dark;
-    line-height: 1.3;
-
-    &:hover {
-        color: $color-primary;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Share buttons
-// ---------------------------------------------------------------------------
-.share-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $sp-2;
-    margin: $sp-4 0;
-    padding: $sp-3;
-    background-color: $color-light;
-    border: 1px solid $color-border;
-    border-radius: $radius;
-    font-size: $fs-sm;
-
-    .share-btn {
-        padding: $sp-1 $sp-2;
-        font-size: $fs-sm;
-        font-weight: 500;
-        text-decoration: none;
-        border: 1px solid $color-border;
-        border-radius: $radius-sm;
-        background-color: $color-white;
-        color: $color-body;
-        cursor: pointer;
-        font-family: $font;
-        transition: background-color $transition, color $transition, border-color $transition;
-
-        &:hover {
-            background-color: $color-primary;
-            color: $color-white;
-            border-color: $color-primary;
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Code copy button (injected by code-copy.js)
-// ---------------------------------------------------------------------------
-.code-copy-btn {
-    position: absolute;
-    top: $sp-2;
-    right: $sp-2;
-    padding: $sp-1 $sp-2;
-    font-size: 0.7rem;
-    font-family: $font;
-    color: $color-muted;
-    background-color: $color-white;
-    border: 1px solid $color-border;
-    border-radius: $radius-sm;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity $transition, color $transition;
-
-    pre:hover & {
-        opacity: 1;
-    }
-
-    &:hover {
-        color: $color-primary;
-        border-color: $color-primary;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Reading progress bar (reading-progress.js — blog post only)
-// ---------------------------------------------------------------------------
 .reading-progress-bar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 0;
-    height: 3px;
-    background-color: $color-primary;
-    z-index: 200;
-    transition: width .1s linear;
+    height: 2px;
+    background: var(--accent);
+    z-index: 999;
+    transition: width 50ms linear;
 }
 
-// ---------------------------------------------------------------------------
-// Lightbox overlay (lightbox.js)
-// ---------------------------------------------------------------------------
-.lightbox-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9000;
-    background-color: rgba(0, 0, 0, .85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: zoom-out;
+.post-featured-image {
+    overflow: hidden;
+
+    img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+    }
 }
 
-.lightbox-img {
-    max-width: 90vw;
-    max-height: 90vh;
-    object-fit: contain;
-    border-radius: $radius;
-    box-shadow: $shadow-lg;
+pre {
+    position: relative;
 }
 
-.lightbox-close {
+.code-copy-btn {
     position: absolute;
-    top: $sp-3;
-    right: $sp-3;
-    font-size: 2.5rem;
-    line-height: 1;
-    color: $color-white;
-    background: none;
-    border: none;
+    top: $sp-1;
+    right: $sp-1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: $sp-1 $sp-2;
+    border-radius: $radius;
+    font-size: $fs-xs;
     cursor: pointer;
-    opacity: .8;
+    opacity: 0;
+    transition: opacity $transition;
 
     &:hover {
-        opacity: 1;
+        background: var(--bg-surface);
+    }
+}
+
+pre:hover .code-copy-btn {
+    opacity: 1;
+}
+
+#lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba($color-black, .9);
+    z-index: 2000;
+    place-items: center;
+
+    &.is-open {
+        display: grid;
+    }
+
+    img {
+        max-width: 90vw;
+        max-height: 90vh;
+        object-fit: contain;
+        cursor: zoom-in;
+    }
+
+    .lb-close {
+        position: absolute;
+        top: $sp-3;
+        right: $sp-3;
+        background: none;
+        border: none;
+        color: $color-white;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    .lb-zoom-controls {
+        position: absolute;
+        bottom: $sp-3;
+        right: $sp-3;
+        display: flex;
+        gap: $sp-1;
+
+        button {
+            background: rgba($color-white, .2);
+            border: none;
+            color: $color-white;
+            width: 32px;
+            height: 32px;
+            border-radius: $radius;
+            cursor: pointer;
+            font-size: 1rem;
+
+            &:hover {
+                background: rgba($color-white, .4);
+            }
+        }
     }
 }
