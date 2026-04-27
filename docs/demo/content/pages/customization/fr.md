@@ -10,7 +10,7 @@ menu:
 
 ## Le Système de Surcharge `local/`
 
-Chaque personnalisation vit dans `local/`. Ce répertoire est votre couche spécifique au site. Les répertoires core `templates/`, `assets/` et `src/` sont le framework. Vos surcharges dans `local/` ont priorité.
+Chaque personnalisation se trouve dans `local/`. Ce répertoire est votre couche spécifique au site. Les répertoires core `templates/`, `assets/` et `src/` sont le framework. Vos surcharges dans `local/` ont priorité.
 
 ```
 local/
@@ -36,7 +36,7 @@ cp templates/page/default.html.twig local/templates/page/default.html.twig
 # Éditer maintenant local/templates/page/default.html.twig
 ```
 
-Le chargeur Twig vérifie d'abord `local/templates/`, puis fallback sur `templates/`. Vous pouvez surcharger n'importe quel template sans toucher aux fichiers core.
+Le chargeur Twig vérifie d'abord `local/templates/`, puis se rabat sur `templates/`. Vous pouvez surcharger n'importe quel template sans toucher aux fichiers core.
 
 ### Surcharger un Bloc Unique
 
@@ -88,7 +88,7 @@ import './styles/app_local.scss';
 // AVERTISSEMENT : Le fichier racine doit s'appeler app_local.scss — pas app.scss ou un autre nom.
 // sass-bundle nécessite des noms de base uniques pour tous les fichiers SCSS racine.
 
-// Importer les variables SCSS core (couleurs, espacements, typographie) pour utilisation dans les surcharges :
+// Importer les variables SCSS de base (couleurs, espacements, typographie) pour utilisation dans les surcharges :
 @import '../../../../assets/styles/variables';
 
 // Écraser les propriétés CSS personnalisées pour votre marque :
@@ -197,7 +197,7 @@ final class MySiteConfigDecorator implements SiteConfigServiceInterface
 
 Pour les déploiements de production, placez les snippets de configuration Nginx dans `local/docker/nginx/`. Chaque fichier `.conf` dans ce répertoire est automatiquement inclus dans le bloc `server {}`.
 
-Lors du premier déploiement, le bootstrap seede trois fichiers depuis `docs/demo/docker/nginx/` :
+Lors du premier déploiement, le bootstrap initialise trois fichiers depuis `docs/demo/docker/nginx/` :
 
 - **`redirects.conf`** — Redirections SEO (www → non-www, URLs legacy)
 - **`error-pages.conf`** — pages d'erreur sensibles à la locale
@@ -241,7 +241,7 @@ Vous pouvez surcharger n'importe quelle clé des fichiers `translations/messages
 
 L'image `og:image` de fallback, affichée lorsqu'une page n'a pas d'image de couverture, utilise par défaut un placeholder avec marque. Pour le remplacer, placez votre image sous `local/assets/images/og-default.jpg`. Le template lit automatiquement depuis ce chemin.
 
-Lors du premier `./notACMS deploy` ou `ddev build`, le bootstrap se cette fichier depuis le core par défaut, s'il n'existe pas encore. Remplacez le fichier seedé par le vôtre.
+Lors du premier `./notACMS deploy` ou `ddev build`, le bootstrap initialise ce fichier depuis le cœur par défaut, s'il n'existe pas encore. Remplacez le fichier seedé par le vôtre.
 
 Pour une approche complètement différente (format différent, dimensions différentes ou logique différente), surchargez le bloc `{% block og_default_image %}` dans `local/templates/base.html.twig` :
 
@@ -261,13 +261,13 @@ Pour une approche complètement différente (format différent, dimensions diff�
 
 `local/docs/` contient deux fichiers de référence spécifiques au site, tous deux gitignored et seedés lors du premier déploiement :
 
-**`local/docs/EDITOR_GUIDE.md`** — le guide rédactionnel pour votre site : catégories, tags approuvés, voix et styles de génération d'images. Seedé depuis `docs/demo/docs/EDITOR_GUIDE.md`. Les mécaniques de contenu au niveau système (champs frontmatter, structure d'URL, séries, brouillons) restent dans `docs/EDITOR_GUIDE.md`.
+**`local/docs/EDITOR_GUIDE.md`** — le guide rédactionnel pour votre site : catégories, tags approuvés, voix et styles de génération d'images. Initialisé depuis `docs/demo/docs/EDITOR_GUIDE.md`. Les mécaniques de contenu au niveau système (champs frontmatter, structure d'URL, séries, brouillons) restent dans `docs/EDITOR_GUIDE.md`.
 
-**`local/docs/STYLEGUIDE.md`** — la référence design pour votre site : tokens de design, palette de couleurs, typographie et liste de composants. Seedé depuis `docs/demo/docs/STYLEGUIDE.md`. Les mécaniques du styleguide (la page dev `/styleguide/`, conventions SCSS) restent dans `docs/STYLEGUIDE.md`.
+**`local/docs/STYLEGUIDE.md`** — la référence design pour votre site : tokens de design, palette de couleurs, typographie et liste de composants. Initialisé depuis `docs/demo/docs/STYLEGUIDE.md`. Les mécaniques du styleguide (la page dev `/styleguide/`, conventions SCSS) restent dans `docs/STYLEGUIDE.md`.
 
-Les deux fichiers sont librement modifiables après le seeding — le bootstrap ne les écrasera jamais.
+Les deux fichiers sont librement modifiables après l'initialisation — le bootstrap ne les écrasera jamais.
 
-## Extension du Build
+## Extension de la Compilation
 
 Ajoutez des étapes de build personnalisées en créant une commande Console Symfony dans `local/src/Command/` :
 
@@ -293,9 +293,8 @@ Le répertoire `docs/customization/` contient des exemples complets et prêts à
 
 | Exemple | Modèle | Ce qu'il démontre |
 |---|---|---|
-| `custom-footer` | Remplacement complet de base | Pied de page personnalisé — montre comment adapter le simple footer core |
 | `custom-post-card` | Remplacement de composant + SCSS | Layout de carte horizontal — montre l'extension `@base`, l'importmap `app-local` et la surcharge de composant |
-| `self-hosted-fonts` | Remplacement complet de base + SCSS | Ajout de polices personnalisées — montre le preload, `@font-face` et le remplacement des polices système |
+| `self-hosted-fonts` | Remplacement complet de base + SCSS | Ajout de polices personnalisées — montre le preload, `@font-face` et le remplacement des polices du pied de page de base |
 | `php-service-decorator` | PHP `#[AsDecorator]` | Contournement de la validation Turnstile — montre le namespace `NotACms\Local\` et le pattern décorateur |
 | `twig-filter` | PHP `#[AsTwigFilter]` | Ajouter un filtre `|excerpt` — montre le namespace `NotACms\Local\` et l'attribut Twig |
 

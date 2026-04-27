@@ -17,11 +17,12 @@ menu:
 > # 2. Produktion konfigurieren
 > echo "APP_SECRET=$(php -r 'echo bin2hex(random_bytes(32));')" >> .env.local
 > echo "URL=yourdomain.com" >> .env.local
-> > # 3. Deployen
+> 
+> # 3. Bereitstellen (deploy)
 > ./notACMS deploy --prod
 > ```
 > 
-> Site läuft unter `https://yourdomain.com`. Content in `local/content/` bearbeiten.
+> Site läuft unter `https://yourdomain.com`. Inhalte in `local/content/` bearbeiten.
 
 ---
 
@@ -43,7 +44,7 @@ Site läuft unter `https://my-site.ddev.site`.
 
 ---
 
-## Content-Struktur
+## Inhaltsstruktur
 
 ```
 local/content/
@@ -76,7 +77,7 @@ local/content/
 | `slug` | string | Ja | URL-Pfad |
 | `description` | string | Nein | Meta-Beschreibung |
 | `date` | date | Posts | Veröffentlichungsdatum |
-| `updated` | date | Nein | Letzes Änderungsdatum |
+| `updated` | date | Nein | Letztes Änderungsdatum |
 | `category` | string | Posts | Kategorie-Slug |
 | `tags` | list | Nein | Tag-Liste |
 | `template` | string | Nein | Twig-Template |
@@ -96,7 +97,7 @@ local/content/
 
 ## Bilder
 
-Bilder im `files/`-Unterverzeichnis neben dem Content platzieren:
+Bilder im `files/`-Unterverzeichnis neben den Inhalten platzieren:
 
 ```
 blog/releases/my-post/
@@ -118,8 +119,8 @@ Im Frontmatter referenzieren: `image: /media/my-post/featured.webp`
 | `ddev build` | Voller Dev-Build: Cache + Assets + Seiten + Suche |
 | `ddev code-check` | PHPStan + PHP CS Fixer |
 | `ddev code-fix` | Code-Style automatisch fixen |
-| `./notACMS deploy --prod` | Produktions-Deploy (Docker + statischer Build) |
-| `./notACMS rebuild --prod` | Nur Content-Update (schnell, kein Docker-Rebuild) |
+| `./notACMS deploy --prod` | Produktions-Bereitstellung (Docker + statischer Build) |
+| `./notACMS rebuild --prod` | Nur Inhaltsaktualisierung (schnell, kein Docker-Rebuild) |
 
 ---
 
@@ -131,14 +132,14 @@ Im Frontmatter referenzieren: `image: /media/my-post/featured.webp`
 - Domain mit DNS A-Record, der auf Server zeigt
 - Ports 80/443 verfügbar (oder custom via `NGINX_PORT`)
 
-### Erstes Deploy
+### Erste Bereitstellung
 
 ```bash
 ./notACMS deploy --prod
 ```
 
 Was passiert:
-1. Seedet `local/content/` aus `docs/demo/content/` (falls leer)
+1. Seedet `local/` aus `docs/demo/` (nur wenn fehlend oder leer — bestehender Inhalt wird nie überschrieben)
 2. Baut PHP-Docker-Image
 3. Installiert Composer-Deps (`--no-dev` in prod)
 4. Kompiliert SCSS + Assets
@@ -146,7 +147,7 @@ Was passiert:
 6. Baut Pagefind-Suchindex → `public/pagefind/`
 7. Startet nginx-Container
 
-### Content-Updates
+### Inhaltsaktualisierungen
 
 Nach dem Bearbeiten von Markdown-Dateien:
 

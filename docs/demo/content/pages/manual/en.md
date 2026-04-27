@@ -139,7 +139,7 @@ Reference in frontmatter: `image: /media/my-post/featured.webp`
 ```
 
 What happens:
-1. Seeds `local/content/` from `docs/demo/content/` (if empty)
+1. Seeds `local/` from `docs/demo/` (only if missing or empty — existing content is never touched)
 2. Builds PHP Docker image
 3. Installs Composer deps (`--no-dev` in prod)
 4. Compiles SCSS + assets

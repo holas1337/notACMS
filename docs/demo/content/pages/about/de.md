@@ -1,7 +1,7 @@
 ---
 title: "Über das Projekt"
 slug: "about"
-description: "notACMS — KI-freundlicher Static Site Generator auf Symfony-Basis. Keine Datenbank, reines Markdown, ein Befehl zum Deployen."
+description: "notACMS — KI-freundlicher Static Site Generator auf Symfony-Basis. Keine Datenbank, reines Markdown, ein Befehl zum Bereitstellen."
 template: page/about
 menu:
   weight: 60
@@ -12,7 +12,9 @@ menu:
 
 notACMS ist ein Static Site Generator, der auf Symfony 7.4 und PHP 8.5 aufbaut. Du schreibst Inhalte in Markdown mit YAML-Frontmatter, konfigurierst Locales und Website-Einstellungen in einer einzigen YAML-Datei und führst einen Befehl aus — das Ergebnis ist eine vollständig vorgerenderte HTML-Website. Keine Datenbank, kein PHP zur Laufzeit (außer einem optionalen Kontaktformular).
 
-notACMS ist der Generator, den ich mir gewünscht hätte. Die Architektur ist eine dünne Schicht über Symfony. Das Content-Modell sind Flat Files. Der Build-Schritt ist ein einziger Befehl.
+Jedes vorhandene Werkzeug schien zu verlangen, ein neues Ökosystem zu lernen. Hugo hat seine eigene Templatesprache. Jekyll setzt Ruby voraus. Next.js bringt einen JavaScript-Bundler in einen Workflow, der eigentlich einfaches statisches Publizieren sein sollte.
+
+notACMS ist der Generator, den ich mir gewünscht hätte. Die Architektur ist eine dünne Schicht über Symfony. Das Inhaltsmodell besteht aus Flat Files. Der Build-Schritt ist ein einziger Befehl.
 
 ## Philosophie
 

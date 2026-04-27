@@ -1,8 +1,8 @@
 ---
 title: "Kontakt"
 slug: "kontakt"
-description: "Haben Sie eine Frage zu notACMS oder möchten Sie Kontakt aufnehmen? Schreiben Sie mir."
+description: "Hast du eine Frage zu notACMS oder möchtest du Kontakt aufnehmen? Schreib mir."
 template: page/contact
 ---
 
-Haben Sie eine Frage zu notACMS, einen Fehler gefunden oder möchten Sie über ein Projekt sprechen? Nutzen Sie das Formular unten — ich melde mich so schnell wie möglich.
+> **Demo-Hinweis:** Diese Demo-Seite hat `RUNTIME_PHP_ENABLED=false` in der `.env`-Datei stehen, was bedeutet, dass das Kontaktformular deaktiviert ist. Um es zu aktivieren, setze `RUNTIME_PHP_ENABLED=true` und starte die Container neu. Siehe das [Handbuch](/manual/) für Details.

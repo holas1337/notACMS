@@ -139,7 +139,7 @@ Referencja w frontmatter: `image: /media/my-post/featured.webp`
 ```
 
 Co się dzieje:
-1. Kopiuje `local/content/` z `docs/demo/content/` (jeśli puste)
+1. Seeduje `local/` z `docs/demo/` (tylko jeśli brak lub puste — istniejąca treść nigdy nie jest nadpisywana)
 2. Buduje obraz Docker PHP
 3. Instaluje zależności Composer (`--no-dev` w prod)
 4. Kompiluje SCSS + assety

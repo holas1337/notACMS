@@ -5,4 +5,4 @@ description: "Vous avez une question sur notACMS ou souhaitez prendre contact ? 
 template: page/contact
 ---
 
-Vous avez une question sur notACMS, trouvé un bug ou souhaitez discuter d'un projet ? Utilisez le formulaire ci-dessous — je vous répondrai dès que possible.
+> **Avis de démonstration :** Ce site de démonstration a `RUNTIME_PHP_ENABLED=false` dans le fichier `.env`, ce qui signifie que le formulaire de contact est désactivé. Pour l'activer, définissez `RUNTIME_PHP_ENABLED=true` et redémarrez les conteneurs. Consultez le [Manuel](/fr/manual/) pour plus de détails.

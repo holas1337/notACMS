@@ -44,9 +44,9 @@ Das ist alles. notACMS wird:
 - `hreflang`-Tags für alle Seiten mit einer DE-Übersetzung generieren
 - DE-URLs mit `/de/` präfixieren (oder deinen benutzerdefinierten Pfad verwenden)
 
-Dasselbe gilt für `fr`, `pl` oder jede andere Locale, die Sie hinzufügen.
+Dasselbe gilt für `fr`, `pl` oder jede andere Locale, die du hinzufügst.
 
-## Content Co-location
+## Gemeinsame Ablage von Inhalten
 
 Übersetzungen befinden sich neben dem Quellinhalt. Jede Locale ist eine separate Markdown-Datei im selben Verzeichnis:
 

@@ -25,7 +25,7 @@ Der Kern in `templates/`, `assets/`, `translations/` ist jetzt ein Wireframe. Er
 
 ### Demo-Theme
 
-Das Demo lebt unter `docs/demo/` und wird nach `local/` kopiert, wenn du `--demo` wählst. Es ist das vollständige Amber-Phosphor-Design, das du gerade liest — Dark Mode, Such-Overlay, Docs-Sidebar, Theme-Umschalter, alles dabei. Starte hier, wenn du heute ein poliertes Design willst und planst, zu tweaken statt neu zu bauen.
+Das Demo befindet sich unter `docs/demo/` und wird nach `local/` kopiert, wenn du `--demo` wählst. Es ist das vollständige Amber-Phosphor-Design, das du gerade liest — Dark Mode, Such-Overlay, Docs-Sidebar, Theme-Umschalter, alles dabei. Starte hier, wenn du heute ein poliertes Design willst und planst anzupassen, statt neu zu bauen.
 
 ## Das `local/`-Override-System
 
@@ -40,7 +40,7 @@ Beide Themes nutzen denselben Mechanismus: Jede Datei in `local/` hat Vorrang vo
 | Inhalte | `local/content/**` | Parameter `notacms_content` |
 | Nginx-Snippets | `local/docker/nginx/*.conf` | Container-Entrypoint |
 
-Der Kern wird nie bearbeitet. `git pull` bleibt sauber. Anpassungen leben im Repo deiner Site, nicht in einem Fork dieses Repos.
+Der Kern wird nie bearbeitet. `git pull` bleibt sauber. Anpassungen befinden sich im Repo deiner Site, nicht in einem Fork dieses Repos.
 
 ## Upgrade von 1.0.0
 
@@ -70,6 +70,6 @@ Siehe [UPGRADE-1.1.md](https://github.com/holas1337/notACMS/blob/main/UPGRADE-1.
 - **Test-Suite-Gerüst** unter `tests/Unit/`, `tests/Integration/`, `tests/Fixtures/` mit initialer Abdeckung und einem vom Host ausführbaren `test`-Befehl.
 - **KI-Agent-Skills** unter `.claude/skills/` für die Arbeit am Repo: Locales hinzufügen, Doc-Alignment-Checks, Site-Sweeps, Übersetzungen und Erstellen von Upgrade-Guides.
 
-## Vollständiges Changelog
+## Vollständige Liste der Änderungen
 
 Jede Änderung mit Kategorie: [CHANGELOG.md](https://github.com/holas1337/notACMS/blob/main/CHANGELOG.md#110---2026-04-24).

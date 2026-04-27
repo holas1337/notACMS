@@ -1,6 +1,6 @@
 ---
 title: "Architecture"
-description: "Comment notACMS fonctionne en interne — pipeline de contenu, système de routage et processus de build."
+description: "Comment notACMS fonctionne en interne — pipeline de contenu, système de routage et processus de compilation."
 template: page/doc
 slug: architecture
 menu:
@@ -10,16 +10,16 @@ menu:
 
 ## Pipeline de Contenu
 
-Chaque build suit une pipeline en quatre étapes :
+Chaque compilation suit une pipeline en quatre étapes :
 
 ```
 1. sass:build         → Compiler SCSS vers CSS
 2. asset-map:compile  → Hacher et copier les assets
-3. app:build          → Rendre toutes les pages HTML depuis le contenu + les templates
+3. app:build          → Générer toutes les pages HTML à partir du contenu + des templates
 4. pagefind            → Créer l'index de recherche
 ```
 
-L'étape 3 est contrôlée par `BuildStaticSiteCommand` dans `src/Command/`, qui scanne le contenu, rend les templates, génère les images responsives et écrit le HTML statique dans `public/static/`. L'étape 4 exécute `npx pagefind` comme processus séparé.
+L'étape 3 est contrôlée par `BuildStaticSiteCommand` dans `src/Command/`, qui scanne le contenu, compile les templates, génère les images responsives et écrit le HTML statique dans `public/static/`. L'étape 4 exécute `npx pagefind` comme processus séparé.
 
 Les URLs sont dérivées du champ frontmatter `slug`, pas des chemins de répertoire. Un article dans `blog/releases/release-1-0-0/en.md` avec `slug: "blog/release-1-0-0"` génère `/blog/release-1-0-0/`.
 
@@ -38,7 +38,7 @@ Le `LocalizedRouteLoader` lit `local/content/_routes.yaml` et enregistre les rou
 | `blog/releases/release-1-0-0/en.md` | `blog/release-1-0-0` | EN | `/blog/release-1-0-0/` |
 | `blog/releases/release-1-0-0/pl.md` | `blog/release-1-0-0` | PL | `/wpisy/release-1-0-0/` |
 
-## Services Core
+## Services principaux
 
 ### `ContentService`
 
@@ -90,7 +90,7 @@ Lit `local/content/_site.yaml` et expose les paramètres du site en tant que ser
 
 ### `ContentTree`
 
-Représentation interne de la hiérarchie de contenu pour une seule locale. Utilisée pour la navigation, le calcul précédent/suivant et la reconnaissance des séries. `ContentService` l'enveloppe comme une façade, donc les mêmes noms de méthodes de recherche (`findByUrl`, `findPostBySlug`, `findScheduledPostBySlug`) existent aux deux niveaux : la variante service accepte `$locale` et délègue à l'arbre de la locale correspondante.
+Représentation interne de la hiérarchie de contenu pour une seule locale. Utilisée pour la navigation, le calcul des liens précédent/suivant et la reconnaissance des séries. `ContentService` l'enveloppe comme une façade, donc les mêmes noms de méthodes de recherche (`findByUrl`, `findPostBySlug`, `findScheduledPostBySlug`) existent aux deux niveaux : la variante service accepte `$locale` et délègue à l'arbre de la locale correspondante.
 
 Méthodes importantes :
 - `getAdjacentPosts()` — retourne le Value Object `AdjacentPosts` avec `->prev` et `->next`
@@ -105,7 +105,7 @@ Méthodes importantes :
 | `SrcsetExtension` | Filtre Twig `srcset_media` — post-traite le HTML pour insérer les attributs `srcset`/`sizes` dans les balises `<img>` |
 | `MediaFileResolver` | Résout les chemins de fichiers média à travers les locales |
 | `RelatedPostsService` | Trouve les articles connexes via les tags communs et le frontmatter `related` manuel |
-| `SessionToggleService` | Générateur de bascule booléenne basée sur session ; dépendance commune des deux services de prévisualisation ci-dessous |
+| `SessionToggleService` | Bascule booléenne générique basée sur la session ; dépendance commune des deux services de prévisualisation ci-dessous |
 | `DraftPreviewService` | Gère la prévisualisation du contenu brouillon avec des bascules basées sur session |
 | `ScheduledPreviewService` | Gère la prévisualisation des articles planifiés futurs |
 | `TranslationMapBuilder` | Crée les cartes de traduction d'URL à travers les locales pour le sélecteur de langue |
@@ -132,9 +132,7 @@ De plus, `cf_analytics_token` est enregistré comme globale Twig dans `config/pa
 
 ```
 Browser → nginx → PHP-FPM → Symfony Kernel → LocaleListener → Router
-          → Controller → ContentService → Twig → HTML-Response
-         → Twig-Renderer (appliquer template)
-         → HTML-Response
+          → Controller → ContentService → Twig → HTML response
 ```
 
 Les contrôleurs sont minces. Toute la logique métier réside dans les services.
@@ -142,29 +140,29 @@ Les contrôleurs sont minces. Toute la logique métier réside dans les services
 ## Stratégie de Test
 
 ```bash
-ddev test           # Exécuter toute la suite de tests
+ddev test           # Exécuter la batterie de tests complète
 ddev code-check     # PHPStan Level 6 + PHP CS Fixer
 ```
 
 - **Centaines de méthodes de test** dans les suites d'intégration et unitaires.
 - **PHPStan :** Analyse statique au niveau 6. Tous les services sont entièrement typés.
 - **PHP CS Fixer :** Applique PSR-12 + Standards de Codage Symfony.
-- **Tests d'intégration :** Couvrent le routage, le chargement de contenu, les contrôleurs, la sortie de build, le traitement d'images, les services de prévisualisation et les extensions Twig.
+- **Tests d'intégration :** Couvrent le routage, le chargement de contenu, les contrôleurs, la sortie de compilation, le traitement d'images, les services de prévisualisation et les extensions Twig.
 - **Tests unitaires :** Couvrent `ContentItem`, `ContentTree`, Value Objects, `RelatedPostsService`, `TagTranslationService` et `ResponsiveImageService`.
 
 Voir `docs/TESTING.md` pour les détails.
 
 ## Ajout de Fonctionnalités
 
-notACMS suit le pattern du conteneur de services Symfony. Pour ajouter un nouveau type de contenu ou une étape de build :
+notACMS suit le pattern du conteneur de services Symfony. Pour ajouter un nouveau type de contenu ou une étape de compilation :
 
 1. Créer une interface dans `src/Service/` (pour les contributions core) ou `local/src/` (pour les extensions spécifiques au site)
 2. Créer la classe d'implémentation dans le même répertoire
-3. Symfony auto-discover et autowire automatiquement — aucun enregistrement manuel `services.yaml` requis
+3. Symfony découvre et autowire automatiquement — aucun enregistrement manuel `services.yaml` requis
 4. Injecter dans le contrôleur ou commande pertinent
 5. Surcharger les templates dans `local/templates/` si nécessaire
 
-> **Astuce :** Tous les services sont d'abord des interfaces. Cela facilite le remplacement des implémentations — par exemple, le chargeur de système de fichiers local contre une source S3.
+> **Astuce :** Tous les services sont d'abord des interfaces. Cela facilite le remplacement des implémentations — par exemple, le chargeur de système de fichiers local par une source S3.
 
 ## Runtime PHP (Optionnel)
 
@@ -180,7 +178,7 @@ Le cas d'utilisation standard est le **formulaire de contact** (`ContactControll
 
 ## Architecture de Déploiement
 
-### Serving Static-First
+### Diffusion statique en priorité
 
 Nginx sert les fichiers pré-construits directement depuis `public/static/`. PHP n'est impliqué que pour :
 - `/api/contact` — lorsque `RUNTIME_PHP_ENABLED=true`
@@ -192,16 +190,17 @@ Browser → Nginx → public/static/ (HTML, CSS, JS)
                 → Proxy vers le conteneur PHP (uniquement pour /api/*)
 ```
 
-### Build vs Runtime
+### Compilation vs Exécution
 
 | Phase | Commande | Sortie | Durée |
 |-------|----------|--------|-------|
 | 1. Compiler | `sass:build` | `public/assets/app-<hash>.css` | ~2s |
 | 2. Assets | `asset-map:compile` | Copies d'assets hachées dans `public/assets/` | ~1s |
-| 3. Build | `app:build` (BuildStaticSiteCommand) | `public/static/**/*.html` | ~5s |
+| 3. Compilation | `app:build` (BuildStaticSiteCommand) | `public/static/**/*.html` | ~5s |
 | 4. Index | `pagefind` | Index de recherche `public/pagefind/` | ~3s |
+| 5. Diffusion | nginx | Réponses HTTP | continu |
 
-Premier déploiement complet : ~2-3 minutes (Build Docker)
+Premier déploiement complet : ~2-3 minutes (Construction Docker)
 Mise à jour de contenu : ~10 secondes
 
 ### Profils de Conteneur

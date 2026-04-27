@@ -1,7 +1,7 @@
 ---
 title: "notACMS v1.0.0"
 slug: "beitraege/release-1-0-0"
-description: "Das erste stabile Release — Core Content Pipeline, mehrsprachiges Routing, Pagefind-Suche, Bildverarbeitung und DDEV-basierte lokale Entwicklung."
+description: "Das erste stabile Release — Core-Inhalts-Pipeline, mehrsprachiges Routing, Pagefind-Suche, Bildverarbeitung und DDEV-basierte lokale Entwicklung."
 date: 2026-04-09
 category: releases
 tags: [release, announcement]
@@ -12,9 +12,9 @@ template: blog/post
 
 Nach mehreren Monaten internem Einsatz in persönlichen Projekten markiere ich das erste stabile Release. Der Kern-Funktionsumfang ist solide genug, um damit echte Seiten zu bauen.
 
-### Content-Pipeline
+### Inhalts-Pipeline
 
-Die Content-Pipeline ist das Herzstück von notACMS. Sie liest das `local/content/`-Verzeichnis, parst Frontmatter und generiert mit einem einzigen Befehl eine vollständige statische Seite.
+Die Inhalts-Pipeline ist das Herzstück von notACMS. Sie liest das `local/content/`-Verzeichnis, parst Frontmatter und generiert mit einem einzigen Befehl eine vollständige statische Seite.
 
 - Markdown-Inhalte mit YAML-Frontmatter
 - CommonMark-Rendering mit Überschriften-Permalinks

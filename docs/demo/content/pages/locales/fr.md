@@ -10,7 +10,7 @@ menu:
 
 ## Ajouter une Nouvelle Locale
 
-Ouvrez `local/content/_site.yaml` et ajoutez une entrée à la map `locales` :
+Ouvrez `local/content/_site.yaml` et ajoutez une entrée à la section `locales` :
 
 ```yaml
 site:

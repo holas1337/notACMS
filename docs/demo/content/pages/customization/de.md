@@ -10,14 +10,14 @@ menu:
 
 ## Das `local/`-Override-System
 
-Jede Anpassung lebt in `local/`. Dieses Verzeichnis ist deine site-spezifische Schicht. Die Core-`templates/`, `assets/` und `src/`-Verzeichnisse sind das Framework. Deine Overrides in `local/` haben Vorrang.
+Jede Anpassung befindet sich in `local/`. Dieses Verzeichnis ist deine site-spezifische Schicht. Die Core-`templates/`, `assets/` und `src/`-Verzeichnisse sind das Framework. Deine Overrides in `local/` haben Vorrang.
 
 ```
 local/
 ├── assets/          # SCSS-Overrides + custom JS
 │   ├── images/      # og-default.jpg überschreiben
 │   └── app.js       # als zweiter Entrypoint geladen
-├── content/         # all dein Content (Seiten, Blog, Config)
+├── content/         # all deine Inhalte (Seiten, Blog, Konfiguration)
 ├── docker/          # custom Nginx-Config
 │   └── nginx/       # .conf-Snippets (Redirects, Fehlerseiten)
 ├── docs/            # site-spezifische EDITOR_GUIDE.md + STYLEGUIDE.md
@@ -36,7 +36,7 @@ cp templates/page/default.html.twig local/templates/page/default.html.twig
 # Jetzt local/templates/page/default.html.twig editieren
 ```
 
-Der Twig-Loader checkt zuerst `local/templates/`, dann Fallback auf `templates/`. Du kannst jedes Template überschreiben, ohne Core-Dateien zu touchieren.
+Der Twig-Loader checkt zuerst `local/templates/`, dann Fallback auf `templates/`. Du kannst jedes Template überschreiben, ohne Core-Dateien zu bearbeiten.
 
 ### Einzelnen Block überschreiben
 
@@ -68,7 +68,7 @@ Erstelle die Datei am gleichen Pfad ohne `extends` — sie ersetzt das Original 
 
 | Core-Template | Zweck |
 |---|---|
-| `templates/base.html.twig` | Global Layout, Header, Footer |
+| `templates/base.html.twig` | Globales Layout, Header, Footer |
 | `templates/components/navigation.html.twig` | Nav-Links |
 | `templates/page/default.html.twig` | Standard-Page-Layout |
 | `templates/page/doc.html.twig` | Dokumentations-Layout |
@@ -146,7 +146,7 @@ final class MyCustomService
 }
 ```
 
-Inject in einen Controller via Constructor Injection — Symfony's DI-Container erledigt den Rest.
+Injiziere es per Constructor Injection in einen Controller — Symfony's DI-Container erledigt den Rest.
 
 ### Erweitert: Event-Listener, Twig-Filter, Service-Dekoratoren
 
@@ -261,7 +261,7 @@ Für einen komplett anderen Ansatz (anderes Format, andere Dimensionen oder Logi
 
 `local/docs/` enthält zwei site-spezifische Referenzdateien, beide gitignored und beim ersten Deploy geseedt:
 
-**`local/docs/EDITOR_GUIDE.md`** — der Schreibleitfaden für deine Site: Kategorien, genehmigte Tags, Stimme und Bildgenerierungsstile. Geseedt aus `docs/demo/docs/EDITOR_GUIDE.md`. System-Level-Content-Mechaniken (Frontmatter-Felder, URL-Struktur, Serien, Entwürfe) bleiben in `docs/EDITOR_GUIDE.md`.
+**`local/docs/EDITOR_GUIDE.md`** — der Schreibleitfaden für deine Site: Kategorien, genehmigte Tags, Stimme und Bildgenerierungsstile. Geseedt aus `docs/demo/docs/EDITOR_GUIDE.md`. System-Level-Inhaltsmechanismen (Frontmatter-Felder, URL-Struktur, Serien, Entwürfe) bleiben in `docs/EDITOR_GUIDE.md`.
 
 **`local/docs/STYLEGUIDE.md`** — die Design-Referenz für deine Site: Design-Tokens, Farbpalette, Typografie und Komponentenliste. Geseedt aus `docs/demo/docs/STYLEGUIDE.md`. Styleguide-Mechaniken (die `/styleguide/`-Dev-Seite, SCSS-Konventionen) bleiben in `docs/STYLEGUIDE.md`.
 
@@ -336,7 +336,7 @@ services:
 
 ### Security-Header
 
-Zufügen zu `local/docker/nginx/redirects.conf`:
+Hinzufügen zu `local/docker/nginx/redirects.conf`:
 
 ```nginx
 # Security-Header
@@ -356,7 +356,7 @@ location ~* \.(css|js|webp|ico|woff2)$ {
 
 Das Docker Compose hat Traefik-Labels für automatisches SSL.
 
-Requirements:
+Voraussetzungen:
 - Externes Netzwerk: `docker network create web`
 - DNS A-Record zeigt auf Server-IP
 - Ports 80/443 offen
@@ -368,7 +368,7 @@ CERTRESOLVER=le  # Let's Encrypt
 #CERTRESOLVER=dummy  # Self-signed zum Testen
 ```
 
-Für custom Traefik-Config, Labels zu `docker-compose.override.yaml` hinzufügen.
+Für benutzerdefinierte Traefik-Konfiguration, Labels zu `docker-compose.override.yaml` hinzufügen.
 
 ### Custom Build-Schritte
 

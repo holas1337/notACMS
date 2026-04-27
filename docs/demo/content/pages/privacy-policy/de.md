@@ -1,7 +1,7 @@
 ---
 title: "Datenschutzerklärung"
 slug: "datenschutz"
-description: "Wie diese Seite mit Ihren Daten umgeht."
+description: "Wie diese Seite mit deinen Daten umgeht."
 template: page/default
 ---
 
