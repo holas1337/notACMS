@@ -167,6 +167,11 @@ final readonly class ContentItem
         return (int) ($this->frontMatter['menu']['weight'] ?? self::DEFAULT_MENU_WEIGHT);
     }
 
+    public function menuLabel(): string
+    {
+        return (string) ($this->frontMatter['menu']['label'] ?? $this->title());
+    }
+
     public function isIndex(): bool
     {
         return $this->isIndexItem;

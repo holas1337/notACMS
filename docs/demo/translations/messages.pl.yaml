@@ -2,12 +2,6 @@ header:
   tagline: blog demo
 nav:
   skip_to_content: Przejdź do treści
-  home: Strona główna
-  blog: Wpisy
-  projects: Realizacje
-  about: O mnie
-  contact: Kontakt
-  privacy_policy: Polityka prywatności
   search: Szukaj
   menu: menu
   main: Nawigacja główna
@@ -139,13 +133,6 @@ badge:
   updated: '[ZAKTUALIZOWANY]'
 site:
   docs: Dokumentacja
-  releases: Wydania
-  about: O projekcie
-  manual: Podręcznik
-  architecture: Architektura
-  customization: Dostosowanie
-  locales: Lokalizacja
-  design_reference: Wzornik
   github: GitHub
   project: Projekt
   author: Autor
@@ -156,7 +143,6 @@ site:
   nav_prev: Poprzedni
   nav_next: Następny
   open_navigation: Otwórz nawigację
-  contact: Kontakt
 home:
   hero_badge: Open Source · PHP / Symfony
   hero_heading: Generator stron statycznych, który<br><em>po prostu nie przeszkadza.</em>

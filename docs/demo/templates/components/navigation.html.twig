@@ -32,27 +32,27 @@
         <ul class="nav-dropdown">
             <li>
                 <a href="{{ manual_url }}"{% if current_path starts with manual_url %} aria-current="page"{% endif %}>
-                    <i class="ph ph-book-open" aria-hidden="true"></i> {{ 'site.manual'|trans }}
+                    <i class="ph ph-book-open" aria-hidden="true"></i> {{ content_item('manual', locale).menuLabel() }}
                 </a>
             </li>
             <li>
                 <a href="{{ arch_url }}"{% if current_path starts with arch_url %} aria-current="page"{% endif %}>
-                    <i class="ph ph-tree-structure" aria-hidden="true"></i> {{ 'site.architecture'|trans }}
+                    <i class="ph ph-tree-structure" aria-hidden="true"></i> {{ content_item('architecture', locale).menuLabel() }}
                 </a>
             </li>
             <li>
                 <a href="{{ custom_url }}"{% if current_path starts with custom_url %} aria-current="page"{% endif %}>
-                    <i class="ph ph-sliders" aria-hidden="true"></i> {{ 'site.customization'|trans }}
+                    <i class="ph ph-sliders" aria-hidden="true"></i> {{ content_item('customization', locale).menuLabel() }}
                 </a>
             </li>
             <li>
                 <a href="{{ locales_url }}"{% if current_path starts with locales_url %} aria-current="page"{% endif %}>
-                    <i class="ph ph-globe" aria-hidden="true"></i> {{ 'site.locales'|trans }}
+                    <i class="ph ph-globe" aria-hidden="true"></i> {{ content_item('locales', locale).menuLabel() }}
                 </a>
             </li>
             <li>
                 <a href="{{ styleguide_url }}"{% if current_path starts with styleguide_url %} aria-current="page"{% endif %}>
-                    <i class="ph ph-palette" aria-hidden="true"></i> {{ 'site.design_reference'|trans }}
+                    <i class="ph ph-palette" aria-hidden="true"></i> {{ content_item('styleguide', locale).menuLabel() }}
                 </a>
             </li>
         </ul>
@@ -61,21 +61,21 @@
     {# Releases #}
     <li class="nav-item{{ current_path starts with blog_url ? ' nav-item--active' : '' }}">
         <a href="{{ blog_url }}"{% if current_path starts with blog_url %} aria-current="page"{% endif %}>
-            {{ 'site.releases'|trans }}
+            {{ content_item('blog', locale).menuLabel() }}
         </a>
     </li>
 
     {# About #}
     <li class="nav-item{{ current_path is same as(about_url) ? ' nav-item--active' : '' }}">
         <a href="{{ about_url }}"{% if current_path is same as(about_url) %} aria-current="page"{% endif %}>
-            {{ 'site.about'|trans }}
+            {{ content_item('about', locale).menuLabel() }}
         </a>
     </li>
 
     {# Contact #}
     <li class="nav-item{{ current_path is same as(contact_url) ? ' nav-item--active' : '' }}">
         <a href="{{ contact_url }}"{% if current_path is same as(contact_url) %} aria-current="page"{% endif %}>
-            {{ 'site.contact'|trans }}
+            {{ content_item('contact', locale).menuLabel() }}
         </a>
     </li>
 </ul>

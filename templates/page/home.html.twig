@@ -17,7 +17,7 @@
 
     <ul class="home-actions">
         <li><a href="{{ path('blog_list_' ~ locale) }}" class="btn btn-primary">{{ 'blog.all_posts'|trans }}</a></li>
-        <li><a href="{{ content_url('about', locale) }}" class="btn btn-outline">{{ 'nav.about'|trans }}</a></li>
+        <li><a href="{{ content_url('about', locale) }}" class="btn btn-outline">{{ content_item('about', locale).menuLabel() }}</a></li>
     </ul>
 </section>
 

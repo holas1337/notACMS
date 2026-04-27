@@ -133,8 +133,9 @@
     <footer class="site-footer">
         <div class="container">
             <span>&copy; {{ "now"|date("Y") }} {{ site_name }}</span>
-            {% if content_url('privacy-policy', locale) is defined %}
-            <a href="{{ content_url('privacy-policy', locale) }}">{{ 'nav.privacy_policy'|trans }}</a>
+            {% set privacy_item = content_item('privacy-policy', locale) %}
+            {% if privacy_item is not null %}
+            <a href="{{ content_url('privacy-policy', locale) }}">{{ privacy_item.menuLabel() }}</a>
             {% endif %}
         </div>
     </footer>

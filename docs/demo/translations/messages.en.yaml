@@ -2,12 +2,6 @@ header:
   tagline: demo blog
 nav:
   skip_to_content: Skip to content
-  home: Home
-  blog: Blog
-  projects: Projects
-  about: About
-  contact: Contact
-  privacy_policy: Privacy Policy
   search: Search
   menu: menu
   main: Main navigation
@@ -138,13 +132,6 @@ badge:
   updated: '[RECENTLY UPDATED]'
 site:
   docs: Documentation
-  releases: Releases
-  about: About
-  manual: Manual
-  architecture: Architecture
-  customization: Customization
-  locales: Locales
-  design_reference: Design Reference
   github: GitHub
   project: Project
   author: Author
@@ -155,7 +142,6 @@ site:
   nav_prev: Previous
   nav_next: Next
   open_navigation: Open navigation
-  contact: Contact
 home:
   hero_badge: Open Source · PHP / Symfony
   hero_heading: The static site generator that<br><em>gets out of your way.</em>

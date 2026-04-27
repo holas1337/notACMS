@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'site.releases'|trans }} | {{ site_name }}{% endblock %}
+{% block title %}{{ index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }} | {{ site_name }}{% endblock %}
 {% block meta_description %}{% if filter_type is same as('tag') %}{{ 'releases.meta_tagged'|trans({'%tag%': filter_value, '%site_name%': site_name}) }}{% else %}{{ 'releases.meta_description'|trans({'%site_name%': site_name}) }}{% endif %}{% endblock %}
-{% block og_title %}{{ 'site.releases'|trans }}{% endblock %}
+{% block og_title %}{{ index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }}{% endblock %}
 
 {% block body %}
 
@@ -12,13 +12,13 @@
     <div class="page-header">
         {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
             { label: site_name, url: path('home_' ~ locale) },
-            { label: 'site.releases'|trans }
+            { label: index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }
         ] }) }}
         <h1>
             {% if filter_type is same as('tag') %}
                 {{ 'releases.tagged_heading'|trans }} <span class="text-accent">#{{ filter_value }}</span>
             {% else %}
-                {{ 'site.releases'|trans }}
+                {{ index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }}
             {% endif %}
         </h1>
         <p class="page-header-desc">

@@ -159,7 +159,7 @@ menu:
 
 ### 4. Add to navigation
 
-Set `menu.weight` and `menu.label` in frontmatter. Lower weight = appears earlier. Existing weights for reference:
+Set `menu.weight` and `menu.label` in frontmatter. Lower weight = appears earlier. `menu.label` is the text shown in the navigation; if omitted, the page `title` is used as fallback. Existing weights for reference:
 
 | Page | Weight |
 |---|---|
