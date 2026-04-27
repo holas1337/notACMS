@@ -1,7 +1,7 @@
 ---
 title: "notACMS — Generator stron statycznych dla programistów PHP"
 slug: ""
-description: "Pisz w Markdown. Definiuj strukturę w YAML. Uruchom jedno polecenie. Uzyskaj czysty statyczny HTML — brak bazy danych, brak serwera, brak niespodzianek."
+description: "Pisz w Markdown. Definiuj strukturę w YAML. Jedno polecenie — i masz czysty, statyczny HTML. Bez bazy danych, bez środowiska uruchomieniowego, bez niespodzianek."
 template: page/home
 menu:
   weight: 10

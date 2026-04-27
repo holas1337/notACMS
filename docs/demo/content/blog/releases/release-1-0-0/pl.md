@@ -23,7 +23,7 @@ Pipeline treści to serce notACMS. Odczytuje katalog `local/content/`, parsuje f
 
 ### Wielojęzyczny routing
 
-Lokale są definiowane w `_site.yaml`. Każdy lokal otrzymuje własną przestrzeń URL, z opcjonalnymi nadpisaniami ścieżek w `_routes.yaml`. Tagi hreflang są generowane automatycznie.
+Wersje językowe są definiowane w `_site.yaml`. Każda wersja językowa otrzymuje własną przestrzeń URL, z opcjonalnymi nadpisaniami ścieżek w `_routes.yaml`.
 
 ```yaml
 locales:
@@ -47,7 +47,7 @@ Obrazy przechowywane obok treści są przetwarzane podczas budowania. notACMS ge
 
 Środowisko deweloperskie jest w pełni skonteneryzowane z DDEV. `ddev start` daje PHP 8.5, Nginx i wszystkie narzędzia budowania. `ddev build` produkuje wynik statyczny. `ddev code-check` uruchamia PHPStan i PHP CS Fixer.
 
-## Przełomowe zmiany
+## Breaking changes
 
 To pierwsze stabilne wydanie. Jeśli używałeś wersji sprzed 1.0, sprawdź schemat `_site.yaml` — klucz `social` zmienił się z listy na mapę.
 
@@ -61,4 +61,4 @@ ddev build
 
 ## Co dalej
 
-v1.1.0 skupi się na systemie designu i dokumentacji. Ta strona — zbudowana z notACMS — stanie się oficjalną dokumentacją i referencją designu.
+v1.1.0 skupi się na systemie designu i dokumentacji. Ta strona — zbudowana z notACMS — stanie się oficjalną dokumentacją i referencją projektową.

@@ -8,7 +8,7 @@ menu:
   label: "Architektura"
 ---
 
-## Pipeline Treści
+## Pipeline treści
 
 Każdy build przebiega według czteroetapowego pipeline:
 
@@ -23,11 +23,11 @@ Krok 3 jest sterowany przez `BuildStaticSiteCommand` w `src/Command/`, który sk
 
 URL-e pochodzą z pola frontmatter `slug`, a nie ze ścieżek katalogów. Post w `blog/releases/release-1-0-0/en.md` z `slug: "blog/release-1-0-0"` generuje `/blog/release-1-0-0/`.
 
-## System Routingu
+## System routingu
 
 Trasy są generowane z drzewa treści. Każdy `ContentItem` ma URL zdefiniowany przez pole frontmatter `slug`.
 
-`LocalizedRouteLoader` czyta `local/content/_routes.yaml` i rejestruje trasy Symfony dla każdego locale. Domyślne locale (EN) ma trasy bez prefiksu. Inne locale dostają prefiks `/{locale}/`, chyba że nadpisano.
+`LocalizedRouteLoader` czyta `local/content/_routes.yaml` i rejestruje trasy Symfony dla każdej wersji językowej. Domyślna wersja językowa (EN) ma trasy bez prefiksu. Pozostałe wersje językowe otrzymują prefiks `/{locale}/`, chyba że nadpisano.
 
 **Przykład generowania URL:**
 
@@ -38,7 +38,7 @@ Trasy są generowane z drzewa treści. Każdy `ContentItem` ma URL zdefiniowany 
 | `blog/releases/release-1-0-0/en.md` | `blog/release-1-0-0` | EN | `/blog/release-1-0-0/` |
 | `blog/releases/release-1-0-0/pl.md` | `blog/release-1-0-0` | PL | `/wpisy/release-1-0-0/` |
 
-## Serwisy Core
+## Serwisy rdzeniowe
 
 ### `ContentService`
 
@@ -52,7 +52,7 @@ $item  = $contentService->findByUrl('/about/', $locale);
 
 ### `ContentItem`
 
-Reprezentuje pojedynczy element treści. Ekspozycja metod dla pól frontmatter:
+Reprezentuje pojedynczy element treści. Udostępnia metody dla pól frontmatter:
 
 ```php
 $item->title()          // string
@@ -86,11 +86,11 @@ $item->htmlContent      // wyrenderowany string HTML (właściwość public)
 
 ### `SiteConfigService`
 
-Czyta `local/content/_site.yaml` i ekspozycja ustawień site-wide jako serwis. Injected do kontrolerów i Twig globals przez `SiteConfigExtension`.
+Czyta `local/content/_site.yaml` i udostępnia ustawienia globalne jako serwis. Wstrzykiwany do kontrolerów i Twig globals przez `SiteConfigExtension`.
 
 ### `ContentTree`
 
-Wewnętrzna reprezentacja hierarchii treści dla pojedynczego locale. Używana do nawigacji, obliczania prev/next i wykrywania serii. `ContentService` opakowuje ją jako fasadę, więc te same nazwy metod wyszukiwania (`findByUrl`, `findPostBySlug`, `findScheduledPostBySlug`) istnieją w obu: wersja z serwisu przyjmuje `$locale` i deleguje do drzewa odpowiedniego locale.
+Wewnętrzna reprezentacja hierarchii treści dla pojedynczej wersji językowej. Używana do nawigacji, obliczania prev/next i wykrywania serii. `ContentService` stanowi dla niej fasadę, więc te same nazwy metod wyszukiwania (`findByUrl`, `findPostBySlug`, `findScheduledPostBySlug`) istnieją w obu: wersja z serwisu przyjmuje `$locale` i deleguje do drzewa odpowiedniego locale.
 
 Kluczowe metody:
 - `getAdjacentPosts()` — zwraca value object `AdjacentPosts` z `->prev` i `->next`
@@ -100,12 +100,12 @@ Kluczowe metody:
 
 | Serwis | Przeznaczenie |
 |--------|---------------|
-| `ImageResizer` | Wrapper ImageMagick: `resize()` generuje warianty responsywne; `optimize()` rekompresuje w miejscu |
+| `ImageResizer` | Nakładka na ImageMagick: `resize()` generuje warianty responsywne; `optimize()` rekompresuje w miejscu |
 | `ResponsiveImageService` | Oblicza szerokości wariantów responsywnych i buduje wartości atrybutów `srcset` |
-| `SrcsetExtension` | Filtr Twig `srcset_media` — post-processuje HTML wstrzykując atrybuty `srcset`/`sizes` do tagów `<img>` |
+| `SrcsetExtension` | Filtr Twig `srcset_media` — przetwarza HTML, wstrzykując atrybuty `srcset`/`sizes` do tagów `<img>` |
 | `MediaFileResolver` | Rozwiązuje ścieżki plików multimedialnych między locale |
 | `RelatedPostsService` | Znajduje powiązane posty przez wspólne tagi i ręczne frontmatter `related` |
-| `SessionToggleService` | Generyczny przełącznik boolean oparty o sesję; wspólna zależność obu serwisów podglądu poniżej |
+| `SessionToggleService` | Ogólny przełącznik logiczny oparty na sesji; współdzielona zależność obu serwisów podglądu poniżej |
 | `DraftPreviewService` | Zarządza podglądem draftów treści za pomocą przełączników sesji |
 | `ScheduledPreviewService` | Zarządza podglądem zaplanowanych, przyszłych postów |
 | `TranslationMapBuilder` | Buduje mapy tłumaczeń URL między locale dla przełącznika języka |
@@ -124,11 +124,11 @@ Pięć rozszerzeń Twig udostępnia dane w szablonach:
 | `TranslationMapTwigExtension` | Global | `translation_map` — mapowanie `{directoryKey: {locale: url}}` dla przełącznika języków i tagów hreflang |
 | `ContentTwigExtension` | Funkcja | `content_url(directoryKey, locale)` — rozwiązuje URL dla elementu treści po kluczu katalogu |
 | `LangSwitcherExtension` | Funkcja | `lang_switch_urls(otherLocales)` — rozwiązuje URL przełącznika języków dla każdego locale: mapa tłumaczeń, override kontrolera, następnie fallbacki (archiwum → paginacja → lista wpisów → strona główna) |
-| `SrcsetExtension` | Filter | `srcset_media` — post-processuje HTML wstrzykując atrybuty `srcset`/`sizes` w tagach `<img>` |
+| `SrcsetExtension` | Filter | `srcset_media` — przetwarza HTML, wstrzykując atrybuty `srcset`/`sizes` do tagów `<img>` w celu responsywności |
 
 Dodatkowo, `cf_analytics_token` jest rejestrowany jako Twig global w `config/packages/twig.yaml`, powiązany ze zmienną środowiskową `CF_ANALYTICS_TOKEN`.
 
-## Przepływ Żądania (Tryb Live)
+## Przepływ żądań (tryb na żywo)
 
 ```
 Przeglądarka → nginx → PHP-FPM → Symfony Kernel → LocaleListener → Router
@@ -137,9 +137,9 @@ Przeglądarka → nginx → PHP-FPM → Symfony Kernel → LocaleListener → Ro
             → HTML-Response
 ```
 
-Kontrolery są cienkie. Cała logika biznesowa mieszka w serwisach.
+Kontrolery są lekkie. Cała logika biznesowa znajduje się w serwisach.
 
-## Strategia Testowania
+## Strategia testowania
 
 ```bash
 ddev test           # Uruchom pełny zestaw testów
@@ -154,19 +154,19 @@ ddev code-check     # PHPStan poziom 6 + PHP CS Fixer
 
 Zobacz `docs/TESTING.md` po szczegóły.
 
-## Dodawanie Funkcjonalności
+## Dodawanie funkcjonalności
 
-notACMS stosuje wzorzec kontenera serwisów Symfony. Aby dodać nowy typ treści lub krok builda:
+notACMS stosuje wzorzec kontenera serwisów Symfony. Aby dodać nowy typ treści lub krok budowania:
 
 1. Utwórz interfejs w `src/Service/` (dla wkładu w core) lub `local/src/` (dla rozszerzeń specyficznych dla strony)
 2. Utwórz klasę implementacji w tym samym katalogu
 3. Symfony auto-discovery i autowiring — ręczna rejestracja w `services.yaml` nie jest potrzebna
-4. Inject do odpowiedniego kontrolera lub komendy
+4. Wstrzyknij do odpowiedniego kontrolera lub komendy
 5. Nadpisz szablony w `local/templates/` jeśli potrzeba
 
 > **Wskazówka:** Wszystkie serwisy to najpierw interfejsy. To ułatwia zamianę implementacji — na przykład zamianę lokalnego loadera filesystem na źródło S3.
 
-## Runtime PHP (Opcjonalny)
+## Runtime PHP (opcjonalny)
 
 Domyślnie zbudowana strona jest czysto statyczna — Nginx serwuje `public/static/` bezpośrednio i PHP nie jest zaangażowany.
 
@@ -178,9 +178,9 @@ Domyślny przypadek użycia to **formularz kontaktowy** (`ContactController` prz
 
 ---
 
-## Architektura Deploymentu
+## Architektura wdrożenia
 
-### Static-First Serving
+### Obsługa statyczna (static-first)
 
 Nginx serwuje wstępnie zbudowane pliki bezpośrednio z `public/static/`. PHP jest zaangażowany tylko dla:
 - `/api/contact` — jeśli `RUNTIME_PHP_ENABLED=true`
@@ -192,19 +192,19 @@ Przeglądarka → Nginx → public/static/ (HTML, CSS, JS)
                     → Proxy do kontenera PHP (tylko dla /api/*)
 ```
 
-### Build vs Runtime
+### Budowanie vs runtime
 
-| Faza | Komenda | Output | Czas trwania |
+| Faza | Komenda | Wynik | Czas trwania |
 |------|---------|--------|--------------|
 | 1. Kompilacja | `sass:build` | `public/assets/app-<hash>.css` | ~2s |
 | 2. Assety | `asset-map:compile` | Zahashowane kopie assetów w `public/assets/` | ~1s |
 | 3. Build | `app:build` (BuildStaticSiteCommand) | `public/static/**/*.html` | ~5s |
 | 4. Indeks | `pagefind` | `public/pagefind/` indeks wyszukiwania | ~3s |
 
-Całkowity pierwszy deploy: ~2-3 minuty (Docker build)
+Całkowite pierwsze wdrożenie: ~2-3 minuty (Docker build)
 Aktualizacja treści: ~10 sekund
 
-### Profile Kontenerów
+### Profile kontenerów
 
 | Profil | Kontenery | Przypadek użycia |
 |----------|-----------|------------------|

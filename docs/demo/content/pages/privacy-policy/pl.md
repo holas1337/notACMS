@@ -13,10 +13,10 @@ Ta strona ustawia jedno funkcjonalne ciasteczko:
 
 | Ciasteczko | Cel | Wygasa |
 |---|---|---|
-| `cookie_consent` | Zapamiętuje akceptację tej informacji | 365 dni |
-| `notacms-theme` | Zapamiętuje preferencję trybu jasny/ciemny | Trwale (localStorage) |
+| `cookie_consent` | Zapamiętuje Twoją zgodę | 365 dni |
+| `notacms-theme` | Zapamiętuje preferencję trybu jasny/ciemny | Bezterminowo (localStorage) |
 
-Brak ciasteczek śledzących. Brak zewnętrznych skryptów poza ikonami Phosphor via CDN.
+Brak ciasteczek śledzących. Brak zewnętrznych skryptów poza ikonami Phosphor z CDN.
 
 ## Analityka
 

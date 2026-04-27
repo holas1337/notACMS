@@ -8,7 +8,7 @@ menu:
   label: "Lokalizacja"
 ---
 
-## Dodawanie nowego lokalu
+## Dodawanie nowej wersji językowej
 
 Otwórz `local/content/_site.yaml` i dodaj wpis do mapy `locales`:
 
@@ -44,11 +44,11 @@ To wszystko. notACMS automatycznie:
 - Wygeneruje tagi `hreflang` dla wszystkich stron z tłumaczeniem DE
 - Poprzedzi adresy URL dla DE prefiksem `/de/` (lub użyje Twojej własnej ścieżki)
 
-To samo dotyczy `fr`, `pl` lub dowolnej innej dodanej locale.
+To samo dotyczy `fr`, `pl` lub dowolnej innej dodanej wersji językowej.
 
-## Kolokacja treści
+## Współlokacja treści
 
-Tłumaczenia przechowywane są obok treści źródłowej. Każdy lokal to osobny plik Markdown w tym samym katalogu:
+Tłumaczenia przechowywane są obok treści źródłowej. Każda wersja językowa to osobny plik Markdown w tym samym katalogu:
 
 ```
 pages/about/
@@ -58,11 +58,11 @@ pages/about/
 └── fr.md    ← francuski
 ```
 
-Pole `slug` we frontmatter definiuje ścieżkę URL dla każdego lokalu. Jeśli jest puste (lub pominięte dla stron indeksowych), używany jest URL strony głównej (`/` dla domyślnego lokalu, `/{locale}/` dla innych). URLe zawsze pochodzą z pola frontmatter `slug` — nie ze ścieżek katalogów.
+Pole `slug` we frontmatter definiuje ścieżkę URL dla każdej wersji językowej. Jeśli jest puste (lub pominięte dla stron indeksowych), używany jest URL strony głównej (`/` dla domyślnej wersji językowej, `/{locale}/` dla pozostałych). URLe zawsze pochodzą z pola frontmatter `slug` — nie ze ścieżek katalogów.
 
 ## Nadpisania URL
 
-Domyślnie lokale inne niż domyślny poprzedzają angielską ścieżkę: `/de/about/`, `/pl/about/`, `/fr/about/`. Aby użyć całkowicie własnej ścieżki, dodaj wpis do `_routes.yaml`:
+Domyślnie wersje językowe inne niż domyślna poprzedzają angielską ścieżkę: `/de/about/`, `/pl/about/`, `/fr/about/`. Aby użyć całkowicie własnej ścieżki, dodaj wpis do `_routes.yaml`:
 
 ```yaml
 # local/content/_routes.yaml
@@ -100,33 +100,33 @@ release:
   fr: version
 ```
 
-Kanoniczny tag (klucz EN) jest używany wewnętrznie. Przetłumaczona wartość wyświetla się w UI dla każdego lokalu. Tagi identyczne we wszystkich lokalach nie wymagają wpisu — wystarczy wymienić tylko te różniące się.
+Tag bazowy (klucz EN) jest używany wewnętrznie. Przetłumaczona wartość wyświetla się w UI dla każdej wersji językowej. Tagi identyczne we wszystkich wersjach językowych nie wymagają wpisu — wystarczy wymienić tylko te różniące się.
 
 ## Działanie przełącznika języków
 
-Przełącznik języków w nawigacji automatycznie rozwiązuje właściwy URL dla każdego innego lokalu przy użyciu funkcji Twig `lang_switch_urls()`. Łańcuch fallbacków, w kolejności:
+Przełącznik języków w nawigacji automatycznie rozwiązuje właściwy URL dla każdej innej wersji językowej przy użyciu funkcji Twig `lang_switch_urls()`. Łańcuch fallbacków, w kolejności:
 
 1. **Mapa tłumaczeń** — szuka przetłumaczonej wersji bieżącej strony używając globalnej zmiennej `translation_map`
-2. **Override kontrolera** — używa jawnego `lang_switch_url`, jeśli jest ustawiony (np. strony tagów, gdzie tag może nie istnieć w docelowym lokalu)
-3. **Archiwum** — jeśli jesteś na stronie archiwalnej, prowadzi do tego samego archiwum w docelowym lokalu
-4. **Paginowana lista wpisów** — jeśli jesteś na stronie 2+, prowadzi do tej samej strony w docelowym lokalu
-5. **Lista wpisów** — jeśli jesteś na dowolnej stronie listy wpisów, prowadzi do listy wpisów w docelowym lokalu
+2. **Nadpisanie kontrolera** — używa jawnego `lang_switch_url`, jeśli jest ustawiony (np. strony tagów, gdzie tag może nie istnieć w docelowej wersji językowej)
+3. **Archiwum** — jeśli jesteś na stronie archiwalnej, prowadzi do tego samego archiwum w docelowej wersji językowej
+4. **Paginowana lista wpisów** — jeśli jesteś na stronie 2+, prowadzi do tej samej strony w docelowej wersji językowej
+5. **Lista wpisów** — jeśli jesteś na dowolnej stronie listy wpisów, prowadzi do listy wpisów w docelowej wersji językowej
 6. **Strona główna** — ostateczny fallback, gdy nie ma dostępnego kontekstu bloga ani tłumaczenia
 
-Przełącznik wyświetla się tylko wtedy, gdy skonfigurowane są co najmniej 2 lokale z co najmniej jednym innym zdefiniowanym lokalem.
+Przełącznik wyświetla się tylko wtedy, gdy skonfigurowane są co najmniej 2 wersje językowe.
 
-## Strategia awaryjnego powrotu
+## Strategia powrotu (fallback)
 
 Jeśli strona istnieje w wersji EN, ale nie DE, notACMS:
-- Nie wygeneruje adresu URL dla DE dla tej strony
+- Nie wygeneruje niemieckiego adresu URL tej strony
 - Nie uwzględni jej w mapie strony dla DE
 - Wyświetli link do strony głównej DE w przełączniku języków (nie do wersji EN tej strony)
 
-Oznacza to, że możesz tłumaczyć stopniowo — EN jest zawsze kompletne, pozostałe lokale rozrastają się z czasem. To samo dotyczy FR lub każdego innego lokalu.
+Oznacza to, że możesz tłumaczyć stopniowo — EN jest zawsze kompletne, pozostałe wersje językowe rozrastają się z czasem. To samo dotyczy FR lub każdej innej wersji językowej.
 
 ## hreflang i SEO
 
-notACMS automatycznie generuje tagi `<link rel="alternate" hreflang="...">` w sekcji `<head>` dla wszystkich stron posiadających tłumaczenia. Pole `og_locale` w konfiguracji serwisu steruje formatem lokalu Open Graph (`en_US`, `de_DE` itp.).
+notACMS automatycznie generuje tagi `<link rel="alternate" hreflang="...">` w sekcji `<head>` dla wszystkich stron posiadających tłumaczenia. Pole `og_locale` w konfiguracji serwisu steruje formatem wersji językowej Open Graph (`en_US`, `de_DE` itp.).
 
 ```html
 <link rel="alternate" hreflang="en" href="https://example.com/about/">
@@ -135,4 +135,4 @@ notACMS automatycznie generuje tagi `<link rel="alternate" hreflang="...">` w se
 <link rel="alternate" hreflang="x-default" href="https://example.com/about/">
 ```
 
-> **Wskazówka:** Zawsze podawaj tłumaczenie `x-default` wskazujące na Twój podstawowy język. notACMS obsługuje to automatycznie dla domyślnego lokalu.
+> **Wskazówka:** Zawsze podawaj tłumaczenie `x-default` wskazujące na Twój podstawowy język. notACMS obsługuje to automatycznie dla domyślnej wersji językowej.

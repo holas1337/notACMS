@@ -1,6 +1,6 @@
 ---
-title: "Dokumentacja designu"
-description: "System designu notACMS — tokeny kolorów, typografia, komponenty i klasy SCSS."
+title: "Dokumentacja projektowa"
+description: "System projektowy notACMS — tokeny kolorów, typografia, komponenty i klasy SCSS."
 template: page/styleguide
 slug: design-reference
 menu:
@@ -8,4 +8,4 @@ menu:
   label: "Design"
 ---
 
-Ta strona to żywa dokumentacja designu notACMS. Opisuje wszystkie nazwane komponenty, własności CSS custom properties i wzorce Twig używane w domyślnym motywie. Nazwy komponentów i klas CSS są identyfikatorami technicznymi — pozostają w języku angielskim.
+Ta strona to interaktywna dokumentacja projektu notACMS. Opisuje wszystkie nazwane komponenty, custom properties CSS i wzorce Twig używane w domyślnym motywie. Nazwy komponentów i klas CSS są identyfikatorami technicznymi — pozostają w języku angielskim.

@@ -8,9 +8,9 @@ tags: [release, announcement]
 template: blog/post
 ---
 
-## Dwa motywy, jeden wybór przy pierwszym buildzie
+## Dwa motywy, jeden wybór przy pierwszym budowaniu
 
-Najważniejsza zmiana w 1.1.0: notACMS wysyła teraz dwa motywy w pakiecie, a ty wybierasz jeden już przy pierwszym buildzie:
+Najważniejsza zmiana w 1.1.0: notACMS zawiera teraz dwa motywy, a ty wybierasz jeden już przy pierwszym buildzie:
 
 ```bash
 ./notACMS deploy --demo    # domyślny — projekt amber-phosphor, który widzisz tutaj
@@ -25,7 +25,7 @@ Rdzeń w `templates/`, `assets/`, `translations/` jest teraz wireframem. Został
 
 ### Motyw demo
 
-Demo żyje w `docs/demo/` i kopiowane jest do `local/`, kiedy wybierzesz `--demo`. To pełny projekt amber-phosphor, który właśnie czytasz — ciemny tryb, overlay wyszukiwania, sidebar dokumentacji, przełącznik motywu, wszystko razem. Startuj stąd, jeśli chcesz dopracowany projekt już dziś i planujesz dopracowywać, a nie przebudowywać.
+Demo znajduje się w `docs/demo/` i kopiowane jest do `local/`, kiedy wybierzesz `--demo`. To pełny projekt amber-phosphor, który właśnie czytasz — ciemny tryb, overlay wyszukiwania, sidebar dokumentacji, przełącznik motywu, wszystko razem. Startuj stąd, jeśli chcesz dopracowany projekt już dziś i planujesz dopracowywać, a nie przebudowywać.
 
 ## System nadpisań `local/`
 
@@ -40,7 +40,7 @@ Oba motywy korzystają z tego samego mechanizmu: każdy plik w `local/` ma pierw
 | Treści | `local/content/**` | Parametr `notacms_content` |
 | Snippety Nginx | `local/docker/nginx/*.conf` | Entrypoint kontenera |
 
-Rdzeń nie jest nigdy edytowany. `git pull` pozostaje czysty. Personalizacje żyją w repozytorium twojej strony, nie w forku tego repo.
+Rdzeń nie jest nigdy edytowany. `git pull` pozostaje czysty. Personalizacje znajdują się w repozytorium twojej strony, nie w forku tego repo.
 
 ## Aktualizacja z 1.0.0
 
@@ -67,9 +67,9 @@ Zobacz [UPGRADE-1.1.md](https://github.com/holas1337/notACMS/blob/main/UPGRADE-1
 - **Czas czytania** i **wskaźnik postępu czytania** na wpisach, dokumentacji i releasach.
 - **Przełącznik języka** jako rozszerzenie Twiga (`lang_switch_urls`) z poprawnymi łańcuchami fallbacków dla archiwów, list z paginacją i stron głównych.
 - **Zajawki wpisów usuwają kotwice nagłówków** — żadnych zbłąkanych `#` na kartach list.
-- **Szkielet suite testów** w `tests/Unit/`, `tests/Integration/`, `tests/Fixtures/` z początkowym pokryciem i komendą `test` uruchamianą z hosta.
-- **Skille agenta AI** w `.claude/skills/` do pracy nad repo: dodawanie locali, sprawdzanie alignmentu dokumentacji, site-sweepy, tłumaczenia i generowanie przewodników aktualizacji.
+- **Szkielet zestawu testów** w `tests/Unit/`, `tests/Integration/`, `tests/Fixtures/` z początkowym pokryciem i komendą `test` uruchamianą z hosta.
+- **Skrypty agenta AI** w `.claude/skills/` do pracy nad repo: dodawanie wersji językowych, sprawdzanie alignmentu dokumentacji, site-sweepy, tłumaczenia i generowanie przewodników aktualizacji.
 
-## Pełny changelog
+## Pełna lista zmian
 
 Każda zmiana ze swoją kategorią: [CHANGELOG.md](https://github.com/holas1337/notACMS/blob/main/CHANGELOG.md#110---2026-04-24).

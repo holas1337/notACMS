@@ -8,25 +8,25 @@ menu:
   label: "Dostosowywanie"
 ---
 
-## System Nadpisywania `local/`
+## System nadpisywania `local/`
 
-Każde dostosowanie żyje wewnątrz `local/`. Ten katalog to twoja warstwa site-specific. Core `templates/`, `assets/` i `src/` to framework. Twoje nadpisywania w `local/` mają pierwszeństwo.
+Każda modyfikacja znajduje się w katalogu `local/`. Ten katalog to twoja warstwa site-specific. Core `templates/`, `assets/` i `src/` to framework. Twoje nadpisywania w `local/` mają pierwszeństwo.
 
 ```
 local/
-├── assets/          # Nadpisywania SCSS + custom JS
+├── assets/          # Nadpisywania SCSS + własny JS
 │   ├── images/      # nadpisanie og-default.jpg
 │   └── app.js       # ładowany jako drugi entrypoint
 ├── content/         # cała twoja treść (strony, blog, config)
-├── docker/          # custom konfiguracja Nginx
-│   └── nginx/       # snippet .conf (redirects, strony błędów)
+├── docker/          # własna konfiguracja Nginx
+│   └── nginx/       # fragmenty .conf (redirects, strony błędów)
 ├── docs/            # site-specific EDITOR_GUIDE.md + STYLEGUIDE.md
-├── src/             # custom serwisy PHP (namespace NotACms\Local\)
+├── src/             # własne serwisy PHP (namespace NotACms\Local\)
 ├── templates/       # nadpisywania szablonów
 └── translations/    # nadpisywania stringów UI (messages.*.yaml)
 ```
 
-## Nadpisywanie Szablonów
+## Nadpisywanie szablonów
 
 Aby nadpisać szablon core, utwórz plik w tej samej ścieżce pod `local/templates/`:
 
@@ -36,7 +36,7 @@ cp templates/page/default.html.twig local/templates/page/default.html.twig
 # Teraz edytuj local/templates/page/default.html.twig
 ```
 
-Loader Twig sprawdza najpierw `local/templates/`, potem fallback do `templates/`. Możesz nadpisać dowolny szablon bez dotykania plików core.
+Loader Twig sprawdza najpierw `local/templates/`, potem sięga do `templates/`. Możesz nadpisać dowolny szablon bez dotykania plików core.
 
 ### Nadpisywanie pojedynczego bloku
 
@@ -85,7 +85,7 @@ import './styles/app_local.scss';
 
 ```scss
 // local/assets/styles/app_local.scss
-// OSTRZEŻENIE: plik główny musi nazywać się app_local.scss — nie app.scss ani inaczej.
+// UWAGA: plik główny musi nazywać się app_local.scss — nie app.scss ani inaczej.
 // sass-bundle wymaga unikalnych nazw bazowych dla wszystkich głównych plików SCSS.
 
 // Importuj zmienne SCSS core (kolory, odstępy, typografia) do użycia w nadpisaniach:
@@ -97,7 +97,7 @@ import './styles/app_local.scss';
     --accent-bg: #EFF6FF;
 }
 
-// Dodaj custom style komponentów poniżej
+// Dodaj własne style komponentów poniżej
 .my-custom-hero {
     background: var(--accent);
     color: #fff;
@@ -120,9 +120,9 @@ import './styles/app_local.scss';
 
 > **Wskazówka:** Zawsze nadpisuj CSS custom properties (`--accent`, `--bg`, etc.) zamiast surowych wartości hex. Dzięki temu tryb jasny i ciemny będą działać poprawnie z kolorami Twojej marki. Pełną listę tokenów znajdziesz w [Design Reference](/pl/design-reference/).
 
-## Custom Serwisy PHP
+## Własne serwisy PHP
 
-Utwórz interfejs serwisu w `src/Service/`, zaimplementuj go, a Symfony autowired go automatycznie. Dla rozszerzeń site-specific umieść implementacje w `local/src/` z namespace `NotACms\Local\`:
+Utwórz interfejs serwisu w `src/Service/`, zaimplementuj go, a Symfony wstrzykuje go automatycznie. Dla rozszerzeń site-specific umieść implementacje w `local/src/` z namespace `NotACms\Local\`:
 
 ```php
 // local/src/Service/MyCustomService.php
@@ -146,11 +146,11 @@ final class MyCustomService
 }
 ```
 
-Inject do kontrolera przez constructor injection — kontener DI Symfony załatwia resztę.
+Wstrzyknij do odpowiedniego kontrolera przez konstruktor — kontener DI Symfony załatwia resztę.
 
-### Zaawansowane: Event listenery, filtry Twig, dekoratory serwisów
+### Zaawansowane: nasłuchiwacze zdarzeń, filtry Twig, dekoratory serwisów
 
-Oprócz podstawowych serwisów, możesz też tworzyć event listenery, filtry Twig i dekoratory serwisów w `local/src/`:
+Oprócz podstawowych serwisów, możesz też tworzyć nasłuchiwacze zdarzeń, filtry Twig i dekoratory serwisów w `local/src/`:
 
 ```php
 // local/src/EventListener/MyListener.php
@@ -193,11 +193,11 @@ final class MySiteConfigDecorator implements SiteConfigServiceInterface
 }
 ```
 
-## Custom Konfiguracja Nginx
+## Konfiguracja Nginx
 
-Dla deploymentów produkcyjnych umieść snippet konfiguracji Nginx w `local/docker/nginx/`. Każdy plik `.conf` w tym katalogu jest automatycznie dołączany wewnątrz bloku `server {}`.
+Dla deploymentów produkcyjnych umieść fragment konfiguracji Nginx w `local/docker/nginx/`. Każdy plik `.conf` w tym katalogu jest automatycznie dołączany wewnątrz bloku `server {}`.
 
-Przy pierwszym deployu bootstrap seeduje trzy pliki z `docs/demo/docker/nginx/`:
+Przy pierwszym wdrożeniu bootstrap kopiuje trzy pliki z `docs/demo/docker/nginx/`:
 
 - **`redirects.conf`** — przekierowania SEO (www → non-www, stare URLe)
 - **`error-pages.conf`** — strony błędów uwzględniające locale
@@ -222,9 +222,9 @@ set $csp "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eva
 
 Nie dodawaj drugiego `add_header Content-Security-Policy` — przeglądarki biorą część wspólną wielu nagłówków CSP (bardziej restrykcyjne, nie szersze).
 
-## Nadpisywanie Tłumaczeń
+## Nadpisywanie tłumaczeń
 
-Utwórz `local/translations/messages.en.yaml` i/lub `messages.pl.yaml`, `messages.de.yaml` z tylko kluczami, które chcesz zmienić. Są one merge'owane na wierzch plików core tłumaczeń, więc pominięte klucze zachowują swoją oryginalną wartość.
+Utwórz `local/translations/messages.en.yaml` i/lub `messages.pl.yaml`, `messages.de.yaml` z tylko kluczami, które chcesz zmienić. Są scalane z plikami tłumaczeń rdzenia, więc pominięte klucze zachowują swoją oryginalną wartość.
 
 ```yaml
 # local/translations/messages.pl.yaml
@@ -241,7 +241,7 @@ Możesz nadpisać dowolny klucz z `translations/messages.*.yaml`. Zagnieżdżone
 
 Obraz zastępczy `og:image` wyświetlany, gdy strona nie ma obrazka wyróżniającego, domyślnie używa markowego placeholdera. Aby go zastąpić, umieść swój obraz w `local/assets/images/og-default.jpg`. Szablon automatycznie odczytuje z tej ścieżki.
 
-Przy pierwszym `./notACMS deploy` lub `ddev build` bootstrap seeduje ten plik z domyślnego core, jeśli jeszcze nie istnieje. Zastąp geseedowany plik własnym.
+Przy pierwszym `./notACMS deploy` lub `ddev build` bootstrap kopiuje ten plik z domyślnego rdzenia, jeśli jeszcze nie istnieje. Zastąp skopiowany plik własnym.
 
 Dla zupełnie innego podejścia (inny format, wymiary lub logika), nadpisz blok `{% block og_default_image %}` w `local/templates/base.html.twig`:
 
@@ -257,19 +257,19 @@ Dla zupełnie innego podejścia (inny format, wymiary lub logika), nadpisz blok 
 {% endblock %}
 ```
 
-## Lokalna Dokumentacja
+## Lokalna dokumentacja
 
-`local/docs/` zawiera dwa pliki referencyjne site-specific, oba gitignored i seedowane przy pierwszym deployu:
+`local/docs/` zawiera dwa pliki referencyjne site-specific, oba wykluczone z gita i tworzone przy pierwszym wdrożeniu:
 
-**`local/docs/EDITOR_GUIDE.md`** — przewodnik po pisaniu dla twojej strony: kategorie, zatwierdzone tagi, głos i style generowania obrazów. Seeded z `docs/demo/docs/EDITOR_GUIDE.md`. Mechaniki treści systemowej (pola frontmatter, struktura URL, serie, szkice) pozostają w `docs/EDITOR_GUIDE.md`.
+**`local/docs/EDITOR_GUIDE.md`** — przewodnik po pisaniu dla twojej strony: kategorie, zatwierdzone tagi, głos i style generowania obrazów. Kopiowany z `docs/demo/docs/EDITOR_GUIDE.md`. Mechaniki treści systemowej (pola frontmatter, struktura URL, serie, szkice) pozostają w `docs/EDITOR_GUIDE.md`.
 
-**`local/docs/STYLEGUIDE.md`** — referencja designu dla twojej strony: tokeny projektowe, paleta kolorów, typografia i lista komponentów. Seeded z `docs/demo/docs/STYLEGUIDE.md`. Mechaniki styleguide (strona dev `/styleguide/`, konwencje SCSS) pozostają w `docs/STYLEGUIDE.md`.
+**`local/docs/STYLEGUIDE.md`** — referencja projektowa dla twojej strony: tokeny projektowe, paleta kolorów, typografia i lista komponentów. Kopiowany z `docs/demo/docs/STYLEGUIDE.md`. Mechaniki styleguide (strona dev `/styleguide/`, konwencje SCSS) pozostają w `docs/STYLEGUIDE.md`.
 
-Oba pliki są swobodnie edytowalne po seedingu — bootstrap nigdy ich nie nadpisuje.
+Oba pliki są swobodnie edytowalne po inicjalizacji — bootstrap nigdy ich nie nadpisuje.
 
-## Rozszerzanie Builda
+## Rozszerzanie procesu budowania
 
-Dodaj custom kroki builda tworząc komendę Symfony Console w `local/src/Command/`:
+Dodaj niestandardowe kroki budowania, tworząc komendę Symfony Console w `local/src/Command/`:
 
 ```php
 // local/src/Command/GenerateSitemapCommand.php
@@ -285,9 +285,9 @@ class GenerateSitemapCommand extends Command
 }
 ```
 
-Potem dodaj do swojego aliasu `ddev build` lub wywołaj explicit z `ddev exec bin/console local:sitemap`.
+Potem dodaj do swojego aliasu `ddev build` lub wywołaj bezpośrednio z `ddev exec bin/console local:sitemap`.
 
-## Gotowe Przykłady
+## Gotowe przykłady
 
 Katalog `docs/customization/` zawiera kompletne, gotowe do skopiowania przykłady. Każdy zawiera wszystkie niezbędne pliki i README z dokładnymi komendami `cp`.
 
@@ -301,11 +301,11 @@ Katalog `docs/customization/` zawiera kompletne, gotowe do skopiowania przykład
 
 ---
 
-## Dostosowywanie Produkcyjne
+## Dostosowywanie produkcyjne
 
-### Zmienne Środowiskowe
+### Zmienne środowiskowe
 
-Utwórz `.env.local` w głównym katalogu projektu (gitignored):
+Utwórz `.env.local` w głównym katalogu projektu (wykluczony z gita):
 
 ```bash
 # Wymagane
@@ -334,7 +334,7 @@ services:
       - "8080:80"  # Nadpisz NGINX_PORT dla tej maszyny
 ```
 
-### Nagłówki Bezpieczeństwa
+### Nagłówki bezpieczeństwa
 
 Dodaj do `local/docker/nginx/redirects.conf`:
 
@@ -368,9 +368,9 @@ CERTRESOLVER=le  # Let's Encrypt
 #CERTRESOLVER=dummy  # Self-signed do testowania
 ```
 
-Dla custom konfiguracji Traefik, dodaj etykiety do `docker-compose.override.yaml`.
+Dla własnej konfiguracji Traefik, dodaj etykiety do `docker-compose.override.yaml`.
 
-### Custom Kroki Builda
+### Niestandardowe kroki budowania
 
 Dodaj komendy post-build edytując `scripts/rebuild-content.sh` lub tworząc wrapper:
 
@@ -382,9 +382,9 @@ Dodaj komendy post-build edytując `scripts/rebuild-content.sh` lub tworząc wra
 aws s3 sync public/static/ s3://my-bucket/ --delete
 ```
 
-### Uprawnienia Plików
+### Uprawnienia plików
 
-Upewnij się co do poprawnego własności dla produkcji:
+Sprawdź uprawnienia przed wdrożeniem produkcyjnym:
 
 ```bash
 # Napraw uprawnienia przed deploy
