@@ -116,21 +116,46 @@ local_has_content() {
 
 # ── Seed logic ───────────────────────────────────────────────────────
 
-SEED_SOURCE="docs/${THEME}"
+# Determine if the user explicitly requested a theme re-seed
+SEED_EXPLICIT=false
+SEED_SOURCE=""
 
-if [ ! -d local ]; then
-    echo "==> local/ does not exist — creating and seeding from ${SEED_SOURCE}/"
-    mkdir -p local
-    cp -r "${SEED_SOURCE}/." local/
-elif local_has_content; then
-    TIMESTAMP="$(date '+%Y-%m-%d-%H%M%S')"
-    echo "==> local/ has content — backing up to local-${TIMESTAMP}/"
-    mv local "local-${TIMESTAMP}"
-    mkdir -p local
-    cp -r "${SEED_SOURCE}/." local/
+for arg in "${args[@]}"; do
+    if [[ "$arg" == "--bare" ]]; then
+        SEED_EXPLICIT=true
+        SEED_SOURCE="docs/bare"
+    elif [[ "$arg" == "--demo" ]]; then
+        SEED_EXPLICIT=true
+        SEED_SOURCE="docs/demo"
+    fi
+done
+
+if [[ "$SEED_EXPLICIT" == true ]]; then
+    # Explicit --bare or --demo: always seed (back up existing content first)
+    if [ ! -d local ]; then
+        echo "==> local/ does not exist — creating and seeding from ${SEED_SOURCE}/"
+        mkdir -p local
+        cp -r "${SEED_SOURCE}/." local/
+    elif local_has_content; then
+        TIMESTAMP="$(date '+%Y-%m-%d-%H%M%S')"
+        echo "==> local/ has content — backing up to local-${TIMESTAMP}/"
+        mv local "local-${TIMESTAMP}"
+        mkdir -p local
+        cp -r "${SEED_SOURCE}/." local/
+        echo "    Seeded from ${SEED_SOURCE}/"
+    else
+        echo "==> local/ exists but is empty — seeding from ${SEED_SOURCE}/"
+        cp -r "${SEED_SOURCE}/." local/
+    fi
 else
-    echo "==> local/ exists but is empty — seeding from ${SEED_SOURCE}/"
-    cp -r "${SEED_SOURCE}/." local/
+    # No explicit theme flag: only seed if local/ is missing or empty
+    if [ ! -d local ] || ! local_has_content; then
+        echo "==> local/ is empty or missing — seeding from docs/demo/"
+        mkdir -p local
+        cp -r docs/demo/. local/
+    else
+        echo "==> local/ has existing content — skipping seed (use --bare or --demo to force)"
+    fi
 fi
 
 if [ ! -f local/assets/images/og-default.jpg ]; then
