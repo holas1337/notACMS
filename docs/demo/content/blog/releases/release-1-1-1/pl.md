@@ -1,18 +1,43 @@
 ---
-title: "notACMS 1.1.1 — Deploy szanuje istniejącą treść"
+title: "notACMS 1.1.1 — Etykiety nawigacji z frontmatter i deploy bez nadpisywania treści"
 slug: "wpisy/release-1-1-1"
-description: "1.1.1 naprawia błąd, przez który ./notACMS deploy --prod nadpisywało istniejącą treść local/. Deploy teraz seeduje tylko gdy local/ brakuje lub jest puste — zachowanie zgodne z ddev build."
+description: "1.1.1 wprowadza etykiety nawigacji oparte na frontmatter (zamiast kluczy tłumaczeń) i naprawia błąd deploy --prod nadpisujący local/."
 date: 2026-04-26
 category: releases
 tags: [release, announcement]
 template: blog/post
 ---
 
-## Błąd
+## Etykiety nawigacji z frontmatter
+
+Etykiety w nawigacji dla stron treści pochodzą teraz z frontmatter — nie z kluczy tłumaczeń. Wystarczy ustawić `menu.label` w frontmatter strony, a to ono stanie się etykietą w menu; jeśli go nie ma, użyty zostanie `title`.
+
+```yaml
+---
+title: "Przewodnik po architekturze"
+slug: "architecture-guide"
+menu:
+  label: "Architektura"
+  weight: 30
+---
+```
+
+Nowa funkcja Twig `content_item()` pozwala pobrać dowolną stronę według klucza katalogu:
+
+```twig
+{{ content_item('architecture-guide', 'pl').menuLabel() }}
+{# → "Architektura" (lub tytuł strony, jeśli menu.label nie jest ustawione) #}
+```
+
+**Dlaczego to ważne:** Wcześniej pliki `messages.*.yaml` w każdej lokalizacji musiały zawierać tłumaczenia dla `nav.home`, `nav.blog`, `nav.about`, `nav.contact`, `nav.privacy_policy` (core) oraz `site.releases`, `site.about`, `site.manual`, `site.architecture`, `site.customization`, `site.locales`, `site.design_reference`, `site.contact` (demo). Dodanie strony oznaczało aktualizację N plików tłumaczeń. Teraz wystarczy jedno pole w frontmatter. Własne szablony odwołujące się do usuniętych kluczy powinny przejść na `content_item('key', locale).menuLabel()`.
+
+## Deploy nie nadpisuje już istniejącego `local/`
+
+### Błąd
 
 Uruchomienie `./notACMS deploy --prod` **tworzyło kopię zapasową i nadpisywało** cały katalog `local/` zawartością `docs/demo/` przy każdym deployu — nawet gdy zawierał twoją treść, szablony i dostosowania. Logika seedowania nie rozróżniała jawnego żądania ponownego seedowania motywu (`--bare`/`--demo`) od zwykłego redeployu z istniejącą treścią.
 
-## Naprawa
+### Naprawa
 
 Deploy działa teraz dokładnie tak samo jak `ddev build`:
 

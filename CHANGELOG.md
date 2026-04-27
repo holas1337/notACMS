@@ -7,17 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-04-26
+
 ### Added
+
+- **Frontmatter-driven navigation labels** — nav labels for content pages now come from `menu.label` frontmatter (with `title` as fallback) instead of translation keys. New `content_item(directoryKey, locale)` Twig function returns a `ContentItem` for any page; `ContentItem::menuLabel()` reads `menu.label` or falls back to `title()`. Eliminates the need to maintain nav label translations in every locale file.
 
 ### Changed
 
-### Deprecated
+- `symfony/polyfill-*` dependencies updated from v1.36.0 to v1.37.0.
+- Polish (PL), German (DE), and French (FR) demo content reviewed and improved across all pages and blog posts.
+- Translation style guides added to `.claude/skills/translate-content/SKILL.md` for PL, DE, and FR locales.
 
 ### Removed
 
+- **Navigation label translation keys** removed from core, demo, and holas.pl translations — `nav.home`, `nav.blog`, `nav.about`, `nav.contact`, `nav.privacy_policy` (core); `site.releases`, `site.about`, `site.manual`, `site.architecture`, `site.customization`, `site.locales`, `site.design_reference`, `site.contact` (demo). Labels now come from page frontmatter. Custom templates referencing these keys must switch to `content_item('key', locale).menuLabel()`.
+
 ### Fixed
 
-### Security
+- **`./notACMS deploy --prod` no longer overwrites existing `local/` content.** Previously, every deploy would back up `local/` and replace it with `docs/demo/`, destroying customisations. Now deploy only seeds `local/` when it is missing or empty — matching the `ddev build` behaviour. Pass `--bare` or `--demo` explicitly to force a re-seed.
 
 ## [1.1.0] - 2026-04-24
 

@@ -8,11 +8,36 @@ tags: [release, announcement]
 template: blog/post
 ---
 
-## The bug
+## Frontmatter-driven navigation labels
+
+Navigation labels for content pages now come from frontmatter — not translation keys. Set `menu.label` in any page's frontmatter and it becomes the label in the navigation; omit it and the page `title` is used as fallback.
+
+```yaml
+---
+title: "Architecture guide"
+slug: "architecture-guide"
+menu:
+  label: "Architecture"
+  weight: 30
+---
+```
+
+New `content_item()` Twig function resolves any content page by directory key:
+
+```twig
+{{ content_item('architecture-guide', 'en').menuLabel() }}
+{# → "Architecture" (or the page title if menu.label is absent) #}
+```
+
+**Why this matters:** Previously every locale's `messages.*.yaml` had to duplicate translations for `nav.home`, `nav.blog`, `nav.about`, `nav.contact`, `nav.privacy_policy` (core) and `site.releases`, `site.about`, `site.manual`, `site.architecture`, `site.customization`, `site.locales`, `site.design_reference`, `site.contact` (demo). Adding a page meant updating N translation files. Now it's one frontmatter field. Custom templates referencing the removed keys should switch to `content_item('key', locale).menuLabel()`.
+
+## Deploy no longer overwrites existing `local/`
+
+### The bug
 
 Running `./notACMS deploy --prod` would **back up and replace** your entire `local/` directory with `docs/demo/` on every deploy — even when it already contained your content, templates, and customisations. The seed logic didn't distinguish between "user explicitly requested a theme re-seed" and "user just wants to redeploy with existing content."
 
-## The fix
+### The fix
 
 Deploy now works exactly like `ddev build`:
 

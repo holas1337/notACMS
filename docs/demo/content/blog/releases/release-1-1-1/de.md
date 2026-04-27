@@ -1,18 +1,43 @@
 ---
-title: "notACMS 1.1.1 — Deploy respektiert bestehenden Inhalt"
+title: "notACMS 1.1.1 — Navigationslabels aus Frontmatter und deploy ohne Überschreiben"
 slug: "beitraege/release-1-1-1"
-description: "1.1.1 behebt einen Bug, bei dem ./notACMS deploy --prod bestehenden local/-Inhalt überschrieb. Deploy seedet jetzt nur, wenn local/ fehlt oder leer ist — wie ddev build."
+description: "1.1.1 führt nav labels aus Frontmatter (statt Übersetzungskeys) ein und behebt den deploy --prod-Bug, der local/-Inhalt überschrieb."
 date: 2026-04-26
 category: releases
 tags: [release, announcement]
 template: blog/post
 ---
 
-## Der Bug
+## Navigationslabels aus Frontmatter
+
+Navigationslabels für Content-Seiten kommen jetzt aus dem Frontmatter — nicht aus Übersetzungskeys. Setze `menu.label` im Frontmatter einer Seite und es wird zum Label in der Navigation; lass es weg und der Seiten-`title` wird als Fallback genutzt.
+
+```yaml
+---
+title: "Architektur-Leitfaden"
+slug: "architecture-guide"
+menu:
+  label: "Architektur"
+  weight: 30
+---
+```
+
+Die neue Twig-Funktion `content_item()` löst jede Content-Seite über den Directory-Key auf:
+
+```twig
+{{ content_item('architecture-guide', 'de').menuLabel() }}
+{# → "Architektur" (oder der Seitentitel, wenn menu.label fehlt) #}
+```
+
+**Warum das wichtig ist:** Bisher musste jede `messages.*.yaml` pro Locale Übersetzungen für `nav.home`, `nav.blog`, `nav.about`, `nav.contact`, `nav.privacy_policy` (Core) und `site.releases`, `site.about`, `site.manual`, `site.architecture`, `site.customization`, `site.locales`, `site.design_reference`, `site.contact` (Demo) enthalten. Eine neue Seite bedeutete N Übersetzungsdateien zu aktualisieren. Jetzt reicht ein Frontmatter-Feld. Custom Templates, die auf die entfernten Keys verweisen, sollten auf `content_item('key', locale).menuLabel()` umsteigen.
+
+## Deploy respektiert bestehenden Inhalt
+
+### Der Bug
 
 `./notACMS deploy --prod` würde bei **jedem** Deploy das gesamte `local/`-Verzeichnis sichern und durch `docs/demo/` ersetzen — selbst wenn es bereits eigenen Inhalt, Templates und Anpassungen enthielt. Die Seed-Logik unterschied nicht zwischen „Nutzer möchte explizit ein Theme neu seeden" und „Nutzer möchte nur mit bestehendem Inhalt redeployen."
 
-## Der Fix
+### Der Fix
 
 Deploy verhält sich jetzt genauso wie `ddev build`:
 
