@@ -14,7 +14,7 @@ notACMS est un générateur de sites statiques construit sur Symfony 7.4 et PHP 
 
 Chaque outil existant semblait nécessiter l'apprentissage d'un nouvel écosystème. Hugo a son propre langage de templates. Jekyll nécessite Ruby. Next.js introduit un bundler JavaScript dans ce qui devrait être un simple flux de publication statique.
 
-notACMS est le générateur que j'aurais voulu trouver. L'architecture est une couche fine au-dessus de Symfony. Le modèle de contenu est en fichiers plats. L'étape de build est une seule commande.
+notACMS est le générateur que j'aurais voulu trouver. L'architecture est une couche fine au-dessus de Symfony. Le modèle de contenu est en fichiers plats. L'étape de construction est une seule commande.
 
 ## Philosophie
 
@@ -26,4 +26,4 @@ notACMS est le générateur que j'aurais voulu trouver. L'architecture est une c
 
 ## Open source
 
-notACMS est sous licence Apache 2.0. Le code est sur [GitHub](https://github.com/holas1337/notACMS) — ouvert aux issues, discussions et pull requests.
+notACMS est sous licence Apache 2.0. Le code est sur [GitHub](https://github.com/holas1337/notACMS) — ouvert aux tickets, discussions et pull requests.

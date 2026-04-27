@@ -73,7 +73,7 @@ local/content/
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `title` | string | **Yes** | Page title |
+| `title` | string | Yes | Page title |
 | `slug` | string | Yes | URL path |
 | `description` | string | No | Meta description |
 | `date` | date | Posts | Publication date |
@@ -139,7 +139,7 @@ Reference in frontmatter: `image: /media/my-post/featured.webp`
 ```
 
 What happens:
-1. Seeds `local/content/` from `docs/demo/content/` (if empty)
+1. Seeds `local/` from `docs/demo/` (only if missing or empty — existing content is never touched)
 2. Builds PHP Docker image
 3. Installs Composer deps (`--no-dev` in prod)
 4. Compiles SCSS + assets
@@ -173,8 +173,8 @@ Create `.env.local` (never committed, gitignored):
 
 | Variable | Required | Set via | Purpose |
 |----------|----------|---------|---------|
-| `APP_SECRET` | **Yes** | `php -r "echo bin2hex(random_bytes(32));"` | Symfony secret |
-| `URL` | **Yes** | `yourdomain.com` | Must match `base_url` in `_site.yaml` |
+| `APP_SECRET` | Yes | `php -r "echo bin2hex(random_bytes(32));"` | Symfony secret |
+| `URL` | Yes | `yourdomain.com` | Must match `base_url` in `_site.yaml` |
 | `NGINX_PORT` | No | `8123` | Host port (default: 8123) |
 | `RUNTIME_PHP_ENABLED` | No | `true`/`false` | Enable PHP for contact form |
 | `MAILER_DSN` | No* | `smtp://user:pass@host:587` | *Required if contact form enabled |

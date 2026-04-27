@@ -20,13 +20,13 @@ Ich dachte immer wieder: Ich kenne Symfony bereits. Ich kenne Twig bereits. Ich 
 
 ## Die Entscheidung gegen eine Datenbank
 
-Das Erste, was ich entschied: keine Datenbank. Nicht „Datenbank optional" — gar keine Datenbank. Inhalte leben in Dateien. Der Build-Prozess liest Dateien. Die Ausgabe sind Dateien.
+Das Erste, was ich entschied: keine Datenbank. Nicht „Datenbank optional" — gar keine Datenbank. Inhalte befinden sich in Dateien. Der Build-Prozess liest Dateien. Die Ausgabe sind Dateien.
 
 Das erzwingt eine gewisse Disziplin. Die Inhaltsstruktur muss explizit und vorhersehbar sein. Es gibt keine Datenbankabfrage, auf die man zurückgreifen kann, wenn man verwandte Beiträge finden oder eine Sitemap generieren möchte. Alles muss aus dem Dateibaum ableitbar sein.
 
 Diese Einschränkung stellte sich als die richtige heraus. Sie macht das System leicht verständlich, einfach zu sichern und trivial für KI-Tools nutzbar.
 
-## KI-freundlich by Design
+## KI-freundlich vom Konzept her
 
 Ich begann darüber ernsthaft nachzudenken, als ich LLMs in meiner täglichen Arbeit einzusetzen begann. Eine KI um Hilfe beim Generieren von Inhalten, Übersetzen von Seiten oder Validieren von YAML-Schemas zu bitten, ist unkompliziert, wenn das Format Plain Text ist.
 
@@ -38,7 +38,7 @@ Das ist keine nachträglich hinzugefügte Funktion. Es ist der Grund, warum das 
 
 Ich habe notACMS auf Symfony 7 aufgebaut, aus demselben Grund, warum ich Symfony für alles andere nutze: Es ist explizit, typisiert und gut dokumentiert. Der DI-Container, Konsolenbefehle, Twig — all das ist Standard-Symfony. An der Infrastruktur ist nichts Neuartiges.
 
-Das Content-Modell ist der interessante Teil. Das Routing-System liest `_routes.yaml` und generiert Symfony-Routen aus dem Content-Baum. Der Build-Befehl rendert jede Route und schreibt statisches HTML. Die Service-Schicht ist schlank und austauschbar.
+Das Inhaltsmodell ist der interessante Teil. Das Routing-System liest `_routes.yaml` und generiert Symfony-Routen aus dem Inhaltsbaum. Der Build-Befehl rendert jede Route und schreibt statisches HTML. Die Service-Schicht ist schlank und austauschbar.
 
 ## Was als nächstes kommt
 

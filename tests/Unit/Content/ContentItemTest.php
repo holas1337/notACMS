@@ -446,6 +446,27 @@ final class ContentItemTest extends TestCase
         self::assertSame(10, $item->menuWeight());
     }
 
+    public function testMenuLabelReturnsFrontMatterLabel(): void
+    {
+        $item = ContentItemFactory::create(['title' => 'Full Title', 'menu' => ['label' => 'Short']]);
+
+        self::assertSame('Short', $item->menuLabel());
+    }
+
+    public function testMenuLabelFallsBackToTitle(): void
+    {
+        $item = ContentItemFactory::create(['title' => 'My Page']);
+
+        self::assertSame('My Page', $item->menuLabel());
+    }
+
+    public function testMenuLabelReturnsEmptyStringWhenNeitherSet(): void
+    {
+        $item = ContentItemFactory::create(['title' => '']);
+
+        self::assertSame('', $item->menuLabel());
+    }
+
     // ===== Index =====
 
     public function testIsIndexReturnsFalseByDefault(): void

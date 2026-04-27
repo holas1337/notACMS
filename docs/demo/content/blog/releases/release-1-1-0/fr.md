@@ -25,7 +25,7 @@ Le cœur situé dans `templates/`, `assets/`, `translations/` est désormais un 
 
 ### Thème démo
 
-Le démo vit sous `docs/demo/` et est copié dans `local/` quand vous choisissez `--demo`. C'est le design amber-phosphor complet que vous lisez en ce moment — mode sombre, overlay de recherche, sidebar docs, bouton de thème, tout y est. Partez de là si vous voulez un design abouti dès aujourd'hui et prévoyez d'ajuster, pas de reconstruire.
+Le démo se trouve sous `docs/demo/` et est copié dans `local/` quand vous choisissez `--demo`. C'est le design amber-phosphor complet que vous lisez en ce moment — mode sombre, overlay de recherche, sidebar docs, bouton de thème, tout y est. Partez de là si vous voulez un design abouti dès aujourd'hui et prévoyez d'ajuster, pas de reconstruire.
 
 ## Le système de surcharges `local/`
 
@@ -40,7 +40,7 @@ Les deux thèmes utilisent le même mécanisme : chaque fichier dans `local/` pr
 | Contenu | `local/content/**` | Paramètre `notacms_content` |
 | Fragments Nginx | `local/docker/nginx/*.conf` | Entrypoint du conteneur |
 
-Le cœur n'est jamais modifié. `git pull` reste propre. Les personnalisations vivent dans le dépôt de votre site, pas dans un fork de celui-ci.
+Le cœur n'est jamais modifié. `git pull` reste propre. Les personnalisations se trouvent dans le dépôt de votre site, pas dans un fork de celui-ci.
 
 ## Mise à niveau depuis 1.0.0
 
@@ -67,9 +67,9 @@ Voir [UPGRADE-1.1.md](https://github.com/holas1337/notACMS/blob/main/UPGRADE-1.1
 - **Temps de lecture** et **indicateur de progression** sur les posts, docs et releases.
 - **Sélecteur de langue** comme extension Twig (`lang_switch_urls`) avec des chaînes de fallback correctes pour les archives, listes paginées et pages d'accueil.
 - **Les extraits de posts retirent les ancres de titres** — plus de `#` parasites dans les cartes de liste.
-- **Ossature de suite de tests** sous `tests/Unit/`, `tests/Integration/`, `tests/Fixtures/` avec une couverture initiale et une commande `test` exécutable depuis l'hôte.
-- **Skills d'agent IA** sous `.claude/skills/` pour travailler sur le dépôt : ajout de locales, vérifications d'alignement des docs, balayages de site, traductions et génération de guides de mise à niveau.
+- **Ossature de batterie de tests** sous `tests/Unit/`, `tests/Integration/`, `tests/Fixtures/` avec une couverture initiale et une commande `test` exécutable depuis l'hôte.
+- **Scripts d'agent IA** sous `.claude/skills/` pour travailler sur le dépôt : ajout de locales, vérifications d'alignement des docs, balayages de site, traductions et génération de guides de mise à niveau.
 
-## Changelog complet
+## Liste complète des modifications
 
 Chaque changement avec sa catégorie : [CHANGELOG.md](https://github.com/holas1337/notACMS/blob/main/CHANGELOG.md#110---2026-04-24).

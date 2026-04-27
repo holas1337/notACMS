@@ -149,27 +149,30 @@
                     <div class="footer-col">
                         <h4>{{ 'site.docs'|trans }}</h4>
                         <ul>
-                            <li><a href="{{ content_url('manual', locale) }}">{{ 'site.manual'|trans }}</a></li>
-                            <li><a href="{{ content_url('architecture', locale) }}">{{ 'site.architecture'|trans }}</a></li>
-                            <li><a href="{{ content_url('customization', locale) }}">{{ 'site.customization'|trans }}</a></li>
-                            <li><a href="{{ content_url('locales', locale) }}">{{ 'site.locales'|trans }}</a></li>
-                            <li><a href="{{ content_url('styleguide', locale) }}">{{ 'site.design_reference'|trans }}</a></li>
+                            <li><a href="{{ content_url('manual', locale) }}">{{ content_item('manual', locale).menuLabel() }}</a></li>
+                            <li><a href="{{ content_url('architecture', locale) }}">{{ content_item('architecture', locale).menuLabel() }}</a></li>
+                            <li><a href="{{ content_url('customization', locale) }}">{{ content_item('customization', locale).menuLabel() }}</a></li>
+                            <li><a href="{{ content_url('locales', locale) }}">{{ content_item('locales', locale).menuLabel() }}</a></li>
+                            <li><a href="{{ content_url('styleguide', locale) }}">{{ content_item('styleguide', locale).menuLabel() }}</a></li>
                         </ul>
                     </div>
                     <div class="footer-col">
                         <h4>{{ 'site.project'|trans }}</h4>
                         <ul>
-                            <li><a href="{{ path('blog_list_' ~ locale) }}">{{ 'site.releases'|trans }}</a></li>
+                            <li><a href="{{ path('blog_list_' ~ locale) }}">{{ content_item('blog', locale).menuLabel() }}</a></li>
                             <li><a href="{{ site_social.github ?? '#' }}" target="_blank" rel="noopener noreferrer">
                                 {{ 'site.github'|trans }} <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
                             </a></li>
-                            <li><a href="{{ content_url('privacy-policy', locale) }}">{{ 'nav.privacy_policy'|trans }}</a></li>
+                            {% set privacy_item = content_item('privacy-policy', locale) %}
+                            {% if privacy_item is not null %}
+                            <li><a href="{{ privacy_item.url() }}">{{ privacy_item.menuLabel() }}</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                     <div class="footer-col">
                         <h4>{{ 'site.author'|trans }}</h4>
                         <ul>
-                            <li><a href="{{ content_url('about', locale) }}">{{ 'site.about'|trans }}</a></li>
+                            <li><a href="{{ content_url('about', locale) }}">{{ content_item('about', locale).menuLabel() }}</a></li>
                             <li><a href="{{ site_author.url ?? '#' }}" target="_blank" rel="noopener noreferrer">
                                 holas.pl <i class="ph ph-arrow-square-out" aria-hidden="true"></i>
                             </a></li>

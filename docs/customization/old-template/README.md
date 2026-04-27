@@ -7,7 +7,7 @@ Full standalone override that restores the pre-redesign notACMS look and feel af
 - Restores the `site-branding` two-column header (name + tagline) instead of the SVG logo
 - Brings back the Projects link in main navigation
 - Restores original SCSS layout, variables, and component styles
-- Includes old fonts, images (favicon, OG default), and translations (with `header.tagline`, `nav.projects`)
+- Includes old fonts, images (favicon, OG default), and translations (with `header.tagline`)
 - Replaces all core templates to match the pre-redesign HTML structure
 
 ## How to Use
@@ -78,7 +78,7 @@ assets/
 ├── fonts/                                 # Open Sans + Source Code Pro
 └── images/                                # Original favicon, OG image
 translations/
-├── messages.en.yaml                       # Includes header.tagline, nav.projects
+├── messages.en.yaml                       # Includes header.tagline
 └── messages.pl.yaml
 src/
 └── .gitkeep                               # Required placeholder for local/src/

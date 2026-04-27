@@ -228,8 +228,8 @@ Create `local/translations/messages.en.yaml` (and/or `messages.pl.yaml`, `messag
 
 ```yaml
 # local/translations/messages.en.yaml
-nav:
-  blog: "Articles"
+blog:
+  read_more: "Read on"
 
 footer:
   copyright: "All rights reserved — My Site"
@@ -237,8 +237,8 @@ footer:
 
 ```yaml
 # local/translations/messages.pl.yaml
-nav:
-  blog: "Artykuły"
+blog:
+  read_more: "Czytaj dalej"
 
 footer:
   copyright: "Wszelkie prawa zastrzeżone — Moja strona"

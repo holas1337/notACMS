@@ -19,11 +19,11 @@
 {# Determine sidebar active state from current path #}
 {% set current_path = app.request.pathInfo %}
 {% set doc_pages = [
-    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: 'site.manual'|trans },
-    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: 'site.architecture'|trans },
-    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: 'site.customization'|trans },
-    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: 'site.locales'|trans },
-    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: 'site.design_reference'|trans },
+    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: content_item('manual', locale).menuLabel() },
+    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: content_item('architecture', locale).menuLabel() },
+    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: content_item('customization', locale).menuLabel() },
+    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: content_item('locales', locale).menuLabel() },
+    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: content_item('styleguide', locale).menuLabel() },
 ] %}
 
 {# Prev/next navigation — derived from doc_pages #}

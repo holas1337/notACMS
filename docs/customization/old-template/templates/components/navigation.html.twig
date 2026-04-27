@@ -7,11 +7,11 @@
 {% set is_blog = current_path starts with blog_url or current_path matches '#^/([a-z]{2}/)?\\d{4}/#' %}
 
 {% set nav_items = [
-    { label: 'nav.home'|trans,     url: home_url,      active: current_path is same as(home_url) },
-    { label: 'nav.blog'|trans,     url: blog_url,      active: is_blog },
-    { label: 'nav.projects'|trans, url: projects_url,  active: current_path is same as(projects_url) },
-    { label: 'nav.about'|trans,    url: about_url,     active: current_path is same as(about_url) },
-    { label: 'nav.contact'|trans,  url: contact_url,   active: current_path is same as(contact_url) },
+    { label: content_item('home', locale).menuLabel(),     url: home_url,     active: current_path is same as(home_url) },
+    { label: content_item('blog', locale).menuLabel(),     url: blog_url,     active: is_blog },
+    { label: content_item('projects', locale).menuLabel(), url: projects_url, active: current_path is same as(projects_url) },
+    { label: content_item('about', locale).menuLabel(),    url: about_url,    active: current_path is same as(about_url) },
+    { label: content_item('contact', locale).menuLabel(),  url: contact_url,  active: current_path is same as(contact_url) },
 ] %}
 
 <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="{{ 'nav.menu'|trans }}">

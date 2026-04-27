@@ -6,11 +6,11 @@
 
 {% set current_path = app.request.pathInfo %}
 {% set doc_pages = [
-    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: 'site.manual'|trans },
-    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: 'site.architecture'|trans },
-    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: 'site.customization'|trans },
-    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: 'site.locales'|trans },
-    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: 'site.design_reference'|trans },
+    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: content_item('manual', locale).menuLabel() },
+    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: content_item('architecture', locale).menuLabel() },
+    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: content_item('customization', locale).menuLabel() },
+    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: content_item('locales', locale).menuLabel() },
+    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: content_item('styleguide', locale).menuLabel() },
 ] %}
 
 {% block body %}
@@ -246,11 +246,11 @@
             <nav class="prev-next-nav" aria-label="Example navigation">
                 <a href="#" class="prev-next-card" onclick="return false">
                     <span class="prev-next-dir"><i class="ph ph-arrow-left" aria-hidden="true"></i> {{ 'site.nav_prev'|trans }}</span>
-                    <span class="prev-next-title">{{ 'site.architecture'|trans }}</span>
+                    <span class="prev-next-title">{{ content_item('architecture', locale).menuLabel() }}</span>
                 </a>
                 <a href="#" class="prev-next-card prev-next-card--next" onclick="return false">
                     <span class="prev-next-dir">{{ 'site.nav_next'|trans }} <i class="ph ph-arrow-right" aria-hidden="true"></i></span>
-                    <span class="prev-next-title">{{ 'site.locales'|trans }}</span>
+                    <span class="prev-next-title">{{ content_item('locales', locale).menuLabel() }}</span>
                 </a>
             </nav>
 

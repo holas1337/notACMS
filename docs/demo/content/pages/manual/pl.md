@@ -8,7 +8,7 @@ menu:
   label: "Podręcznik"
 ---
 
-> ## Quick Start
+> ## Szybki start
 > 
 > ```bash
 > # 1. Klonowanie
@@ -22,11 +22,11 @@ menu:
 > ./notACMS deploy --prod
 > ```
 > 
-> Strona działa pod `https://yourdomain.com`. Edytuj treść w `local/content/`.
+> Strona jest dostępna pod adresem `https://yourdomain.com`. Edytuj treść w `local/content/`.
 
 ---
 
-## Instalacja (Development)
+## Instalacja (środowisko deweloperskie)
 
 notACMS używa [DDEV](https://ddev.readthedocs.io/) do lokalnego developmentu.
 
@@ -40,11 +40,11 @@ ddev composer install
 ddev build
 ```
 
-Strona działa pod `https://my-site.ddev.site`.
+Strona jest dostępna pod adresem `https://my-site.ddev.site`.
 
 ---
 
-## Struktura Treści
+## Struktura treści
 
 ```
 local/content/
@@ -69,11 +69,11 @@ local/content/
 
 ---
 
-## Frontmatter Strony
+## Frontmatter strony
 
 | Pole | Typ | Wymagane | Opis |
 |---|---|---|---|
-| `title` | string | **Tak** | Tytuł strony |
+| `title` | string | Tak | Tytuł strony |
 | `slug` | string | Tak | Ścieżka URL |
 | `description` | string | Nie | Meta opis |
 | `date` | date | Posty | Data publikacji |
@@ -112,7 +112,7 @@ Referencja w frontmatter: `image: /media/my-post/featured.webp`
 
 ---
 
-## Komendy Builda
+## Komendy budowania
 
 | Komenda | Cel |
 |---------|-----|
@@ -120,26 +120,26 @@ Referencja w frontmatter: `image: /media/my-post/featured.webp`
 | `ddev code-check` | PHPStan + PHP CS Fixer |
 | `ddev code-fix` | Auto-fix stylu kodu |
 | `./notACMS deploy --prod` | Wdrożenie produkcyjne (Docker + statyczny build) |
-| `./notACMS rebuild --prod` | Aktualizacja treści tylko (szybko, bez rebuildu Dockera) |
+| `./notACMS rebuild --prod` | Aktualizacja treści tylko (szybko, bez przebudowy Dockera) |
 
 ---
 
-## Wdrożenie Produkcyjne
+## Wdrożenie produkcyjne
 
 ### Wymagania
 
 - Docker + Docker Compose
 - Domena z rekordem DNS A wskazującym na serwer
-- Porty 80/443 dostępne (lub custom przez `NGINX_PORT`)
+- Porty 80/443 dostępne (lub niestandardowe przez `NGINX_PORT`)
 
-### Pierwsze Wdrożenie
+### Pierwsze wdrożenie
 
 ```bash
 ./notACMS deploy --prod
 ```
 
 Co się dzieje:
-1. Seeduje `local/content/` z `docs/demo/content/` (jeśli puste)
+1. Seeduje `local/` z `docs/demo/` (tylko jeśli brak lub puste — istniejąca treść nigdy nie jest nadpisywana)
 2. Buduje obraz Docker PHP
 3. Instaluje zależności Composer (`--no-dev` w prod)
 4. Kompiluje SCSS + assety
@@ -147,7 +147,7 @@ Co się dzieje:
 6. Buduje indeks wyszukiwania Pagefind → `public/pagefind/`
 7. Uruchamia kontener nginx
 
-### Aktualizacje Treści
+### Aktualizacje treści
 
 Po edycji plików Markdown:
 
@@ -155,26 +155,26 @@ Po edycji plików Markdown:
 ./notACMS rebuild --prod
 ```
 
-Pomija rebuild Dockera — regeneruje tylko HTML + indeks wyszukiwania (~10s vs ~2-3min).
+Pomija przebudowę Dockera — regeneruje tylko HTML + indeks wyszukiwania (~10s vs ~2-3min).
 
-### Komendy Kontenerów
+### Komendy kontenerów
 
 | Komenda | Cel |
 |---------|-----|
-| `./notACMS deploy up` | Uruchom kontenery (bez rebuildu) |
+| `./notACMS deploy up` | Uruchom kontenery (bez przebudowy) |
 | `./notACMS deploy down` | Zatrzymaj kontenery |
-| `./notACMS deploy restart` | Restart bez rebuildu |
+| `./notACMS deploy restart` | Restart bez przebudowy |
 
 ---
 
-## Zmienne Środowiskowe
+## Zmienne środowiskowe
 
-Utwórz `.env.local` (nigdy nie commitowane, gitignored):
+Utwórz `.env.local` (nigdy nie commitowane, wykluczony z gita):
 
 | Zmienna | Wymagane | Ustaw przez | Cel |
 |---------|----------|-------------|-----|
-| `APP_SECRET` | **Tak** | `php -r "echo bin2hex(random_bytes(32));"` | Sekret Symfony |
-| `URL` | **Tak** | `yourdomain.com` | Musi pasować do `base_url` w `_site.yaml` |
+| `APP_SECRET` | Tak | `php -r "echo bin2hex(random_bytes(32));"` | Sekret Symfony |
+| `URL` | Tak | `yourdomain.com` | Musi pasować do `base_url` w `_site.yaml` |
 | `NGINX_PORT` | Nie | `8123` | Port hosta (domyślnie: 8123) |
 | `RUNTIME_PHP_ENABLED` | Nie | `true`/`false` | Włącz PHP dla formularza kontaktowego |
 | `MAILER_DSN` | Nie* | `smtp://user:pass@host:587` | *Wymagane jeśli formularz włączony |
@@ -185,9 +185,9 @@ Utwórz `.env.local` (nigdy nie commitowane, gitignored):
 
 ---
 
-## Rozwiązywanie Problemów
+## Rozwiązywanie problemów
 
-### Port Już w Użyciu
+### Port już w użyciu
 
 **Błąd:** `bind: address already in use`  
 **Naprawa:**
@@ -196,7 +196,7 @@ echo "NGINX_PORT=8080" >> .env.local
 ./notACMS deploy --prod
 ```
 
-### Odmowa Dostępu
+### Odmowa dostępu
 
 **Błąd:** 403 przy plikach statycznych  
 **Naprawa:**
@@ -206,7 +206,7 @@ echo "GID=$(id -g)" >> .env.local
 ./notACMS deploy restart
 ```
 
-### Formularz Kontaktowy 404
+### Formularz kontaktowy 404
 
 **Naprawa:** Włącz runtime PHP:
 ```bash
@@ -214,12 +214,12 @@ echo "RUNTIME_PHP_ENABLED=true" >> .env.local
 ./notACMS deploy restart
 ```
 
-### Certyfikat SSL Nie Działa
+### Certyfikat SSL nie działa
 
 **Błąd:** Traefik nie może pobrać certyfikatu  
 **Naprawa:** Sprawdź czy porty 80/443 są otwarte, DNS się rozwiązuje. Albo użyj `CERTRESOLVER=dummy` do testowania.
 
-### Style Się Nie Aktualizują
+### Style się nie aktualizują
 
 **Naprawa:** Wyczyść cache i zbuduj ponownie:
 ```bash
@@ -227,6 +227,6 @@ rm -rf var/ public/assets/
 ./notACMS deploy --prod
 ```
 
-### Build Się Zawiesza
+### Budowanie się zawiesza
 
 **Naprawa:** Upewnij się, że Docker ma wystarczająco pamięci (4GB+) do kompilacji assetów.

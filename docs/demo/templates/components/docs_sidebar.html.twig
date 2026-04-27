@@ -26,7 +26,7 @@
                 <a href="{{ path('blog_list_' ~ locale) }}"
                    {% if current_path starts with path('blog_list_' ~ locale) %} class="is-active" aria-current="page"{% endif %}>
                     <span class="sidebar-icon"><i class="ph ph-rocket" aria-hidden="true"></i></span>
-                    {{ 'site.releases'|trans }}
+                    {{ content_item('blog', locale).menuLabel() }}
                 </a>
             </li>
             <li>
@@ -74,7 +74,7 @@
                 <a href="{{ path('blog_list_' ~ locale) }}"
                    {% if current_path starts with path('blog_list_' ~ locale) %} class="is-active" aria-current="page"{% endif %}>
                     <span class="sidebar-icon"><i class="ph ph-rocket" aria-hidden="true"></i></span>
-                    {{ 'site.releases'|trans }}
+                    {{ content_item('blog', locale).menuLabel() }}
                 </a>
             </li>
             <li>

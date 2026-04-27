@@ -48,6 +48,7 @@ else
 fi
 
 echo "==> Building static site"
+docker compose --env-file .env $ENV_LOCAL_FLAG run --rm $APP_ENV_FLAG php php bin/console cache:clear
 docker compose --env-file .env $ENV_LOCAL_FLAG run --rm $APP_ENV_FLAG php php bin/console app:build
 
 

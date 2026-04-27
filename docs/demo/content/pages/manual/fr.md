@@ -17,7 +17,8 @@ menu:
 > # 2. Configurer la production
 > echo "APP_SECRET=$(php -r 'echo bin2hex(random_bytes(32));')" >> .env.local
 > echo "URL=yourdomain.com" >> .env.local
-> > # 3. Déployer
+> 
+> # 3. Déployer
 > ./notACMS deploy --prod
 > ```
 > 
@@ -72,7 +73,7 @@ local/content/
 
 | Champ | Type | Requis | Description |
 |---|---|---|---|
-| `title` | string | **Oui** | Titre de la page |
+| `title` | string | Oui | Titre de la page |
 | `slug` | string | Oui | Chemin de l'URL |
 | `description` | string | Non | Méta-description |
 | `date` | date | Articles | Date de publication |
@@ -84,7 +85,7 @@ local/content/
 | `image_alt` | string | Requis avec `image` | Texte alternatif de l'image (valeur par défaut : titre, si omis) |
 | `draft` | bool | Non | Masquer en production |
 | `pinned` | date ou false | Non | Épingle l'article jusqu'à cette date (incluse) en haut de toutes les listes ; est automatiquement désépinglé lorsque la date est dépassée. Articles uniquement. |
-| `featured` | bool | Non | Projets uniquement, affichage dans la grille curatée |
+| `featured` | bool | Non | Projets uniquement, affichage dans la grille sélectionnée |
 | `dynamic` | bool | Non | Ignorer le pré-rendu statique |
 | `series` | string | Non | Clé de série |
 | `series_order` | int | Non | Position dans la série |
@@ -111,15 +112,15 @@ Référencer dans le frontmatter : `image: /media/my-post/featured.webp`
 
 ---
 
-## Commandes de Build
+## Commandes de Compilation
 
 | Commande | Objectif |
 |--------|-------|
-| `ddev build` | Build complet de développement : Cache + Assets + Pages + Recherche |
+| `ddev build` | Compilation complète de développement : Cache + Assets + Pages + Recherche |
 | `ddev code-check` | PHPStan + PHP CS Fixer |
 | `ddev code-fix` | Correction automatique du style de code |
-| `./notACMS deploy --prod` | Déploiement en production (Docker + build statique) |
-| `./notACMS rebuild --prod` | Mise à jour du contenu uniquement (rapide, pas de rebuild Docker) |
+| `./notACMS deploy --prod` | Déploiement en production (Docker + compilation statique) |
+| `./notACMS rebuild --prod` | Mise à jour du contenu uniquement (rapide, pas de reconstruction Docker) |
 
 ---
 
@@ -138,12 +139,12 @@ Référencer dans le frontmatter : `image: /media/my-post/featured.webp`
 ```
 
 Ce qui se passe :
-1. Seede `local/content/` depuis `docs/demo/content/` (si vide)
-2. Build l'image Docker PHP
+1. Initialise `local/` depuis `docs/demo/` (uniquement si absent ou vide — le contenu existant n'est jamais écrasé)
+2. Construit l'image Docker PHP
 3. Installe les dépendances Composer (`--no-dev` en prod)
 4. Compile SCSS + Assets
 5. Génère le HTML statique → `public/static/`
-6. Build l'index de recherche Pagefind → `public/pagefind/`
+6. Construit l'index de recherche Pagefind → `public/pagefind/`
 7. Démarre le conteneur nginx
 
 ### Mises à Jour de Contenu
@@ -154,15 +155,15 @@ Après modification des fichiers Markdown :
 ./notACMS rebuild --prod
 ```
 
-Ignore le rebuild Docker — régénère uniquement HTML + index de recherche (~10s au lieu de ~2-3min).
+Ignore la reconstruction Docker — régénère uniquement HTML + index de recherche (~10s au lieu de ~2-3min).
 
 ### Commandes de Conteneur
 
 | Commande | Objectif |
 |--------|-------|
-| `./notACMS deploy up` | Démarrer les conteneurs (pas de rebuild) |
+| `./notACMS deploy up` | Démarrer les conteneurs (pas de reconstruction) |
 | `./notACMS deploy down` | Arrêter les conteneurs |
-| `./notACMS deploy restart` | Redémarrer sans rebuild |
+| `./notACMS deploy restart` | Redémarrer sans reconstruction |
 
 ---
 
@@ -172,8 +173,8 @@ Créer `.env.local` à la racine du projet (jamais commité, gitignored) :
 
 | Variable | Requis | Définir via | Objectif |
 |----------|--------------|------------|-------|
-| `APP_SECRET` | **Oui** | `php -r "echo bin2hex(random_bytes(32));"` | Secret Symfony |
-| `URL` | **Oui** | `yourdomain.com` | Doit correspondre à `base_url` dans `_site.yaml` |
+| `APP_SECRET` | Oui | `php -r "echo bin2hex(random_bytes(32));"` | Secret Symfony |
+| `URL` | Oui | `yourdomain.com` | Doit correspondre à `base_url` dans `_site.yaml` |
 | `NGINX_PORT` | Non | `8123` | Port hôte (Défaut : 8123) |
 | `RUNTIME_PHP_ENABLED` | Non | `true`/`false` | Activer PHP pour le formulaire de contact |
 | `MAILER_DSN` | Non* | `smtp://user:pass@host:587` | *Requis si le formulaire de contact est activé |
@@ -220,12 +221,12 @@ echo "RUNTIME_PHP_ENABLED=true" >> .env.local
 
 ### Les styles ne se mettent pas à jour
 
-**Correction :** Vider le cache et rebuild :
+**Correction :** Vider le cache et reconstruire :
 ```bash
 rm -rf var/ public/assets/
 ./notACMS deploy --prod
 ```
 
-### Build bloqué
+### Compilation bloquée
 
 **Correction :** S'assurer que Docker dispose de suffisamment de mémoire (4GB+) pour la compilation des assets.

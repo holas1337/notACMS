@@ -77,6 +77,7 @@ $item->seriesOrder()    // ?int
 $item->directoryKey()   // ?string
 $item->relatedSlugs()   // string[]
 $item->menuWeight()     // int
+$item->menuLabel()      // string (menu.label frontmatter, falls back to title())
 $item->isIndex()       // bool
 $item->readingTime()    // int
 $item->wordCount()      // int
@@ -126,7 +127,7 @@ Five Twig extensions expose data to templates:
 |---|---|---|
 | `SiteConfigExtension` | Globals | `site_name`, `site_base_url`, `site_description`, `site_social`, `site_author`, `site_locales`, `site_locales_list`, `site_default_locale`, `image_variant_widths`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length` |
 | `TranslationMapTwigExtension` | Global | `translation_map` — `{directoryKey: {locale: url}}` mapping for language switcher and hreflang tags |
-| `ContentTwigExtension` | Function | `content_url(directoryKey, locale)` — resolves URL for a content item by directory key |
+| `ContentTwigExtension` | Function | `content_url(directoryKey, locale)` — resolves URL for a content item by directory key; `content_item(directoryKey, locale)` — returns the full `ContentItem` (or `null` if not found) |
 | `LangSwitcherExtension` | Function | `lang_switch_urls(otherLocales)` — resolves language switcher URLs per locale using translation map, controller overrides, and route-based fallbacks (archive → paginated → blog list → home) |
 | `SrcsetExtension` | Filter | `srcset_media` — post-processes HTML to inject `srcset`/`sizes` attributes into `<img>` tags for responsive images |
 

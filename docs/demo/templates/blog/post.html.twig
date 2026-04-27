@@ -52,7 +52,7 @@
     {# Breadcrumb #}
     {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
         { label: site_name, url: path('home_' ~ locale) },
-        { label: 'site.releases'|trans, url: path('blog_list_' ~ locale) },
+        { label: content_item('blog', locale).menuLabel(), url: path('blog_list_' ~ locale) },
         { label: content.title() }
     ] }) }}
 

@@ -65,7 +65,7 @@ Flags are mutually exclusive. Once `local/` has content, subsequent `ddev build`
 
 | Command | Description |
 |---|---|
-| `./notACMS deploy --prod` | Production deploy: build image, start containers, full build (seeds `--demo` by default) |
+| `./notACMS deploy --prod` | Production deploy: build image, start containers, full build (seeds `local/` only if empty) |
 | `./notACMS deploy --prod --bare` | Production deploy with bare wireframe theme |
 | `./notACMS deploy --prod --port 8081` | Override port at runtime |
 | `./notACMS deploy down` | Stop and remove containers |

@@ -2,12 +2,6 @@ header:
   tagline: Demo-Blog
 nav:
   skip_to_content: Zum Inhalt springen
-  home: Startseite
-  blog: Blog
-  projects: Projekte
-  about: Über mich
-  contact: Kontakt
-  privacy_policy: Datenschutz
   search: Suche
   menu: Menü
   main: Hauptnavigation
@@ -140,13 +134,6 @@ badge:
   updated: '[KÜRZLICH AKTUALISIERT]'
 site:
   docs: Dokumentation
-  releases: Versionen
-  about: Über das Projekt
-  manual: Handbuch
-  architecture: Architektur
-  customization: Anpassung
-  locales: Lokalisierung
-  design_reference: Design-Referenz
   github: GitHub
   project: Projekt
   author: Autor

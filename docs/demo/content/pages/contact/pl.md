@@ -5,6 +5,8 @@ description: "Masz pytanie dotyczące notACMS lub chcesz się skontaktować? Wy�
 template: page/contact
 ---
 
-Masz pytanie o notACMS, znalazłeś błąd lub chcesz porozmawiać o projekcie? Użyj poniższego formularza — odezwę się tak szybko, jak to możliwe.
+Masz pytanie o notACMS, znalazłeś błąd lub chcesz porozmawiać o projekcie? Użyj poniższego formularza — odezwę się najszybciej jak się da.
 
 > **Uwaga demo:** Ta strona demo ma `RUNTIME_PHP_ENABLED=false` w pliku `.env`, co oznacza, że formularz kontaktowy jest wyłączony. Aby go włączyć, ustaw `RUNTIME_PHP_ENABLED=true` i zrestartuj kontenery. Szczegóły znajdziesz w [Podręczniku](/pl/manual/).
+
+Możesz mnie też znaleźć na [GitHubie](https://github.com/holas1337/notACMS) lub przez [holas.pl/contact](https://holas.pl/contact/).
