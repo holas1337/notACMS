@@ -202,15 +202,13 @@
         color: var(--text-muted);
         vertical-align: top;
 
-        &:first-child {
-            font-family: $font-mono;
-            font-size: 0.8rem;
-            color: var(--accent);
-        }
-
         strong {
             color: var(--text);
         }
+    }
+
+    td:first-child code {
+        white-space: nowrap;
     }
 
     tr:last-child td {

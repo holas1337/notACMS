@@ -73,7 +73,7 @@ local/content/
 
 | Pole | Typ | Wymagane | Opis |
 |---|---|---|---|
-| `title` | string | **Tak** | Tytuł strony |
+| `title` | string | Tak | Tytuł strony |
 | `slug` | string | Tak | Ścieżka URL |
 | `description` | string | Nie | Meta opis |
 | `date` | date | Posty | Data publikacji |
@@ -173,8 +173,8 @@ Utwórz `.env.local` (nigdy nie commitowane, wykluczony z gita):
 
 | Zmienna | Wymagane | Ustaw przez | Cel |
 |---------|----------|-------------|-----|
-| `APP_SECRET` | **Tak** | `php -r "echo bin2hex(random_bytes(32));"` | Sekret Symfony |
-| `URL` | **Tak** | `yourdomain.com` | Musi pasować do `base_url` w `_site.yaml` |
+| `APP_SECRET` | Tak | `php -r "echo bin2hex(random_bytes(32));"` | Sekret Symfony |
+| `URL` | Tak | `yourdomain.com` | Musi pasować do `base_url` w `_site.yaml` |
 | `NGINX_PORT` | Nie | `8123` | Port hosta (domyślnie: 8123) |
 | `RUNTIME_PHP_ENABLED` | Nie | `true`/`false` | Włącz PHP dla formularza kontaktowego |
 | `MAILER_DSN` | Nie* | `smtp://user:pass@host:587` | *Wymagane jeśli formularz włączony |

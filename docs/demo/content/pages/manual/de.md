@@ -73,7 +73,7 @@ local/content/
 
 | Feld | Typ | Erforderlich | Beschreibung |
 |---|---|---|---|
-| `title` | string | **Ja** | Seitentitel |
+| `title` | string | Ja | Seitentitel |
 | `slug` | string | Ja | URL-Pfad |
 | `description` | string | Nein | Meta-Beschreibung |
 | `date` | date | Posts | Veröffentlichungsdatum |
@@ -173,8 +173,8 @@ Nach dem Bearbeiten von Markdown-Dateien:
 
 | Variable | Erforderlich | Setzen via | Zweck |
 |----------|--------------|------------|-------|
-| `APP_SECRET` | **Ja** | `php -r "echo bin2hex(random_bytes(32));"` | Symfony Secret |
-| `URL` | **Ja** | `yourdomain.com` | Muss `base_url` in `_site.yaml` entsprechen |
+| `APP_SECRET` | Ja | `php -r "echo bin2hex(random_bytes(32));"` | Symfony Secret |
+| `URL` | Ja | `yourdomain.com` | Muss `base_url` in `_site.yaml` entsprechen |
 | `NGINX_PORT` | Nein | `8123` | Host-Port (Default: 8123) |
 | `RUNTIME_PHP_ENABLED` | Nein | `true`/`false` | PHP für Kontaktformular aktivieren |
 | `MAILER_DSN` | Nein* | `smtp://user:pass@host:587` | *Erforderlich wenn Kontaktformular aktiv |

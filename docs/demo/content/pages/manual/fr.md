@@ -73,7 +73,7 @@ local/content/
 
 | Champ | Type | Requis | Description |
 |---|---|---|---|
-| `title` | string | **Oui** | Titre de la page |
+| `title` | string | Oui | Titre de la page |
 | `slug` | string | Oui | Chemin de l'URL |
 | `description` | string | Non | Méta-description |
 | `date` | date | Articles | Date de publication |
@@ -173,8 +173,8 @@ Créer `.env.local` à la racine du projet (jamais commité, gitignored) :
 
 | Variable | Requis | Définir via | Objectif |
 |----------|--------------|------------|-------|
-| `APP_SECRET` | **Oui** | `php -r "echo bin2hex(random_bytes(32));"` | Secret Symfony |
-| `URL` | **Oui** | `yourdomain.com` | Doit correspondre à `base_url` dans `_site.yaml` |
+| `APP_SECRET` | Oui | `php -r "echo bin2hex(random_bytes(32));"` | Secret Symfony |
+| `URL` | Oui | `yourdomain.com` | Doit correspondre à `base_url` dans `_site.yaml` |
 | `NGINX_PORT` | Non | `8123` | Port hôte (Défaut : 8123) |
 | `RUNTIME_PHP_ENABLED` | Non | `true`/`false` | Activer PHP pour le formulaire de contact |
 | `MAILER_DSN` | Non* | `smtp://user:pass@host:587` | *Requis si le formulaire de contact est activé |
