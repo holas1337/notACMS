@@ -2,7 +2,7 @@
 title: "Dostosowywanie"
 description: "Nadpisz szablony, style, serwisy PHP i konfigurację serwera — wszystko z katalogu local/."
 template: page/doc
-slug: customization
+slug: dostosowywanie
 menu:
   weight: 40
   label: "Dostosowywanie"

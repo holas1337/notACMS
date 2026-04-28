@@ -2,7 +2,7 @@
 title: "Anpassung"
 description: "Templates, Styles, PHP-Services und Server-Konfiguration überschreiben — alles aus dem local/-Verzeichnis."
 template: page/doc
-slug: customization
+slug: anpassung
 menu:
   weight: 40
   label: "Anpassung"
@@ -118,7 +118,7 @@ import './styles/app_local.scss';
 >
 > Beide Entrypoints an `importmap()` zu übergeben garantiert die korrekte CSS-Ladereihenfolge: `app.css` (Original) zuerst, dann deine Overrides.
 
-> **Tipp:** Überschreibe immer CSS Custom Properties (`--accent`, `--bg`, etc.) statt direkter Hex-Werte. Das stellt sicher, dass Hell- und Dunkel-Modus mit deinen Markenfarben korrekt funktionieren. Die vollständige Token-Liste findest du in der [Design-Referenz](/de/design-reference/).
+> **Tipp:** Überschreibe immer CSS Custom Properties (`--accent`, `--bg`, etc.) statt direkter Hex-Werte. Das stellt sicher, dass Hell- und Dunkel-Modus mit deinen Markenfarben korrekt funktionieren. Die vollständige Token-Liste findest du in der [Design-Referenz](/de/design-referenz/).
 
 ## Custom PHP-Services
 

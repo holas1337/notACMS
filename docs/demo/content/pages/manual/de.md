@@ -2,7 +2,7 @@
 title: "Handbuch"
 description: "Komplette Anleitung zur Installation, Konfiguration und Bereitstellung von notACMS."
 template: page/doc
-slug: manual
+slug: handbuch
 menu:
   weight: 20
   label: "Handbuch"

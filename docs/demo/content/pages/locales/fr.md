@@ -2,7 +2,7 @@
 title: "Localisation"
 description: "Ajouter des langues, traduire le contenu et configurer les patterns d'URL pour chaque locale."
 template: page/doc
-slug: locales
+slug: localisation
 menu:
   weight: 50
   label: "Localisation"

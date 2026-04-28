@@ -2,7 +2,7 @@
 title: "Référence Design"
 description: "Le système de design notACMS — tokens de couleur, typographie, composants et référence des classes SCSS."
 template: page/styleguide
-slug: design-reference
+slug: reference-design
 menu:
   weight: 70
   label: "Référence Design"

@@ -2,7 +2,7 @@
 title: "Personnalisation"
 description: "Surcharger les templates, les styles, les services PHP et la configuration serveur — tout depuis le répertoire local/."
 template: page/doc
-slug: customization
+slug: personnalisation
 menu:
   weight: 40
   label: "Personnalisation"
@@ -118,7 +118,7 @@ import './styles/app_local.scss';
 >
 > Passer les deux points d'entrée à `importmap()` garantit l'ordre de chargement CSS correct : `app.css` (original) d'abord, puis vos surcharges.
 
-> **Astuce :** Surchargez toujours les propriétés CSS personnalisées (`--accent`, `--bg`, etc.) plutôt que des valeurs hex directes. Cela assure que les modes clair et sombre fonctionnent correctement avec vos couleurs de marque. La liste complète des tokens se trouve dans la [Référence Design](/fr/design-reference/).
+> **Astuce :** Surchargez toujours les propriétés CSS personnalisées (`--accent`, `--bg`, etc.) plutôt que des valeurs hex directes. Cela assure que les modes clair et sombre fonctionnent correctement avec vos couleurs de marque. La liste complète des tokens se trouve dans la [Référence Design](/fr/reference-design/).
 
 ## Services PHP Personnalisés
 

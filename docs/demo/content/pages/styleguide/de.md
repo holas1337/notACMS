@@ -2,7 +2,7 @@
 title: "Design-Referenz"
 description: "Das notACMS Design-System — Farbtokens, Typografie, Komponenten und SCSS-Klassenreferenz."
 template: page/styleguide
-slug: design-reference
+slug: design-referenz
 menu:
   weight: 70
   label: "Design-Referenz"

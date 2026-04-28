@@ -34,7 +34,9 @@ The `LocalizedRouteLoader` reads `local/content/_routes.yaml` and registers Symf
 | Content file | Slug frontmatter | Locale | Generated URL |
 |---|---|---|---|
 | `pages/about/en.md` | `about` | EN | `/about/` |
-| `pages/about/de.md` | `about` | DE | `/de/about/` |
+| `pages/about/pl.md` | `o-projekcie` | PL | `/pl/o-projekcie/` |
+| `pages/about/de.md` | `ueber-uns` | DE | `/de/ueber-uns/` |
+| `pages/about/fr.md` | `a-propos` | FR | `/fr/a-propos/` |
 | `blog/releases/release-1-0-0/en.md` | `blog/release-1-0-0` | EN | `/blog/release-1-0-0/` |
 | `blog/releases/release-1-0-0/pl.md` | `blog/release-1-0-0` | PL | `/wpisy/release-1-0-0/` |
 

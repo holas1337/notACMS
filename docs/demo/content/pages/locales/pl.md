@@ -2,7 +2,7 @@
 title: "Lokalizacja"
 description: "Jak dodawać języki, tłumaczyć treści i konfigurować wzorce URL dla każdej wersji językowej."
 template: page/doc
-slug: locales
+slug: lokalizacja
 menu:
   weight: 50
   label: "Lokalizacja"

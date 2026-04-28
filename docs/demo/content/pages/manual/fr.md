@@ -2,7 +2,7 @@
 title: "Manuel"
 description: "Guide complet pour l'installation, la configuration et le déploiement de notACMS."
 template: page/doc
-slug: manual
+slug: manuel
 menu:
   weight: 20
   label: "Manuel"

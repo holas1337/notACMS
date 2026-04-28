@@ -2,7 +2,7 @@
 title: "Architektura"
 description: "Jak działa notACMS wewnętrznie — pipeline treści, system routingu i proces budowania."
 template: page/doc
-slug: architecture
+slug: architektura
 menu:
   weight: 30
   label: "Architektura"
@@ -34,7 +34,9 @@ Trasy są generowane z drzewa treści. Każdy `ContentItem` ma URL zdefiniowany 
 | Plik treści | Slug frontmatter | Locale | Wygenerowany URL |
 |---|---|---|---|
 | `pages/about/en.md` | `about` | EN | `/about/` |
-| `pages/about/de.md` | `about` | DE | `/de/about/` |
+| `pages/about/pl.md` | `o-projekcie` | PL | `/pl/o-projekcie/` |
+| `pages/about/de.md` | `ueber-uns` | DE | `/de/ueber-uns/` |
+| `pages/about/fr.md` | `a-propos` | FR | `/fr/a-propos/` |
 | `blog/releases/release-1-0-0/en.md` | `blog/release-1-0-0` | EN | `/blog/release-1-0-0/` |
 | `blog/releases/release-1-0-0/pl.md` | `blog/release-1-0-0` | PL | `/wpisy/release-1-0-0/` |
 
