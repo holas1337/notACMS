@@ -2,7 +2,7 @@
 title: "L'idée"
 slug: "articles/the-idea"
 description: "Comment l'idée de notACMS est née — et pourquoi le monde n'a pas besoin d'un autre CMS."
-date: 2024-11-01
+date: 2026-02-01
 category: releases
 tags: [announcement, open-source]
 template: blog/post
