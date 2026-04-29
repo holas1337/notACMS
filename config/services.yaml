@@ -3,6 +3,7 @@
 parameters:
     notacms_content:    '%kernel.project_dir%/local/content'
     notacms_static_dir: '%kernel.project_dir%/public/static'
+    notacms.local_dir:  'local'
 
 services:
     _defaults:

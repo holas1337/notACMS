@@ -39,6 +39,9 @@ Tests are organized in `tests/` directory:
 tests/
 ├── bootstrap.php              # PHPUnit bootstrap (loads Composer autoload + env)
 ├── TmpDirTrait.php            # Shared temp-directory fixture helper (used by filesystem-dependent tests)
+├── Fixtures/                  # Test fixture data (isolated from local/ instance)
+│   ├── content/               # _site.yaml, _routes.yaml, _tags.yaml, blog/ posts, pages/
+│   └── templates/             # Empty — Twig falls through to core templates/ (drop overrides here as needed)
 ├── Unit/                      # Pure unit tests (no Symfony kernel)
 │   ├── Content/
 │   │   ├── ContentItemTest.php

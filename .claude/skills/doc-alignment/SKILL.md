@@ -127,9 +127,9 @@ After presenting findings, **stop and wait** for the user to decide which issues
 
 When running this audit, also verify that the test suite is self-contained — i.e., PHPUnit can run without `local/content/` being seeded:
 
-1. Check that `config/services_test.yaml` overrides `notacms_content` to `tests/Fixtures/content`
+1. Check that `config/services_test.yaml` overrides `notacms_content` to `tests/Fixtures/content` and `notacms.local_dir` to `tests/Fixtures` (decouples Twig paths from instance templates)
 2. Verify `tests/Fixtures/content/` has valid `_site.yaml`, `_routes.yaml`, `_tags.yaml`
-3. Check that `local/templates/`, `local/assets/` directories exist with `.gitkeep` (required by Twig and AssetMapper at kernel boot)
+3. Verify `tests/Fixtures/templates/` has `.gitkeep` (empty — Twig falls through to core `templates/`)
 4. Verify that `importmap.php` and `symfonycasts_sass.php` use `file_exists()` guards for optional `local/` files
 5. Confirm the CI seed step only needs to create `local/content/` for non-test commands (`sass:build`, `lint:twig`)
 
