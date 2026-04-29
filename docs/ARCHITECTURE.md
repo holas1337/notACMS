@@ -87,6 +87,7 @@ HTTP Request
 | `TranslationMapTwigExtension` | `src/Twig/TranslationMapTwigExtension.php` | Twig global `translation_map` — `{directoryKey: {locale: url}}` mapping for language switcher and hreflang tags |
 | `ContentTwigExtension` | `src/Twig/ContentTwigExtension.php` | Twig functions `content_url(directoryKey, locale)` and `content_item(directoryKey, locale)` — resolve URL or full `ContentItem` by directory key |
 | `LangSwitcherExtension` | `src/Twig/LangSwitcherExtension.php` | Twig function `lang_switch_urls(otherLocales)` — resolves language switcher URLs per locale using translation map, controller overrides, and route-based fallbacks (archive → paginated → blog list → home) |
+| `StructuredDataExtension` | `src/Twig/StructuredDataExtension.php` | Twig functions `json_ld(data)` — renders array as `<script type="application/ld+json">` with `JSON_PRETTY_PRINT \| JSON_UNESCAPED_SLASHES`; and `structured_data()` — returns `StructuredDataBuilderInterface` for method chaining (e.g. `structured_data().person(...)`) |
 
 **Global metadata:** `local/content/_site.yaml` — site name, base URL, locales config (first key = default), social links, and all site-level numeric/string settings (see Key Configuration Files). Loaded by `SiteConfigService` and exposed to templates via three Twig extensions: `SiteConfigExtension` (Twig globals: `site_name`, `site_base_url`, `site_description`, `site_social`, `site_author`, `site_locales`, `site_locales_list`, `site_default_locale`, `image_variant_widths`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`), `TranslationMapTwigExtension` (Twig global: `translation_map`), and `ContentTwigExtension` (Twig functions: `content_url()`, `content_item()`). Additionally, `cf_analytics_token` is registered as a Twig global in `config/packages/twig.yaml`, bound to the `CF_ANALYTICS_TOKEN` environment variable — used in `base.html.twig` to conditionally load the Cloudflare Web Analytics beacon script.
 
@@ -130,6 +131,7 @@ All services are behind interfaces for testability. Controllers depend only on i
 |---|---|---|
 | `SiteConfigService` | `SiteConfigServiceInterface` | Central locale authority and config source: `getLocales()`, `getDefaultLocale()`, `getLocaleConfig()`, `getSiteConfig()`, `detectLocaleFromPath()`, `getUrlPrefix()`, `getBaseUrl()`, `getPostsPerPage()`, `getRssLimit()`, `getRecentPostsLimit()`, `getRelatedPostsLimit()`, `getImageVariantWidths()`, `getImageQuality()`, `getImageMagickFlags()`, `getNewPostDays()`, `getComingSoonRevealDays()`. Reads `local/content/_site.yaml`; locale list derived from `array_keys(site.locales)`, first key = default |
 | `TurnstileValidator` | `TurnstileValidatorInterface` | Verifies Cloudflare Turnstile CAPTCHA tokens against siteverify API |
+| `StructuredDataBuilder` | `StructuredDataBuilderInterface` | Builds typed PHP arrays for JSON-LD structured data (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); automatic empty-value stripping |
 | `ContactFormConfig` | — (value object) | Holds contact form config from `_site.yaml`: `email`, `from`, `fromName`, `topic` |
 
 ---

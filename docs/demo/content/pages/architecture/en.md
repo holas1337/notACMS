@@ -120,10 +120,11 @@ Key methods:
 | `MarkdownParser` | Converts Markdown to HTML via CommonMark |
 | `SidebarDataProvider` | Assembles sidebar data (categories, tags, recent posts) |
 | `TagTranslationService` | Translates tag slugs between locales |
+| `StructuredDataBuilder` | Builds typed PHP arrays for JSON-LD structured data (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); automatic empty-value stripping |
 
 ### Twig Extensions
 
-Five Twig extensions expose data to templates:
+Six Twig extensions expose data to templates:
 
 | Extension | Type | Provides |
 |---|---|---|
@@ -132,6 +133,7 @@ Five Twig extensions expose data to templates:
 | `ContentTwigExtension` | Function | `content_url(directoryKey, locale)` — resolves URL for a content item by directory key; `content_item(directoryKey, locale)` — returns the full `ContentItem` (or `null` if not found) |
 | `LangSwitcherExtension` | Function | `lang_switch_urls(otherLocales)` — resolves language switcher URLs per locale using translation map, controller overrides, and route-based fallbacks (archive → paginated → blog list → home) |
 | `SrcsetExtension` | Filter | `srcset_media` — post-processes HTML to inject `srcset`/`sizes` attributes into `<img>` tags for responsive images |
+| `StructuredDataExtension` | Function | `json_ld(array)` — encodes a PHP array as JSON-LD and returns a full `<script>` tag; `structured_data()` — returns the builder for method chaining like `structured_data().blogPosting(...)` |
 
 Additionally, `cf_analytics_token` is registered as a Twig global in `config/packages/twig.yaml`, bound to the `CF_ANALYTICS_TOKEN` environment variable.
 

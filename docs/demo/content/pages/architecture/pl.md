@@ -115,10 +115,11 @@ Kluczowe metody:
 | `MarkdownParser` | Konwertuje Markdown do HTML przez CommonMark |
 | `SidebarDataProvider` | Składa dane paska bocznego (kategorie, tagi, ostatnie posty) |
 | `TagTranslationService` | Tłumaczy slugi tagów między locale |
+| `StructuredDataBuilder` | Buduje typowane tablice PHP dla danych strukturalnych JSON-LD (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); automatyczne usuwanie pustych wartości |
 
 ### Rozszerzenia Twig
 
-Pięć rozszerzeń Twig udostępnia dane w szablonach:
+Sześć rozszerzeń Twig udostępnia dane w szablonach:
 
 | Rozszerzenie | Typ | Udostępnia |
 |---|---|---|
@@ -127,6 +128,7 @@ Pięć rozszerzeń Twig udostępnia dane w szablonach:
 | `ContentTwigExtension` | Funkcja | `content_url(directoryKey, locale)` — rozwiązuje URL dla elementu treści po kluczu katalogu |
 | `LangSwitcherExtension` | Funkcja | `lang_switch_urls(otherLocales)` — rozwiązuje URL przełącznika języków dla każdego locale: mapa tłumaczeń, override kontrolera, następnie fallbacki (archiwum → paginacja → lista wpisów → strona główna) |
 | `SrcsetExtension` | Filter | `srcset_media` — przetwarza HTML, wstrzykując atrybuty `srcset`/`sizes` do tagów `<img>` w celu responsywności |
+| `StructuredDataExtension` | Funkcja | `json_ld(array)` — koduje tablicę PHP jako JSON-LD i zwraca pełny znacznik `<script>`; `structured_data()` — zwraca builder do łańcuchowego wywoływania metod, np. `structured_data().blogPosting(...)` |
 
 Dodatkowo, `cf_analytics_token` jest rejestrowany jako Twig global w `config/packages/twig.yaml`, powiązany ze zmienną środowiskową `CF_ANALYTICS_TOKEN`.
 

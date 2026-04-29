@@ -31,9 +31,11 @@ tests/
 │   │   │   └── TranslationMapBuilderTest.php
 │   │   ├── Image/
 │   │   │   └── ResponsiveImageServiceTest.php
-│   │   └── SiteConfigServiceTest.php
+│   │   ├── SiteConfigServiceTest.php
+│   │   └── StructuredDataBuilderTest.php
 │   └── Twig/
-│       └── SrcsetExtensionTest.php
+│       ├── SrcsetExtensionTest.php
+│       └── TranslationMapTwigExtensionTest.php
 └── Integration/
     ├── Command/
     │   └── BuildStaticSiteCommandTest.php

@@ -17,19 +17,11 @@
         {% endif %}
     {% endfor %}
 </nav>
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-        {% for crumb in breadcrumbs %}
-        {
-            "@type": "ListItem",
-            "position": {{ loop.index }},
-            "name": "{{ crumb.label|e('js') }}"{% if crumb.url is defined and crumb.url %},
-            "item": "{{ site_base_url }}{{ crumb.url }}"{% endif %}
-        }{% if not loop.last %},{% endif %}
-        {% endfor %}
-    ]
-}
-</script>
+{{ json_ld(structured_data().breadcrumbList(
+    breadcrumbs|map((crumb, i) => {
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": crumb.label,
+        "item": crumb.url is defined and crumb.url ? site_base_url ~ crumb.url : null
+    })
+)) }}

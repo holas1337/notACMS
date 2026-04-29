@@ -19,32 +19,20 @@
 {% endfor %}
 {% endblock %}
 
-{% block structured_data %}
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "{{ content.title()|e('js') }}",
-    "description": "{{ (content.description() ?: content.excerpt(meta_description_length))|e('js') }}",
-    "inLanguage": "{{ locale }}",
-    "datePublished": "{{ content.date()|date('c') }}"{% if content.updatedDate() %},
-    "dateModified": "{{ content.updatedDate()|date('c') }}"{% endif %},
-    "wordCount": {{ content.wordCount() }}{% if content.category() %},
-    "articleSection": "{{ content.category()|e('js') }}"{% endif %}{% if content.tags() is not empty %},
-    "keywords": "{{ content.tags()|join(', ')|e('js') }}"{% endif %},
-    "author": {
-        "@type": "Person",
-        "name": "{{ site_author.name|e('js') }}",
-        "url": "{{ site_base_url }}"
-    },
-    "publisher": {
-        "@type": "Person",
-        "name": "{{ site_author.name|e('js') }}"
-    },
-    "mainEntityOfPage": "{{ site_base_url }}{{ app.request.pathInfo }}"
-}
-</script>
-{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().blogPosting(
+    content.title(),
+    site_base_url ~ app.request.pathInfo,
+    locale,
+    content.date()|date('c'),
+    content.updatedDate() ? content.updatedDate()|date('c') : content.date()|date('c'),
+    content.description() ?: content.excerpt(meta_description_length),
+    content.wordCount(),
+    content.category() ?: null,
+    content.tags(),
+    null,
+    structured_data().person(site_author.name, site_base_url),
+    structured_data().person(site_author.name)
+)) }}{% endblock %}
 
 {% block body %}
 <div class="container container--post">

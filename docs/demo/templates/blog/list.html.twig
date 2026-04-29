@@ -55,28 +55,14 @@
 
 {% endblock %}
 
-{% block structured_data %}
-{% if posts is not empty %}
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "{{ block('title')|striptags|trim }}",
-    "url": "{{ site_base_url }}{{ app.request.pathInfo }}",
-    "mainEntity": {
-        "@type": "ItemList",
-        "numberOfItems": {{ posts|length }},
-        "itemListElement": [
-            {% for post in posts %}
-            {
-                "@type": "ListItem",
-                "position": {{ loop.index }},
-                "url": "{{ site_base_url }}{{ post.url() }}"
-            }{% if not loop.last %},{% endif %}
-            {% endfor %}
-        ]
-    }
-}
-</script>
-{% endif %}
-{% endblock %}
+{% block structured_data %}{% if posts is not empty %}{{ json_ld(structured_data().collectionPage(
+    block('title')|striptags|trim,
+    site_base_url ~ app.request.pathInfo,
+    posts|map((post, i) => {
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": site_base_url ~ post.url()
+    }),
+    null,
+    posts|length
+)) }}{% endif %}{% endblock %}

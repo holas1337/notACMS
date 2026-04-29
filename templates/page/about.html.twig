@@ -4,16 +4,12 @@
 {% block meta_description %}{{ content.description() ?: content.excerpt(meta_description_length) }}{% endblock %}
 {% block og_title %}{{ content.title() }}{% endblock %}
 
-{% block structured_data %}
-<script type="application/ld+json">{{ {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": site_author.name|default(site_name),
-    "url": site_base_url ~ content_url('about', locale),
-    "jobTitle": 'about.role'|trans,
-    "description": content.description() ?: content.excerpt(meta_description_length)
-}|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</script>
-{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().person(
+    site_author.name|default(site_name),
+    site_base_url ~ content_url('about', locale),
+    'about.role'|trans,
+    content.description() ?: content.excerpt(meta_description_length)
+)) }}{% endblock %}
 
 {% block body %}
 <article data-pagefind-body>

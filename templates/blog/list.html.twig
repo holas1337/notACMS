@@ -22,23 +22,16 @@
 
 {% block meta_description %}{% if filter_type is defined and filter_type is same as('category') %}{{ 'blog.meta.category'|trans({'%category%': filter_value|capitalize}) }}{% elseif filter_type is defined and filter_type is same as('tag') %}{{ 'blog.meta.tag'|trans({'%tag%': filter_value}) }}{% elseif filter_type is defined and filter_type is same as('archive') %}{% if archive_month is defined %}{{ 'blog.meta.archive_month'|trans({'%date%': archive_date}) }}{% else %}{{ 'blog.meta.archive_year'|trans({'%year%': archive_year}) }}{% endif %}{% else %}{{ 'blog.meta.index'|trans }}{% endif %}{% endblock %}
 
-{% block structured_data %}
-<script type="application/ld+json">{{ {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": block('title'),
-    "description": block('meta_description'),
-    "url": site_base_url ~ app.request.pathInfo,
-    "mainEntity": {
-        "@type": "ItemList",
-        "itemListElement": posts|map((post, i) => {
-            "@type": "ListItem",
-            "position": i + 1,
-            "url": site_base_url ~ post.url()
-        })
-    }
-}|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</script>
-{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().collectionPage(
+    block('title'),
+    site_base_url ~ app.request.pathInfo,
+    posts|map((post, i) => {
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": site_base_url ~ post.url()
+    }),
+    block('meta_description')
+)) }}{% endblock %}
 
 {% block body %}
 <div class="page-content">

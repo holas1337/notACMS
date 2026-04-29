@@ -4,17 +4,11 @@
 {% block meta_description %}{{ content.description() ?: content.excerpt(meta_description_length) }}{% endblock %}
 {% block og_title %}{{ content.title() }}{% endblock %}
 
-{% block structured_data %}
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "{{ content.title() }}",
-    "description": "{{ content.description() ?: content.excerpt(meta_description_length) }}",
-    "url": "{{ site_base_url }}{{ app.request.pathInfo }}"
-}
-</script>
-{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().webPage(
+    content.title(),
+    site_base_url ~ app.request.pathInfo,
+    content.description() ?: content.excerpt(meta_description_length)
+)) }}{% endblock %}
 
 {# Determine sidebar active state from current path #}
 {% set current_path = app.request.pathInfo %}

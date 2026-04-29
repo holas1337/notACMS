@@ -288,6 +288,64 @@ The featured image is used as:
 
 ---
 
+## Structured Data (JSON-LD)
+
+Every page automatically includes JSON-LD structured data for search engines.
+The `{% block structured_data %}` block in `base.html.twig` emits the default
+`WebSite` schema. Specific page templates override it with the appropriate type.
+
+**Built-in schema types:**
+
+| Page | Schema.org Type | Template |
+|---|---|---|
+| Homepage | WebSite | `page/home.html.twig` |
+| About page | Person | `page/about.html.twig` |
+| Blog post | BlogPosting | `blog/post.html.twig` |
+| Blog listing | CollectionPage | `blog/list.html.twig` |
+| Contact page | ContactPage | `page/contact.html.twig` |
+
+Two Twig functions drive the output:
+
+- `json_ld(array)` — encodes a PHP array to JSON and wraps it in a
+  `<script type="application/ld+json">` tag.
+- `structured_data()` — returns the builder instance, letting you chain typed
+  builder methods like `structured_data().person(...)`.
+
+The builder automatically strips empty values (`null`, `''`, `[]`). If
+`site_author.email` is not set in `_site.yaml`, the `email` key is absent from
+the output rather than appearing as empty.
+
+### Overriding structured data
+
+To customize the JSON-LD for your site, override the `structured_data` block in
+`local/templates/base.html.twig`. See [Customization](/customization/) for the
+full example with `searchAction`, custom `author`, and `sameAs` social URLs.
+
+For per-page overrides, extend the specific page template and override only its
+`structured_data` block:
+
+```twig
+{# local/templates/page/about.html.twig #}
+{% extends '@base/page/about.html.twig' %}
+
+{% block structured_data %}
+{{ json_ld(structured_data().person(
+    site_author.name,
+    site_base_url,
+    'about.role'|trans,
+    'about.headline'|trans,
+    site_author.email ?? null,
+    site_author.expertise|map(e => e.tags)|reduce((flat, tags) => flat|merge(tags), []),
+    site_social|map(l => l.url)
+)) }}
+{% endblock %}
+```
+
+Content authors typically do not need to write or edit JSON-LD directly — the
+templates handle it based on frontmatter fields and `_site.yaml` values.
+
+---
+
 ## Table of Contents
 
 Blog posts with **3 or more headings** (h2/h3) automatically get a collapsible Table of Contents injected at the top of the post body. No frontmatter needed — it is generated client-side by `table-of-contents.js`.

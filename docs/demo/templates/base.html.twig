@@ -94,21 +94,11 @@
     {# Phosphor Icons #}
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
 
-    {% block structured_data %}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "{{ site_name }}",
-        "url": "{{ site_base_url }}",
-        "author": {
-            "@type": "Person",
-            "name": "{{ site_author.name|e('js') }}",
-            "url": "{{ site_base_url }}"
-        }
-    }
-    </script>
-    {% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().webSite(
+    site_name,
+    site_base_url,
+    structured_data().person(site_author.name, site_base_url)
+)) }}{% endblock %}
 </head>
 <body class="locale-{{ locale ?? site_default_locale }}">
     <a href="#main-content" class="skip-link">{{ 'nav.skip_to_content'|trans }}</a>

@@ -19,31 +19,20 @@
 {% endfor %}
 {% endblock %}
 
-{% block structured_data %}
-<script type="application/ld+json">{{ {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": content.title(),
-    "description": content.description() ?: content.excerpt(meta_description_length),
-    "inLanguage": locale,
-    "datePublished": content.date()|date('c'),
-    "dateModified": content.updatedDate() ? content.updatedDate()|date('c') : content.date()|date('c'),
-    "wordCount": content.wordCount(),
-    "articleSection": content.category() ?: '',
-    "keywords": content.tags()|join(', '),
-    "author": {
-        "@type": "Person",
-        "name": site_author.name|default(site_name),
-        "url": site_base_url ~ content_url('about', locale)
-    },
-    "publisher": {
-        "@type": "Organization",
-        "name": site_name,
-        "url": site_base_url
-    },
-    "mainEntityOfPage": site_base_url ~ app.request.pathInfo
-}|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</script>
-{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().blogPosting(
+    content.title(),
+    site_base_url ~ app.request.pathInfo,
+    locale,
+    content.date()|date('c'),
+    content.updatedDate() ? content.updatedDate()|date('c') : content.date()|date('c'),
+    content.description() ?: content.excerpt(meta_description_length),
+    content.wordCount(),
+    content.category() ?: null,
+    content.tags(),
+    null,
+    structured_data().person(site_author.name|default(site_name), site_base_url ~ content_url('about', locale)),
+    structured_data().organization(site_name, site_base_url)
+)) }}{% endblock %}
 
 {% block body %}
 <div class="container container--post">
