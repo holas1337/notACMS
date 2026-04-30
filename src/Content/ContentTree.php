@@ -20,6 +20,9 @@ final class ContentTree
     /** @var array<string, ContentItem> */
     private array $urlMap = [];
 
+    /** @var array<string, ContentItem> */
+    private array $directoryKeyMap = [];
+
     /** @var ContentItem[]|null */
     private ?array $sortedPosts = null;
 
@@ -36,6 +39,10 @@ final class ContentTree
         if ('' !== $contentItem->url() && '0' !== $contentItem->url()) {
             $this->urlMap[$contentItem->url()] = $contentItem;
         }
+
+        if (null !== $contentItem->directoryKey() && !array_key_exists($contentItem->directoryKey(), $this->directoryKeyMap)) {
+            $this->directoryKeyMap[$contentItem->directoryKey()] = $contentItem;
+        }
     }
 
     public function addPage(ContentItem $contentItem): void
@@ -43,6 +50,10 @@ final class ContentTree
         $this->pages[] = $contentItem;
         if ('' !== $contentItem->url() && '0' !== $contentItem->url()) {
             $this->urlMap[$contentItem->url()] = $contentItem;
+        }
+
+        if (null !== $contentItem->directoryKey() && !array_key_exists($contentItem->directoryKey(), $this->directoryKeyMap)) {
+            $this->directoryKeyMap[$contentItem->directoryKey()] = $contentItem;
         }
     }
 
@@ -53,19 +64,7 @@ final class ContentTree
 
     public function findByDirectoryKey(string $directoryKey): ?ContentItem
     {
-        foreach ($this->pages as $page) {
-            if ($page->directoryKey() === $directoryKey) {
-                return $page;
-            }
-        }
-
-        foreach ($this->posts as $post) {
-            if ($post->directoryKey() === $directoryKey) {
-                return $post;
-            }
-        }
-
-        return null;
+        return $this->directoryKeyMap[$directoryKey] ?? null;
     }
 
     /** @return ContentItem[] */
