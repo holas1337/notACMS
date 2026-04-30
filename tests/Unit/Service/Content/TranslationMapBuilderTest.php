@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NotACms\Tests\Unit\Service\Content;
 
 use NotACms\Content\ContentTree;
+use NotACms\Content\ValueObject\TranslationMapData;
 use NotACms\Service\Content\TranslationMapBuilder;
 use NotACms\Tests\Unit\Fixtures\ContentItemFactory;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +23,7 @@ final class TranslationMapBuilderTest extends TestCase
     {
         $result = $this->builder->build([]);
 
-        self::assertSame([], $result);
+        self::assertSame([], $result->all());
     }
 
     public function testBuildReturnsEmptyArrayForEmptyTree(): void
@@ -32,7 +33,7 @@ final class TranslationMapBuilderTest extends TestCase
 
         $result = $this->builder->build($trees);
 
-        self::assertSame([], $result);
+        self::assertSame([], $result->all());
     }
 
     public function testBuildMapsDirectoryKeyToLocaleUrl(): void
@@ -43,7 +44,7 @@ final class TranslationMapBuilderTest extends TestCase
 
         $result = $this->builder->build(['en' => $tree]);
 
-        self::assertSame(['my-post' => ['en' => '/en/my-post']], $result);
+        self::assertSame(['my-post' => ['en' => '/en/my-post']], $result->all());
     }
 
     public function testBuildIncludesMultipleLocales(): void
@@ -63,7 +64,7 @@ final class TranslationMapBuilderTest extends TestCase
                 'en' => '/en/my-post',
                 'pl' => '/pl/moj-post',
             ],
-        ], $result);
+        ], $result->all());
     }
 
     public function testBuildIgnoresItemsWithoutDirectoryKey(): void
@@ -74,7 +75,7 @@ final class TranslationMapBuilderTest extends TestCase
 
         $result = $this->builder->build(['en' => $tree]);
 
-        self::assertSame([], $result);
+        self::assertSame([], $result->all());
     }
 
     public function testBuildIgnoresItemsWithEmptyUrl(): void
@@ -85,7 +86,7 @@ final class TranslationMapBuilderTest extends TestCase
 
         $result = $this->builder->build(['en' => $tree]);
 
-        self::assertSame([], $result);
+        self::assertSame([], $result->all());
     }
 
     public function testBuildIncludesItemsWithZeroUrl(): void
@@ -96,8 +97,7 @@ final class TranslationMapBuilderTest extends TestCase
 
         $result = $this->builder->build(['en' => $tree]);
 
-        // URL '0' is not empty, so it's included
-        self::assertSame(['my-post' => ['en' => '0']], $result);
+        self::assertSame(['my-post' => ['en' => '0']], $result->all());
     }
 
     public function testBuildIncludesPagesAndPosts(): void
@@ -114,7 +114,7 @@ final class TranslationMapBuilderTest extends TestCase
         self::assertSame([
             'my-post' => ['en' => '/my-post'],
             'about' => ['en' => '/about'],
-        ], $result);
+        ], $result->all());
     }
 
     public function testBuildHandlesMultipleItemsPerLocale(): void
@@ -131,7 +131,7 @@ final class TranslationMapBuilderTest extends TestCase
         self::assertSame([
             'post-1' => ['en' => '/post-1'],
             'post-2' => ['en' => '/post-2'],
-        ], $result);
+        ], $result->all());
     }
 
     public function testBuildHandlesPartialTranslations(): void
@@ -151,6 +151,6 @@ final class TranslationMapBuilderTest extends TestCase
         self::assertSame([
             'post-1' => ['en' => '/post-1', 'pl' => '/pl/post-1'],
             'post-2' => ['en' => '/post-2'],
-        ], $result);
+        ], $result->all());
     }
 }

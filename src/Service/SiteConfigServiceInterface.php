@@ -36,14 +36,9 @@ interface SiteConfigServiceInterface
     public function getDefaultLocale(): string;
 
     /**
-     * @return array<string, mixed> Config for a single locale (label, og_locale, date_format, etc.)
+     * @return \NotACms\Content\ValueObject\SiteConfigData Full site config from _site.yaml
      */
-    public function getLocaleConfig(string $locale): array;
-
-    /**
-     * @return array<string, mixed> Full site config from _site.yaml
-     */
-    public function getSiteConfig(): array;
+    public function getSiteConfig(): \NotACms\Content\ValueObject\SiteConfigData;
 
     public function detectLocaleFromPath(string $path): string;
 

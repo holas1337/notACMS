@@ -149,8 +149,8 @@ final class BuildStaticSiteCommand extends Command
                 ]);
             }
 
-            foreach (array_keys($tree->getArchiveYears()) as $year) {
-                $routes[] = $this->route('blog_archive_year_'.$locale, ['year' => $year]);
+            foreach ($tree->getArchiveYears() as $archiveYear) {
+                $routes[] = $this->route('blog_archive_year_'.$locale, ['year' => $archiveYear->year]);
             }
 
             $homeUrl = $this->route('home_'.$locale);

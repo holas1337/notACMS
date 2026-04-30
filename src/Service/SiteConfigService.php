@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NotACms\Service;
 
+use NotACms\Content\ValueObject\SiteConfigData;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Yaml\Yaml;
 
@@ -38,16 +39,9 @@ final class SiteConfigService implements SiteConfigServiceInterface
         return $locales[0] ?? self::FALLBACK_LOCALE;
     }
 
-    public function getLocaleConfig(string $locale): array
+    public function getSiteConfig(): SiteConfigData
     {
-        $config = $this->load();
-
-        return $config['locales'][$locale] ?? [];
-    }
-
-    public function getSiteConfig(): array
-    {
-        return $this->load();
+        return SiteConfigData::fromArray($this->load());
     }
 
     public function detectLocaleFromPath(string $path): string

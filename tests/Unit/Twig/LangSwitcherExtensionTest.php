@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NotACms\Tests\Unit\Twig;
 
 use NotACms\Content\ContentItem;
+use NotACms\Content\ValueObject\TranslationMapData;
 use NotACms\Twig\LangSwitcherExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -27,7 +28,7 @@ final class LangSwitcherExtensionTest extends TestCase
 
         $context = [
             'content' => $content,
-            'translation_map' => ['posts/hello' => ['en' => '/en/blog/hello/']],
+            'translation_map' => new TranslationMapData(['posts/hello' => ['en' => '/en/blog/hello/']]),
         ];
 
         $result = $this->extension->langSwitchUrls($context, ['en']);

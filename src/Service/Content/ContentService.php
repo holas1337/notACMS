@@ -6,6 +6,7 @@ namespace NotACms\Service\Content;
 
 use NotACms\Content\ContentItem;
 use NotACms\Content\ContentTree;
+use NotACms\Content\ValueObject\TranslationMapData;
 use NotACms\Service\Preview\DraftPreviewServiceInterface;
 use NotACms\Service\Preview\ScheduledPreviewServiceInterface;
 use NotACms\Service\SiteConfigServiceInterface;
@@ -18,8 +19,7 @@ final class ContentService implements ContentServiceInterface, ContentCacheInter
     /** @var array<string, ContentTree> */
     private array $trees = [];
 
-    /** @var array<string, array<string, string>>|null */
-    private ?array $translationMap = null;
+    private ?TranslationMapData $translationMap = null;
 
     public function __construct(
         private readonly ContentTreeBuilderInterface $contentTreeBuilder,
@@ -97,10 +97,7 @@ final class ContentService implements ContentServiceInterface, ContentCacheInter
         return array_slice($this->getTree($locale)->getAllPosts(), 0, $limit);
     }
 
-    /**
-     * @return array<string, array<string, string>>
-     */
-    public function getTranslationMap(): array
+    public function getTranslationMap(): TranslationMapData
     {
         if (null === $this->translationMap) {
             $trees = [];

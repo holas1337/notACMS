@@ -6,6 +6,7 @@ namespace NotACms\Content;
 
 use NotACms\Content\ValueObject\AdjacentPosts;
 use NotACms\Content\ValueObject\ArchiveMonth;
+use NotACms\Content\ValueObject\ArchiveYearData;
 use NotACms\Content\ValueObject\CategoryCount;
 use NotACms\Content\ValueObject\TagCount;
 
@@ -221,10 +222,10 @@ final class ContentTree
         ));
     }
 
-    /** @return array<int, int> year => count, newest first */
+    /** @return ArchiveYearData[] newest first */
     public function getArchiveYears(): array
     {
-        $years = [];
+        $counts = [];
         foreach ($this->getAllPosts() as $contentItem) {
             $date = $contentItem->date();
             if (null === $date) {
@@ -232,12 +233,16 @@ final class ContentTree
             }
 
             $year = (int) $date->format('Y');
-            $years[$year] = ($years[$year] ?? 0) + 1;
+            $counts[$year] = ($counts[$year] ?? 0) + 1;
         }
 
-        krsort($years);
+        krsort($counts);
 
-        return $years;
+        return array_map(
+            fn (int $year, int $count) => new ArchiveYearData($year, $count),
+            array_keys($counts),
+            $counts,
+        );
     }
 
     /** @return ContentItem[] */

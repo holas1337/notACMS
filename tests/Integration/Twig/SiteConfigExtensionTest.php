@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NotACms\Tests\Integration\Twig;
 
+use NotACms\Content\ValueObject\SiteConfigData;
 use NotACms\Service\SiteConfigServiceInterface;
 use NotACms\Twig\SiteConfigExtension;
 use PHPUnit\Framework\TestCase;
@@ -13,14 +14,14 @@ final class SiteConfigExtensionTest extends TestCase
     public function testGetGlobalsReturnsAllKeys(): void
     {
         $config = $this->createStub(SiteConfigServiceInterface::class);
-        $config->method('getSiteConfig')->willReturn([
+        $config->method('getSiteConfig')->willReturn(SiteConfigData::fromArray([
             'name' => 'Test Site',
             'base_url' => 'https://test.dev',
             'description' => 'A test site',
             'social' => ['github' => 'https://github.com/test'],
             'author' => ['name' => 'Test Author'],
             'locales' => ['en' => ['label' => 'English'], 'pl' => ['label' => 'Polski']],
-        ]);
+        ]));
         $config->method('getDefaultLocale')->willReturn('en');
         $config->method('getLocales')->willReturn(['en', 'pl']);
         $config->method('getImageVariantWidths')->willReturn([640, 960]);
@@ -46,7 +47,7 @@ final class SiteConfigExtensionTest extends TestCase
     public function testGetGlobalsReturnsEmptyDefaults(): void
     {
         $config = $this->createStub(SiteConfigServiceInterface::class);
-        $config->method('getSiteConfig')->willReturn([]);
+        $config->method('getSiteConfig')->willReturn(SiteConfigData::fromArray([]));
         $config->method('getDefaultLocale')->willReturn('en');
         $config->method('getLocales')->willReturn([]);
         $config->method('getImageVariantWidths')->willReturn([]);

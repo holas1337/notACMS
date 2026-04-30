@@ -20,12 +20,12 @@ final class SiteConfigExtension extends AbstractExtension implements GlobalsInte
         $site = $this->siteConfigService->getSiteConfig();
 
         return [
-            'site_name' => $site['name'] ?? '',
-            'site_base_url' => $site['base_url'] ?? '',
-            'site_description' => $site['description'] ?? '',
-            'site_social' => $site['social'] ?? [],
-            'site_author' => $site['author'] ?? [],
-            'site_locales' => $site['locales'] ?? [],
+            'site_name' => $site->name,
+            'site_base_url' => $site->baseUrl,
+            'site_description' => $site->description,
+            'site_social' => $site->social,
+            'site_author' => $site->author,
+            'site_locales' => $site->locales,
             'site_default_locale' => $this->siteConfigService->getDefaultLocale(),
             'site_locales_list' => $this->siteConfigService->getLocales(),
             'image_variant_widths' => $this->siteConfigService->getImageVariantWidths(),

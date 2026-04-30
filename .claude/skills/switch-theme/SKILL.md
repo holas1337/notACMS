@@ -54,7 +54,9 @@ When `local/` is a real directory (not a symlink), ask:
 ln -s "$target" "local"
 ```
 
-Then run `ddev build` and confirm the switch with a message showing what was activated.
+**IMPORTANT:** Always create the symlink from the project root **using a relative target path** (e.g. `docs/demo`, `local-holas.pl`). The target paths from Phase 1 are already relative — do not resolve them to absolute paths with `realpath` or `readlink -f`. Absolute symlinks break when the container mounts the project at a different path (DDEV mounts `/var/www/html`, not the host's home directory path).
+
+Then run `ddev build` followed by `ddev exec bin/console cache:clear`, and confirm the switch with a message showing what was activated.
 
 ## Phase 4 — Restore from backup (optional)
 

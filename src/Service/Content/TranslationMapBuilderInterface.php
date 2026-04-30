@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace NotACms\Service\Content;
 
 use NotACms\Content\ContentTree;
+use NotACms\Content\ValueObject\TranslationMapData;
 
 interface TranslationMapBuilderInterface
 {
     /**
      * @param array<string, ContentTree> $trees
-     *
-     * @return array<string, array<string, string>>
      */
-    public function build(array $trees): array;
+    public function build(array $trees): TranslationMapData;
 }

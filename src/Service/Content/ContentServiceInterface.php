@@ -6,6 +6,7 @@ namespace NotACms\Service\Content;
 
 use NotACms\Content\ContentItem;
 use NotACms\Content\ContentTree;
+use NotACms\Content\ValueObject\TranslationMapData;
 
 interface ContentServiceInterface
 {
@@ -29,8 +30,5 @@ interface ContentServiceInterface
      */
     public function getRecentPosts(string $locale, int $limit = 5): array;
 
-    /**
-     * @return array<string, array<string, string>>
-     */
-    public function getTranslationMap(): array;
+    public function getTranslationMap(): TranslationMapData;
 }
