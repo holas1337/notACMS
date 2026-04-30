@@ -31,14 +31,15 @@ final class SidebarExtensionTest extends TestCase
         self::assertSame($expected, $result);
     }
 
-    public function testReturnsNullOnProviderException(): void
+    public function testPropagatesProviderException(): void
     {
         $this->provider->method('getData')
             ->willThrowException(new \RuntimeException('tree not found'));
 
-        $result = $this->extension->getSidebarData('en');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('tree not found');
 
-        self::assertNull($result);
+        $this->extension->getSidebarData('en');
     }
 
     public function testAcceptsAnyLocale(): void

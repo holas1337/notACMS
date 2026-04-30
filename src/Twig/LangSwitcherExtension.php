@@ -6,7 +6,6 @@ namespace NotACms\Twig;
 
 use NotACms\Content\ContentItem;
 use NotACms\Content\Enum\FilterType;
-use NotACms\Content\ValueObject\TranslationMapData;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Attribute\AsTwigFunction;
 
@@ -26,8 +25,7 @@ final readonly class LangSwitcherExtension
     #[AsTwigFunction(name: 'lang_switch_urls', needsContext: true)]
     public function langSwitchUrls(array $context, array $otherLocales): array
     {
-        $raw = $context['translation_map'] ?? null;
-        $translationMap = ($raw instanceof TranslationMapData) ? $raw->all() : [];
+        $translationMap = $context['translation_map'] ?? [];
         $switchContent = $context['content'] ?? $context['index_content'] ?? null;
         $directoryKey = ($switchContent instanceof ContentItem) ? $switchContent->directoryKey() : null;
         $langSwitchUrl = $context['lang_switch_url'] ?? null;

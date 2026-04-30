@@ -16,12 +16,8 @@ final readonly class SidebarExtension
     }
 
     #[AsTwigFunction(name: 'sidebar_data')]
-    public function getSidebarData(string $locale): ?SidebarData
+    public function getSidebarData(string $locale): SidebarData
     {
-        try {
-            return $this->sidebarDataProvider->getData($locale);
-        } catch (\Throwable) {
-            return null;
-        }
+        return $this->sidebarDataProvider->getData($locale);
     }
 }

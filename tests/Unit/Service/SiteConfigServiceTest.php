@@ -116,7 +116,7 @@ final class SiteConfigServiceTest extends TestCase
         self::assertSame(SiteConfigServiceInterface::FALLBACK_LOCALE, $service->getDefaultLocale());
     }
 
-    public function testGetSiteConfigReturnsSiteConfigData(): void
+    public function testGetSiteConfigReturnsRawArray(): void
     {
         $this->writeConfig([
             'locales' => ['en' => ['label' => 'English']],
@@ -127,13 +127,12 @@ final class SiteConfigServiceTest extends TestCase
         $service = $this->createService();
 
         $config = $service->getSiteConfig();
-        self::assertInstanceOf(\NotACms\Content\ValueObject\SiteConfigData::class, $config);
-        self::assertSame(['en' => ['label' => 'English']], $config->locales);
-        self::assertSame('https://example.com', $config->baseUrl);
-        self::assertSame('Test Site', $config->name);
+        self::assertSame(['en' => ['label' => 'English']], $config['locales']);
+        self::assertSame('https://example.com', $config['base_url']);
+        self::assertSame('Test Site', $config['name']);
     }
 
-    public function testGetSiteConfigPreservesCustomKeysViaArrayAccess(): void
+    public function testGetSiteConfigPreservesCustomKeys(): void
     {
         $this->writeConfig([
             'locales' => ['en' => ['label' => 'English']],

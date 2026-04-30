@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace NotACms\Tests\Integration\Service\Content;
 
 use NotACms\Content\ContentTree;
-use NotACms\Content\ValueObject\TranslationMapData;
 use NotACms\Service\Content\ContentCacheInterface;
 use NotACms\Service\Content\ContentService;
 use NotACms\Service\Content\ContentServiceInterface;
@@ -193,11 +192,11 @@ final class ContentServiceTest extends TestCase
         $tree->addPage(ContentItemFactory::page([], 'about', '/about/'));
         $this->contentTreeBuilder->method('build')->willReturn($tree);
         $this->translationMapBuilder->method('build')->willReturn(
-            new TranslationMapData(['about' => ['en' => '/about/', 'pl' => '/o-mnie/']]),
+            ['about' => ['en' => '/about/', 'pl' => '/o-mnie/']],
         );
 
         $result = $this->service->getTranslationMap();
 
-        self::assertArrayHasKey('about', $result->all());
+        self::assertArrayHasKey('about', $result);
     }
 }
