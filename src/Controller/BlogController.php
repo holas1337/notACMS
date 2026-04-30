@@ -10,7 +10,6 @@ use NotACms\Content\Enum\CardLayout;
 use NotACms\Content\Enum\FilterType;
 use NotACms\Service\Content\ContentServiceInterface;
 use NotACms\Service\Content\RelatedPostsServiceInterface;
-use NotACms\Service\Content\SidebarDataProviderInterface;
 use NotACms\Service\Content\TagTranslationServiceInterface;
 use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +20,6 @@ final class BlogController extends AbstractController
     public function __construct(
         private readonly ContentServiceInterface $contentService,
         private readonly RelatedPostsServiceInterface $relatedPostsService,
-        private readonly SidebarDataProviderInterface $sidebarDataProvider,
         private readonly SiteConfigServiceInterface $siteConfigService,
         private readonly TagTranslationServiceInterface $tagTranslationService,
     ) {
@@ -147,7 +145,6 @@ final class BlogController extends AbstractController
     {
         return [
             'locale' => $locale,
-            'sidebar' => $this->sidebarDataProvider->getData($locale),
             'card_layouts' => CardLayout::cycle(),
         ];
     }

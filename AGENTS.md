@@ -15,6 +15,22 @@ Examples:
 
 ---
 
+## Template tree locations
+
+This repo contains multiple template trees. When auditing, fixing bugs, or implementing features that involve templates, check **all layers** that override the relevant file.
+
+| Layer | Directory | Purpose |
+|---|---|---|
+| **Core** (bare) | `templates/` | Minimal wireframe templates shipped with the project. Always the fallback. |
+| **Demo** | `docs/demo/templates/` | Amber-phosphor reference theme shown at notacms.holas.pl. Copied to `local/` via `--demo` deploy. |
+| **User custom** | `local/templates/` | Active site-specific overrides (populated by `--demo` deploy or manual setup). Only applies if `local/` is a real directory, not a symlink (symlinked `local/` → `docs/demo/` means the demo layer already covers it). |
+| **User sites** | `local-*/templates/` | Additional pre-bundled or gitignored site configs. Only present if explicitly created/cloned (e.g. `local-holas.pl`). |
+| **Customization examples** | `docs/customization/*/templates/` | Isolated examples used as documentation snippets (old-template, self-hosted-fonts, custom-footer). Referenced in docs but not meant for direct use. |
+
+**Rule of thumb for template work:** If a fix applies to all themes, update core first, then check demo and any `local-*` folders for the same pattern. Demo and user sites often have independent template copies that drift from core.
+
+---
+
 ## Plans
 
 Non-trivial tasks are tracked as plan files in `.plans/` at the project root.

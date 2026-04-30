@@ -10,10 +10,7 @@
 
     {# Page header #}
     <div class="page-header">
-        {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
-            { label: site_name, url: path('home_' ~ locale) },
-            { label: index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }
-        ] }) }}
+        {{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(index_content|default(null), locale, {home_label: site_name}) }) }}
         <h1>
             {% if filter_type is same as('tag') %}
                 {{ 'releases.tagged_heading'|trans }} <span class="text-accent">#{{ filter_value }}</span>

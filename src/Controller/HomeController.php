@@ -7,7 +7,6 @@ namespace NotACms\Controller;
 use NotACms\Attribute\LocalizedRoute;
 use NotACms\Content\Enum\CardLayout;
 use NotACms\Service\Content\ContentServiceInterface;
-use NotACms\Service\Content\SidebarDataProviderInterface;
 use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +15,6 @@ final class HomeController extends AbstractController
 {
     public function __construct(
         private readonly ContentServiceInterface $contentService,
-        private readonly SidebarDataProviderInterface $sidebarDataProvider,
         private readonly SiteConfigServiceInterface $siteConfigService,
     ) {
     }
@@ -31,7 +29,6 @@ final class HomeController extends AbstractController
         return $this->render('page/home.html.twig', [
             'content' => $page,
             'recentPosts' => $this->contentService->getRecentPosts($locale, $this->siteConfigService->getRecentPostsLimit()),
-            'sidebar' => $this->sidebarDataProvider->getData($locale),
             'locale' => $locale,
             'card_layouts' => CardLayout::cycle(),
         ]);

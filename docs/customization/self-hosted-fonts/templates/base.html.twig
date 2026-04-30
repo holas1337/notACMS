@@ -119,6 +119,7 @@
                     {% block body %}{% endblock %}
                 </div>
                 <aside class="content-sidebar">
+                    {% set sidebar = sidebar_data(locale) %}
                     {% block sidebar_top %}
                     {{ include('components/sidebar_top.html.twig') }}
                     {% endblock %}

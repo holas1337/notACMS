@@ -119,7 +119,7 @@ Wichtige Methoden:
 
 ### Twig-Erweiterungen
 
-Sechs Twig-Erweiterungen stellen Daten für Templates bereit:
+Acht Twig-Erweiterungen stellen Daten für Templates bereit:
 
 | Erweiterung | Typ | Stellt bereit |
 |---|---|---|
@@ -129,6 +129,8 @@ Sechs Twig-Erweiterungen stellen Daten für Templates bereit:
 | `LangSwitcherExtension` | Funktion | `lang_switch_urls(otherLocales)` — löst Sprachwechsler-URLs pro Locale auf: Translation-Map, Controller-Override, dann Fallbacks (Archiv → paginiert → Blog-Liste → Startseite) |
 | `SrcsetExtension` | Filter | `srcset_media` — fügt `srcset`/`sizes`-Attribute in `<img>`-Tags ein für responsive Bilder |
 | `StructuredDataExtension` | Funktion | `json_ld(array)` — encodiert ein PHP-Array als JSON-LD und gibt ein vollständiges `<script>`-Tag zurück; `structured_data()` — gibt den Builder für Method-Chaining wie `structured_data().blogPosting(...)` zurück |
+| `SidebarExtension` | Funktion | `sidebar_data(locale)` — baut Sidebar-Daten lazy zusammen (letzte Posts, Kategorien, Tags, Archiv-Monate); aufgerufen in `base.html.twig` wo die Sidebar gerendert wird |
+| `BreadcrumbExtension` | Funktion | `breadcrumbs(contentItem, locale, options)` — gibt Breadcrumb-Array für jeden Seitentyp zurück |
 
 Zusätzlich wird `cf_analytics_token` als Twig-Global in `config/packages/twig.yaml` registriert, gebunden an die `CF_ANALYTICS_TOKEN`-Umgebungsvariable.
 

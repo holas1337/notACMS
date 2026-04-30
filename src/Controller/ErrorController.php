@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace NotACms\Controller;
 
 use NotACms\Attribute\LocalizedRoute;
-use NotACms\Service\Content\SidebarDataProviderInterface;
 use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +14,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 final class ErrorController extends AbstractController
 {
     public function __construct(
-        private readonly SidebarDataProviderInterface $sidebarDataProvider,
         private readonly SiteConfigServiceInterface $siteConfigService,
     ) {
     }
@@ -46,17 +44,10 @@ final class ErrorController extends AbstractController
 
     private function renderErrorPage(string $locale, int $statusCode): Response
     {
-        try {
-            $sidebar = $this->sidebarDataProvider->getData($locale);
-        } catch (\Throwable) {
-            $sidebar = null;
-        }
-
         return $this->render('page/error.html.twig', [
             'status_code' => $statusCode,
             'status_text' => Response::$statusTexts[$statusCode] ?? 'Error',
             'locale' => $locale,
-            'sidebar' => $sidebar,
             'content' => null,
         ], new Response('', $statusCode));
     }

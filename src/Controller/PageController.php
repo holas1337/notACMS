@@ -7,7 +7,6 @@ namespace NotACms\Controller;
 use NotACms\Attribute\LocalizedRoute;
 use NotACms\Content\ContentItem;
 use NotACms\Service\Content\ContentServiceInterface;
-use NotACms\Service\Content\SidebarDataProviderInterface;
 use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +16,6 @@ final class PageController extends AbstractController
 {
     public function __construct(
         private readonly ContentServiceInterface $contentService,
-        private readonly SidebarDataProviderInterface $sidebarDataProvider,
         private readonly SiteConfigServiceInterface $siteConfigService,
     ) {
     }
@@ -66,7 +64,6 @@ final class PageController extends AbstractController
 
         return $this->render($template.'.html.twig', [
             'content' => $page,
-            'sidebar' => $this->sidebarDataProvider->getData($locale),
             'locale' => $locale,
         ]);
     }

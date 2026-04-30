@@ -7,7 +7,6 @@ namespace NotACms\Controller;
 use NotACms\Attribute\LocalizedRoute;
 use NotACms\Form\ContactType;
 use NotACms\Service\Content\ContentServiceInterface;
-use NotACms\Service\Content\SidebarDataProviderInterface;
 use NotACms\Service\SiteConfigServiceInterface;
 use NotACms\Service\TurnstileValidatorInterface;
 use Psr\Log\LoggerInterface;
@@ -25,7 +24,6 @@ final class ContactController extends AbstractController
 {
     public function __construct(
         private readonly ContentServiceInterface $contentService,
-        private readonly SidebarDataProviderInterface $sidebarDataProvider,
         private readonly SiteConfigServiceInterface $siteConfigService,
         private readonly TurnstileValidatorInterface $turnstileValidator,
         private readonly MailerInterface $mailer,
@@ -49,7 +47,6 @@ final class ContactController extends AbstractController
             'content' => $page,
             'form' => $form,
             'locale' => $locale,
-            'sidebar' => $this->sidebarDataProvider->getData($locale),
             'turnstile_site_key' => $this->turnstileSiteKey,
         ]);
     }

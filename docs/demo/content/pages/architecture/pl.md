@@ -119,7 +119,7 @@ Kluczowe metody:
 
 ### Rozszerzenia Twig
 
-Sześć rozszerzeń Twig udostępnia dane w szablonach:
+Osiem rozszerzeń Twig udostępnia dane w szablonach:
 
 | Rozszerzenie | Typ | Udostępnia |
 |---|---|---|
@@ -129,6 +129,8 @@ Sześć rozszerzeń Twig udostępnia dane w szablonach:
 | `LangSwitcherExtension` | Funkcja | `lang_switch_urls(otherLocales)` — rozwiązuje URL przełącznika języków dla każdego locale: mapa tłumaczeń, override kontrolera, następnie fallbacki (archiwum → paginacja → lista wpisów → strona główna) |
 | `SrcsetExtension` | Filter | `srcset_media` — przetwarza HTML, wstrzykując atrybuty `srcset`/`sizes` do tagów `<img>` w celu responsywności |
 | `StructuredDataExtension` | Funkcja | `json_ld(array)` — koduje tablicę PHP jako JSON-LD i zwraca pełny znacznik `<script>`; `structured_data()` — zwraca builder do łańcuchowego wywoływania metod, np. `structured_data().blogPosting(...)` |
+| `SidebarExtension` | Funkcja | `sidebar_data(locale)` — leniwie buduje dane paska bocznego (ostatnie wpisy, kategorie, tagi, miesiące archiwum); wywoływane w `base.html.twig` tam, gdzie sidebar jest renderowany |
+| `BreadcrumbExtension` | Funkcja | `breadcrumbs(contentItem, locale, options)` — zwraca tablicę breadcrumbs dla dowolnego typu strony |
 
 Dodatkowo, `cf_analytics_token` jest rejestrowany jako Twig global w `config/packages/twig.yaml`, powiązany ze zmienną środowiskową `CF_ANALYTICS_TOKEN`.
 

@@ -32,8 +32,8 @@
 
         <p>{{ ('contact.about_nudge'|trans({'%about_url%': content_url('about', locale)}))|raw }}</p>
 
-        <div id="contact-success" class="alert alert-success is-hidden"></div>
-        <div id="contact-error" class="alert alert-danger is-hidden"></div>
+        <div id="contact-success" class="alert alert-success is-hidden"><div class="alert-body"></div></div>
+        <div id="contact-error" class="alert alert-danger is-hidden"><div class="alert-body"></div></div>
 
         {{ form_start(form, {
             action: path('api_contact_' ~ locale),

@@ -53,15 +53,7 @@
 {% endblock %}
 
 {% block body %}
-{% set crumbs = [
-    {label: content_item('home', locale).menuLabel(), url: path('home_' ~ locale)},
-    {label: content_item('blog', locale).menuLabel(), url: path('blog_list_' ~ locale)},
-] %}
-{% if content.category() %}
-    {% set crumbs = crumbs|merge([{label: content.category(), url: path('blog_category_' ~ locale, {category: content.category()})}]) %}
-{% endif %}
-{% set crumbs = crumbs|merge([{label: content.title()}]) %}
-{{ include('components/breadcrumb.html.twig', { breadcrumbs: crumbs }) }}
+{{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(content, locale) }) }}
 
 <article class="post" data-pagefind-body>
     <header class="post-header">

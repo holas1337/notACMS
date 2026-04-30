@@ -172,6 +172,10 @@ Each target locale has specific conventions. Follow the guide for the locale you
 | "redeploy" | "ponowne wdrożenie" |
 | "changelog" | "lista zmian" |
 | "skille" | "skrypty" or "umiejętności" depending on context |
+| "customizować" / "customizujesz" | "dostosowywać" / "dostosowujesz" or "modyfikować" |
+| "kompatybilność" | "zgodność" |
+| "seed / seedowanie" (CLI) | "inicjować" / "inicjalizacja" or seedowanie in backticks when referring to the --seed flag |
+| "reseed" | "ponowne seedowanie" in backticks, "ponowna inicjalizacja" otherwise |
 | "suite testów" | "zestaw testów" |
 | "content" (as noun) | "treść" |
 | "seed / seedowanie" | "seedowanie" in backticks for the CLI concept, "inicjalizacja" otherwise |

@@ -12,10 +12,7 @@
 
 {% block body %}
 <article class="page-content" data-pagefind-body>
-    {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
-        { label: site_name, url: path('home_' ~ locale) },
-        { label: 'contact.title'|trans }
-    ] }) }}
+    {{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(content, locale, {home_label: site_name}) }) }}
     <header class="page-header">
         <h1>{{ 'contact.title'|trans }}</h1>
     </header>
