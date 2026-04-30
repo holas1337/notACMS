@@ -135,6 +135,30 @@ When writing or editing any content (blog posts, pages, UI strings, descriptions
 
 ---
 
+## Content file format
+
+**Every content `.md` file MUST end with a trailing newline (`\n`) after the closing `---` of the frontmatter (or after the last line of body content).**
+
+The League CommonMark FrontMatter parser requires the closing `---` to be followed by a newline. Without it, the parser silently treats the file as having no frontmatter — `title`, `slug`, `menu.label`, etc. all return empty strings, and the URL collapses to `/` (because `slug=''` resolves to root). This is most damaging on `_index_*.md` files that contain only frontmatter and no body — `blog/_index_en.md` would render the blog list page with an empty `<title>` and `<h1>`.
+
+The parser in `src/Service/Content/MarkdownParser.php` defensively appends `\n` if missing, so files without trailing newlines still parse correctly. **But every new content file must still end with `\n` as the source-of-truth convention.** Editor settings should enforce this (`.editorconfig` already declares `insert_final_newline = true`).
+
+When creating a new content file via `Write` tool, ensure the final line ends with `\n`. To verify an existing file:
+
+```bash
+[ "$(tail -c 1 path/to/file.md | od -An -tx1 | tr -d ' ')" = "0a" ] && echo OK || echo MISSING
+```
+
+To fix in-place if missing:
+
+```bash
+[ -n "$(tail -c 1 path/to/file.md)" ] && echo "" >> path/to/file.md
+```
+
+**Use the `write-content` skill (`@write-content`) for creating new posts and pages** — it bundles the frontmatter checklist, slug rules, and trailing-newline guarantee.
+
+---
+
 ## Design system documentation (DESIGN.md)
 
 notACMS supports Google's [google-labs-code/design.md](https://github.com/google-labs-code/design.md) open specification for describing a visual identity to AI coding agents.

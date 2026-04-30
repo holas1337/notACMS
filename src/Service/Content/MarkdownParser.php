@@ -27,6 +27,10 @@ final class MarkdownParser implements MarkdownParserInterface
 
     public function parse(string $markdown): ParsedMarkdown
     {
+        if ('' !== $markdown && !str_ends_with($markdown, "\n")) {
+            $markdown .= "\n";
+        }
+
         $renderedContent = $this->getConverter()->convert($markdown);
 
         $frontMatter = [];
