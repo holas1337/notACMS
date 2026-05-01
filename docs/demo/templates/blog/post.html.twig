@@ -30,8 +30,8 @@
     content.category() ?: null,
     content.tags(),
     null,
-    structured_data().person(site_author.name, site_base_url),
-    structured_data().person(site_author.name)
+    structured_data().person(site_author.name|default(site_name), site_base_url ~ content_url('about', locale)),
+    structured_data().organization(site_name, site_base_url)
 )) }}{% endblock %}
 
 {% block body %}

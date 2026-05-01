@@ -239,7 +239,7 @@ final class ContentTree
         krsort($counts);
 
         return array_map(
-            fn (int $year, int $count) => new ArchiveYearData($year, $count),
+            fn (int $year, int $count): ArchiveYearData => new ArchiveYearData($year, $count),
             array_keys($counts),
             $counts,
         );

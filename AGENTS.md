@@ -92,6 +92,7 @@ When the user asks for a **code review** (phrases like "review the code", "audit
 - Loose comparisons (`==`) — use `is same as()`
 - Hardcoded URL strings — use `path('route_' ~ locale)` or `content_url()`
 - Data passed to every render call that could be a global Twig variable instead
+- Globals registration boundary: static config passthroughs (e.g. `cf_analytics_token`) belong in `config/packages/twig.yaml` under `twig.globals`; computed or service-derived globals (`site_name`, `site_base_url`, `translation_map`, …) belong in PHP `GlobalsInterface` extensions in `src/Twig/`. Choose YAML when the value is a literal in `services.yaml` / env, choose PHP when the value requires a service call.
 
 **SCSS**
 - Hardcoded color/size values that have a `$variable` equivalent in `_variables.scss`

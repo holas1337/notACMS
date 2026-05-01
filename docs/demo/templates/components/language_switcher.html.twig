@@ -8,13 +8,13 @@
 {% if other_locales is not empty %}
 
 {% set switch_content = (content is defined and content is not null) ? content : ((index_content is defined and index_content is not null) ? index_content : null) %}
-{% set tk = (switch_content is not null and switch_content.directoryKey()) ? switch_content.directoryKey() : null %}
+{% set directoryKey = (switch_content is not null and switch_content.directoryKey()) ? switch_content.directoryKey() : null %}
 
 {% set switch_urls = lang_switch_urls(other_locales) %}
 
 {% set current_locale_url = app.request.pathInfo %}
-{% if tk and translation_map is defined and translation_map[tk] is defined and translation_map[tk][locale] is defined %}
-    {% set current_locale_url = translation_map[tk][locale] %}
+{% if directoryKey and translation_map is defined and translation_map[directoryKey] is defined and translation_map[directoryKey][locale] is defined %}
+    {% set current_locale_url = translation_map[directoryKey][locale] %}
 {% endif %}
 
 {# Determine display mode: inline links for 2 languages, dropdown for 3+ #}

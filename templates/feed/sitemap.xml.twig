@@ -3,13 +3,13 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     {% macro hreflang(translation_map, item, default_locale) %}
-        {% set tk = item.directoryKey() %}
-        {% if tk and translation_map[tk] is defined %}
-            {% for lang, url in translation_map[tk] %}
+        {% set directoryKey = item.directoryKey() %}
+        {% if directoryKey and translation_map[directoryKey] is defined %}
+            {% for lang, url in translation_map[directoryKey] %}
             <xhtml:link rel="alternate" hreflang="{{ lang }}" href="{{ site_base_url }}{{ url }}"/>
             {% endfor %}
-            {% if translation_map[tk][default_locale] is defined %}
-            <xhtml:link rel="alternate" hreflang="x-default" href="{{ site_base_url }}{{ translation_map[tk][default_locale] }}"/>
+            {% if translation_map[directoryKey][default_locale] is defined %}
+            <xhtml:link rel="alternate" hreflang="x-default" href="{{ site_base_url }}{{ translation_map[directoryKey][default_locale] }}"/>
             {% endif %}
         {% endif %}
     {% endmacro %}
