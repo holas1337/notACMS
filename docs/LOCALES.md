@@ -27,6 +27,7 @@ The locale list is defined in `local/content/_site.yaml` under `site.locales`. T
 - **Default locale** (EN): no prefix — `/`, `/blog/`, `/contact/`
 - **Other locales**: `/{locale}/` prefix — `/pl/`, `/pl/wpisy/`, `/pl/kontakt/`
 - Translated path segments are defined in `local/content/_routes.yaml`. Routes not listed there get auto-prefixed: e.g. `/feed/` → `/pl/feed/`
+- Visiting a default-locale-prefixed URL (e.g. `/en/`, `/en/blog/`) issues a **301 redirect** to the unprefixed canonical URL — handled by `DefaultLocaleRedirectListener`
 
 ### Two URL resolution patterns in templates
 

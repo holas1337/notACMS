@@ -136,3 +136,7 @@ notACMS automatycznie generuje tagi `<link rel="alternate" hreflang="...">` w se
 ```
 
 > **Wskazówka:** Zawsze podawaj tłumaczenie `x-default` wskazujące na Twój podstawowy język. notACMS obsługuje to automatycznie dla domyślnej wersji językowej.
+
+## Przekierowanie do kanonicznego URL
+
+Wejście na URL z prefiksem domyślnej wersji językowej (np. `/en/`, `/en/blog/`) powoduje **trwałe przekierowanie 301** do kanonicznego URL bez prefiksu (`/`, `/blog/`). Zapobiega to duplikowaniu treści i gwarantuje, że wyszukiwarki indeksują wyłącznie kanoniczne adresy URL.

@@ -28,6 +28,7 @@ HTTP Request
   → nginx (DDEV)
   → PHP-FPM
   → Symfony Kernel
+  → DefaultLocaleRedirectListener (priority 34) — 301 redirects /{defaultLocale}/... to unprefixed URL
   → LocaleListener (priority 8) — detects /pl/ prefix → sets locale to 'pl'; default is 'en'
   → Router
   → Controller
