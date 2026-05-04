@@ -86,7 +86,7 @@
                     '<div class="search-result__body">' +
                         '<h2 class="post-card-title"><a href="' + esc(r.url) + '">' + esc(title) + '</a></h2>' +
                         (metaParts.length ? '<p class="post-card-meta">' + metaParts.join('&nbsp;&bull;&nbsp;') + '</p>' : '') +
-                        '<p class="post-card-excerpt">' + r.excerpt + '</p>' +
+                        '<p class="post-card-excerpt">' + esc(r.excerpt) + '</p>' +
                         tagsHtml +
                         '<a href="' + esc(r.url) + '" class="read-more">' + esc(readMoreText) + ' &rarr;</a>' +
                     '</div>' +

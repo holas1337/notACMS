@@ -21,10 +21,10 @@ final readonly class StructuredDataExtension
     public function schemaLd(array $data): string
     {
         if (!isset($data['@context'])) {
-            $data = ['@context' => $this->structuredDataBuilder::SCHEMA_CONTEXT] + $data;
+            $data = ['@context' => StructuredDataBuilderInterface::SCHEMA_CONTEXT] + $data;
         }
 
-        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
 
         return "<script type=\"application/ld+json\">\n".$json."\n</script>";
     }

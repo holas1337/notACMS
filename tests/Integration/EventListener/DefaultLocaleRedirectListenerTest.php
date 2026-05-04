@@ -106,4 +106,15 @@ final class DefaultLocaleRedirectListenerTest extends TestCase
 
         self::assertNull($event->getResponse());
     }
+
+    public function testDoesNotIssueProtocolRelativeRedirect(): void
+    {
+        // Request::getPathInfo() does not collapse repeated slashes, so /en//evil.com
+        // strips to //evil.com — a protocol-relative redirect that browsers would
+        // follow cross-origin. The listener must refuse to issue such a redirect.
+        $event = $this->createEvent('https://example.com/en//evil.com');
+        $this->listener()($event);
+
+        self::assertNull($event->getResponse(), 'Listener must not issue a redirect for paths that strip to a protocol-relative target.');
+    }
 }

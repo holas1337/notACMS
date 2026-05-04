@@ -41,8 +41,15 @@ final readonly class DefaultLocaleRedirectListener
             $stripped = '/';
         }
 
-        $qs = $request->getQueryString();
-        $target = null !== $qs ? $stripped.'?'.$qs : $stripped;
+        // Refuse to issue protocol-relative redirects. Request::getPathInfo()
+        // does not collapse repeated slashes, so /<default>//evil.com would
+        // otherwise produce a Location: //evil.com header (cross-origin).
+        if (str_starts_with($stripped, '//')) {
+            return;
+        }
+
+        $queryString = $request->getQueryString();
+        $target = null !== $queryString ? $stripped.'?'.$queryString : $stripped;
 
         $requestEvent->setResponse(new RedirectResponse($target, Response::HTTP_MOVED_PERMANENTLY));
     }
