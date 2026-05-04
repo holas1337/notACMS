@@ -6,7 +6,7 @@
 
 {% block structured_data %}{{ json_ld(structured_data().person(
     site_author.name,
-    site_base_url,
+    site_base_url ~ content_url('about', locale),
     'about.role'|trans,
     'about.headline'|trans,
     site_author.email ?? null,

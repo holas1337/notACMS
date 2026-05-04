@@ -151,6 +151,31 @@ The builder automatically strips empty/null values — if `site_author.email` is
 not set, the `email` key will be absent from the output rather than appearing as
 empty.
 
+### Layout helpers
+
+A handful of pure Twig functions encapsulate logic that templates would
+otherwise inline. The components shipped with core (`breadcrumb.html.twig`,
+`sidebar.html.twig`, `post_card.html.twig`, …) call them; if you write custom
+templates that need the same data, call them yourself.
+
+| Function | Returns | What it does |
+|---|---|---|
+| `breadcrumbs(content, locale, options = {})` | array of `{label, url}` | Builds the breadcrumb trail. Pass `null` for the blog list, a `ContentItem` for any other page. Options: `home_label`, `filter_type`, `filter_value`, `archive_date`. |
+| `sidebar_data(locale)` | `SidebarData` VO | Recent posts, categories, tags, archive years for the locale. |
+| `blog_filter_title(filterType, filterValue, archiveYear, archiveMonth, locale)` | string | Heading shown on a filtered blog list — category name, `#tag`, formatted archive date, or the localised "Blog" fallback. |
+| `og_image_url(content, siteBaseUrl)` | string | Absolute URL of the page's featured image, or the site default. |
+| `post_badge(content, newPostDays)` | `'new'`, `'updated'`, or `null` | Marks recent posts. Threshold from `_site.yaml`'s `new_post_days`. |
+
+```twig
+{# local/templates/components/breadcrumb.html.twig — example #}
+{% set crumbs = breadcrumbs(content, locale, {home_label: 'My site'}) %}
+<nav aria-label="breadcrumb">
+    {% for crumb in crumbs %}
+        {% if crumb.url %}<a href="{{ crumb.url }}">{{ crumb.label }}</a>{% else %}<span>{{ crumb.label }}</span>{% endif %}
+    {% endfor %}
+</nav>
+```
+
 ---
 
 ## JavaScript and CSS overrides

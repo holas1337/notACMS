@@ -81,14 +81,7 @@
         {{ importmap('app') }}
     {% endblock %}
 
-    {% block structured_data %}
-    <script type="application/ld+json">{{ {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": site_name,
-        "url": site_base_url
-    }|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</script>
-    {% endblock %}
+    {% block structured_data %}{{ json_ld(structured_data().webSite(site_name, site_base_url)) }}{% endblock %}
 </head>
 <body class="locale-{{ locale ?? site_default_locale }}">
     <a href="#main-content" class="skip-link">{{ 'nav.skip_to_content'|trans }}</a>

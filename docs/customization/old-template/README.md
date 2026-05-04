@@ -1,5 +1,11 @@
 # Old Template
 
+> **Deprecated** — this compatibility package will be removed in **notACMS 1.2.0**.
+> It exists only to keep the 1.0.0 look on installs that upgraded to 1.1.x and want
+> the original styling preserved verbatim. New customisation work should branch from
+> `docs/customization/custom-footer/` or `docs/customization/self-hosted-fonts/`
+> (which track current core conventions) and apply changes on top.
+
 Full standalone override that restores the pre-redesign notACMS look and feel after upgrading to the new core.
 
 ## What It Does
