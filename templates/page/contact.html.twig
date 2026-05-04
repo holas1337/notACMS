@@ -3,6 +3,11 @@
 {% block title %}{{ 'contact.title'|trans }} | {{ site_name }}{% endblock %}
 {% block og_title %}{{ 'contact.title'|trans }}{% endblock %}
 
+{% block structured_data %}{{ json_ld(structured_data().contactPage(
+    'contact.title'|trans,
+    site_base_url ~ content_url('contact', locale)
+)) }}{% endblock %}
+
 {% block body %}
 <article data-pagefind-body>
     <header class="page-header">
