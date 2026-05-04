@@ -1,6 +1,6 @@
 ---
 title: "À propos"
-slug: "about"
+slug: "a-propos"
 description: "notACMS — Générateur de sites statiques convivial pour l'IA basé sur Symfony. Zéro base de données, Markdown pur, une commande pour déployer."
 template: page/about
 menu:

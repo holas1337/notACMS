@@ -6,6 +6,7 @@ namespace NotACms\Content;
 
 use NotACms\Content\ValueObject\AdjacentPosts;
 use NotACms\Content\ValueObject\ArchiveMonth;
+use NotACms\Content\ValueObject\ArchiveYearData;
 use NotACms\Content\ValueObject\CategoryCount;
 use NotACms\Content\ValueObject\TagCount;
 
@@ -19,6 +20,9 @@ final class ContentTree
 
     /** @var array<string, ContentItem> */
     private array $urlMap = [];
+
+    /** @var array<string, ContentItem> */
+    private array $directoryKeyMap = [];
 
     /** @var ContentItem[]|null */
     private ?array $sortedPosts = null;
@@ -36,6 +40,10 @@ final class ContentTree
         if ('' !== $contentItem->url() && '0' !== $contentItem->url()) {
             $this->urlMap[$contentItem->url()] = $contentItem;
         }
+
+        if (null !== $contentItem->directoryKey() && !array_key_exists($contentItem->directoryKey(), $this->directoryKeyMap)) {
+            $this->directoryKeyMap[$contentItem->directoryKey()] = $contentItem;
+        }
     }
 
     public function addPage(ContentItem $contentItem): void
@@ -43,6 +51,10 @@ final class ContentTree
         $this->pages[] = $contentItem;
         if ('' !== $contentItem->url() && '0' !== $contentItem->url()) {
             $this->urlMap[$contentItem->url()] = $contentItem;
+        }
+
+        if (null !== $contentItem->directoryKey() && !array_key_exists($contentItem->directoryKey(), $this->directoryKeyMap)) {
+            $this->directoryKeyMap[$contentItem->directoryKey()] = $contentItem;
         }
     }
 
@@ -53,19 +65,7 @@ final class ContentTree
 
     public function findByDirectoryKey(string $directoryKey): ?ContentItem
     {
-        foreach ($this->pages as $page) {
-            if ($page->directoryKey() === $directoryKey) {
-                return $page;
-            }
-        }
-
-        foreach ($this->posts as $post) {
-            if ($post->directoryKey() === $directoryKey) {
-                return $post;
-            }
-        }
-
-        return null;
+        return $this->directoryKeyMap[$directoryKey] ?? null;
     }
 
     /** @return ContentItem[] */
@@ -222,10 +222,10 @@ final class ContentTree
         ));
     }
 
-    /** @return array<int, int> year => count, newest first */
+    /** @return ArchiveYearData[] newest first */
     public function getArchiveYears(): array
     {
-        $years = [];
+        $counts = [];
         foreach ($this->getAllPosts() as $contentItem) {
             $date = $contentItem->date();
             if (null === $date) {
@@ -233,12 +233,16 @@ final class ContentTree
             }
 
             $year = (int) $date->format('Y');
-            $years[$year] = ($years[$year] ?? 0) + 1;
+            $counts[$year] = ($counts[$year] ?? 0) + 1;
         }
 
-        krsort($years);
+        krsort($counts);
 
-        return $years;
+        return array_map(
+            fn (int $year, int $count): ArchiveYearData => new ArchiveYearData($year, $count),
+            array_keys($counts),
+            $counts,
+        );
     }
 
     /** @return ContentItem[] */

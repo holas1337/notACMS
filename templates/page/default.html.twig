@@ -4,11 +4,14 @@
 {% block meta_description %}{{ content.description() ?: content.excerpt(meta_description_length) }}{% endblock %}
 {% block og_title %}{{ content.title() }}{% endblock %}
 
+{% block structured_data %}{{ json_ld(structured_data().webPage(
+    content.title(),
+    site_base_url ~ app.request.pathInfo,
+    content.description() ?: content.excerpt(meta_description_length)
+)) }}{% endblock %}
+
 {% block body %}
-{{ include('components/breadcrumb.html.twig', { breadcrumbs: [
-    {label: site_name, url: path('home_' ~ locale)},
-    {label: content.title()}
-]}) }}
+{{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(content, locale, {home_label: site_name}) }) }}
 
 <div class="container container--prose">
 <article data-pagefind-body>

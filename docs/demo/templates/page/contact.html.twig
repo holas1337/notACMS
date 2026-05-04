@@ -4,28 +4,15 @@
 {% block meta_description %}{{ 'contact.meta_description'|trans }}{% endblock %}
 {% block og_title %}{{ 'contact.title'|trans }}{% endblock %}
 
-{% block structured_data %}
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    "name": "{{ 'contact.title'|trans }}",
-    "url": "{{ site_base_url }}{{ app.request.pathInfo }}",
-    "mainEntity": {
-        "@type": "Person",
-        "name": "{{ site_author.name|e('js') }}",
-        "url": "{{ site_base_url }}"
-    }
-}
-</script>
-{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().contactPage(
+    'contact.title'|trans,
+    site_base_url ~ app.request.pathInfo,
+    structured_data().person(site_author.name, site_base_url)
+)) }}{% endblock %}
 
 {% block body %}
 <article class="page-content" data-pagefind-body>
-    {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
-        { label: site_name, url: path('home_' ~ locale) },
-        { label: 'contact.title'|trans }
-    ] }) }}
+    {{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(content, locale, {home_label: site_name}) }) }}
     <header class="page-header">
         <h1>{{ 'contact.title'|trans }}</h1>
     </header>

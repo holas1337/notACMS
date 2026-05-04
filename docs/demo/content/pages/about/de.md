@@ -1,6 +1,6 @@
 ---
 title: "Über das Projekt"
-slug: "about"
+slug: "ueber-uns"
 description: "notACMS — KI-freundlicher Static Site Generator auf Symfony-Basis. Keine Datenbank, reines Markdown, ein Befehl zum Bereitstellen."
 template: page/about
 menu:

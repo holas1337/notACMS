@@ -74,6 +74,49 @@ Create the file at the same path without `extends` — it replaces the original 
 | `templates/page/doc.html.twig` | Documentation layout |
 | `templates/blog/post.html.twig` | Blog post layout |
 
+### Override structured data (JSON-LD)
+
+The `base.html.twig` template emits a `WebSite` JSON-LD schema in the
+`{% block structured_data %}` block. To add `SearchAction`, `sameAs`, or
+custom `author` data for your site:
+
+```twig
+{# local/templates/base.html.twig #}
+{% extends '@base/base.html.twig' %}
+
+{% block structured_data %}
+{{ json_ld(structured_data().webSite(
+    site_name,
+    site_base_url,
+    structured_data().person(site_author.name, site_base_url),
+    {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": site_base_url ~ path('search_' ~ locale) ~ '?q={search_term_string}'
+        },
+        "query-input": "required name=search_term_string"
+    }
+)) }}
+{% endblock %}
+```
+
+Two Twig functions do the work:
+
+- `json_ld(array)` — encodes a PHP array to JSON and wraps it in a
+  `<script type="application/ld+json">` tag. Pass it the result of any
+  builder method.
+- `structured_data()` — returns the `StructuredDataBuilderInterface`
+  instance, letting you chain typed builder methods.
+
+The builder auto-strips empty values (`null`, `''`, `[]`). If
+`site_author.email` is not set in `_site.yaml`, the `email` key is absent
+from the output rather than appearing as empty.
+
+Available builders: `webSite()`, `person()`, `blogPosting()`,
+`collectionPage()`, `breadcrumbList()`, `contactPage()`, `webPage()`,
+`organization()`, `imageObject()`.
+
 ## SCSS Overrides
 
 `local/assets/` is loaded as a second importmap entrypoint (`app-local`). Create a `local/assets/app.js` that imports your SCSS:

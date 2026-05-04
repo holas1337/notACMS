@@ -36,12 +36,7 @@ interface SiteConfigServiceInterface
     public function getDefaultLocale(): string;
 
     /**
-     * @return array<string, mixed> Config for a single locale (label, og_locale, date_format, etc.)
-     */
-    public function getLocaleConfig(string $locale): array;
-
-    /**
-     * @return array<string, mixed> Full site config from _site.yaml
+     * @return array<string, mixed> Raw _site.yaml "site" block
      */
     public function getSiteConfig(): array;
 

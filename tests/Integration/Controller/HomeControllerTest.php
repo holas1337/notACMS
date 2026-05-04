@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace NotACms\Tests\Integration\Controller;
 
 use NotACms\Service\Content\ContentServiceInterface;
-use NotACms\Service\Content\SidebarDataProviderInterface;
 use NotACms\Service\Content\TagTranslationServiceInterface;
 use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;

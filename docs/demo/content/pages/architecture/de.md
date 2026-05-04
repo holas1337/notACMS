@@ -2,7 +2,7 @@
 title: "Architektur"
 description: "Wie notACMS intern funktioniert — Inhalts-Pipeline, Routing-System und Build-Prozess."
 template: page/doc
-slug: architecture
+slug: architektur
 menu:
   weight: 30
   label: "Architektur"
@@ -34,7 +34,9 @@ Der `LocalizedRouteLoader` liest `local/content/_routes.yaml` und registriert Sy
 | Inhaltsdatei | Slug-Frontmatter | Locale | Generierte URL |
 |---|---|---|---|
 | `pages/about/en.md` | `about` | EN | `/about/` |
-| `pages/about/de.md` | `about` | DE | `/de/about/` |
+| `pages/about/pl.md` | `o-projekcie` | PL | `/pl/o-projekcie/` |
+| `pages/about/de.md` | `ueber-uns` | DE | `/de/ueber-uns/` |
+| `pages/about/fr.md` | `a-propos` | FR | `/fr/a-propos/` |
 | `blog/releases/release-1-0-0/en.md` | `blog/release-1-0-0` | EN | `/blog/release-1-0-0/` |
 | `blog/releases/release-1-0-0/pl.md` | `blog/release-1-0-0` | PL | `/wpisy/release-1-0-0/` |
 
@@ -113,10 +115,11 @@ Wichtige Methoden:
 | `MarkdownParser` | Konvertiert Markdown zu HTML via CommonMark |
 | `SidebarDataProvider` | Stellt Sidebar-Daten zusammen (Kategorien, Tags, letzte Posts) |
 | `TagTranslationService` | Übersetzt Tag-Slugs zwischen Locales |
+| `StructuredDataBuilder` | Erstellt typisierte PHP-Arrays für JSON-LD Structured Data (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); automatische Stripung von leeren Werten |
 
 ### Twig-Erweiterungen
 
-Fünf Twig-Erweiterungen stellen Daten für Templates bereit:
+Acht Twig-Erweiterungen stellen Daten für Templates bereit:
 
 | Erweiterung | Typ | Stellt bereit |
 |---|---|---|
@@ -125,6 +128,9 @@ Fünf Twig-Erweiterungen stellen Daten für Templates bereit:
 | `ContentTwigExtension` | Funktion | `content_url(directoryKey, locale)` — löst URL für ein Content-Element nach Directory-Key auf |
 | `LangSwitcherExtension` | Funktion | `lang_switch_urls(otherLocales)` — löst Sprachwechsler-URLs pro Locale auf: Translation-Map, Controller-Override, dann Fallbacks (Archiv → paginiert → Blog-Liste → Startseite) |
 | `SrcsetExtension` | Filter | `srcset_media` — fügt `srcset`/`sizes`-Attribute in `<img>`-Tags ein für responsive Bilder |
+| `StructuredDataExtension` | Funktion | `json_ld(array)` — encodiert ein PHP-Array als JSON-LD und gibt ein vollständiges `<script>`-Tag zurück; `structured_data()` — gibt den Builder für Method-Chaining wie `structured_data().blogPosting(...)` zurück |
+| `SidebarExtension` | Funktion | `sidebar_data(locale)` — baut Sidebar-Daten lazy zusammen (letzte Posts, Kategorien, Tags, Archiv-Monate); aufgerufen in `base.html.twig` wo die Sidebar gerendert wird |
+| `BreadcrumbExtension` | Funktion | `breadcrumbs(contentItem, locale, options)` — gibt Breadcrumb-Array für jeden Seitentyp zurück |
 
 Zusätzlich wird `cf_analytics_token` als Twig-Global in `config/packages/twig.yaml` registriert, gebunden an die `CF_ANALYTICS_TOKEN`-Umgebungsvariable.
 

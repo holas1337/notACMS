@@ -9,11 +9,10 @@
             {% if post.isDraft() %}<span class="badge">[{{ 'badge.draft'|trans }}]</span>{% endif %}
             {% if post.isScheduled() %}<span class="badge">[{{ 'badge.planned'|trans }}]</span>{% endif %}
             {% if featured is defined and featured or post.isPinned() %}<span class="badge">{{ 'badge.pinned'|trans }}</span>{% endif %}
-            {% set now_ts = "now"|date('U') %}
-            {% set new_threshold = new_post_days * 86400 %}
-            {% if not post.isDraft() and not post.isScheduled() and post.date() and (now_ts - post.date()|date('U')) < new_threshold %}
+            {% set badge = post_badge(post, new_post_days) %}
+            {% if badge is same as('new') %}
                 <span class="badge">{{ 'badge.new'|trans }}</span>
-            {% elseif post.updatedDate() and (now_ts - post.updatedDate()|date('U')) < new_threshold %}
+            {% elseif badge is same as('updated') %}
                 <span class="badge">{{ 'badge.updated'|trans }}</span>
             {% endif %}
         </h2>

@@ -2,7 +2,7 @@
 title: "Podręcznik"
 description: "Kompletny przewodnik po instalacji, konfiguracji i wdrażaniu notACMS."
 template: page/doc
-slug: manual
+slug: podrecznik
 menu:
   weight: 20
   label: "Podręcznik"

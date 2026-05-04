@@ -98,6 +98,84 @@ Available blocks are defined in `templates/base.html.twig`:
 `title`, `meta_description`, `robots`, `stylesheets`, `structured_data`,
 `navigation`, `body`, `javascripts`, and more.
 
+### Structured data (JSON-LD)
+
+The `structured_data` block emits JSON-LD metadata for search engines. Two Twig
+functions make it clean and composable:
+
+- **`json_ld(array)`** — encodes a PHP array as JSON and wraps it in a
+  `<script type="application/ld+json">` tag. Pass it the result of any builder
+  method.
+- **`structured_data()`** — returns the `StructuredDataBuilderInterface`
+  instance, letting you chain schema-typed builder methods directly in Twig.
+
+**Built-in schema types:**
+
+| Builder method | Schema.org type | Used on |
+|---|---|---|
+| `structured_data().webSite(...)` | WebSite | base.html.twig |
+| `structured_data().person(...)` | Person | about page, blog post author |
+| `structured_data().blogPosting(...)` | BlogPosting | blog post pages |
+| `structured_data().collectionPage(...)` | CollectionPage | blog listing pages |
+| `structured_data().breadcrumbList(...)` | BreadcrumbList | breadcrumb component |
+| `structured_data().contactPage(...)` | ContactPage | contact page |
+| `structured_data().webPage(...)` | WebPage | generic pages |
+| `structured_data().organization(...)` | Organization | sub-structure for publisher |
+| `structured_data().imageObject(...)` | ImageObject | sub-structure for post images |
+
+To customize the structured data for your site, override the
+`{% block structured_data %}` block in `local/templates/base.html.twig`:
+
+```twig
+{# local/templates/base.html.twig #}
+{% extends '@base/base.html.twig' %}
+
+{% block structured_data %}
+{{ json_ld(structured_data().webSite(
+    site_name,
+    site_base_url,
+    structured_data().person(site_author.name, site_base_url),
+    {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": site_base_url ~ path('search_' ~ locale) ~ '?q={search_term_string}'
+        },
+        "query-input": "required name=search_term_string"
+    }
+)) }}
+{% endblock %}
+```
+
+The builder automatically strips empty/null values — if `site_author.email` is
+not set, the `email` key will be absent from the output rather than appearing as
+empty.
+
+### Layout helpers
+
+A handful of pure Twig functions encapsulate logic that templates would
+otherwise inline. The components shipped with core (`breadcrumb.html.twig`,
+`sidebar.html.twig`, `post_card.html.twig`, …) call them; if you write custom
+templates that need the same data, call them yourself.
+
+| Function | Returns | What it does |
+|---|---|---|
+| `breadcrumbs(content, locale, options = {})` | array of `{label, url}` | Builds the breadcrumb trail. Pass `null` for the blog list, a `ContentItem` for any other page. Options: `home_label`, `filter_type`, `filter_value`, `archive_date`. |
+| `sidebar_data(locale)` | `SidebarData` VO | Recent posts, categories, tags, archive years for the locale. |
+| `blog_filter_title(filterType, filterValue, archiveYear, archiveMonth, locale)` | string | Heading shown on a filtered blog list — category name, `#tag`, formatted archive date, or the localised "Blog" fallback. |
+| `og_image_url(content, siteBaseUrl)` | string | Absolute URL of the page's featured image, or the site default. |
+| `post_badge(content, newPostDays)` | `'new'`, `'updated'`, or `null` | Marks recent posts. Threshold from `_site.yaml`'s `new_post_days`. |
+
+```twig
+{# local/templates/components/breadcrumb.html.twig — example #}
+{% set crumbs = breadcrumbs(content, locale, {home_label: 'My site'}) %}
+<nav aria-label="breadcrumb">
+    {% for crumb in crumbs %}
+        {% if crumb.url %}<a href="{{ crumb.url }}">{{ crumb.label }}</a>{% else %}<span>{{ crumb.label }}</span>{% endif %}
+    {% endfor %}
+</nav>
+```
+
 ---
 
 ## JavaScript and CSS overrides

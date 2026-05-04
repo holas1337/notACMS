@@ -2,7 +2,7 @@
 title: "Dostosowywanie"
 description: "Nadpisz szablony, style, serwisy PHP i konfigurację serwera — wszystko z katalogu local/."
 template: page/doc
-slug: customization
+slug: dostosowywanie
 menu:
   weight: 40
   label: "Dostosowywanie"
@@ -73,6 +73,48 @@ Utwórz plik w tej samej ścieżce bez `extends` — zastępuje on oryginał w c
 | `templates/page/default.html.twig` | Domyślny layout strony |
 | `templates/page/doc.html.twig` | Layout dokumentacji |
 | `templates/blog/post.html.twig` | Layout posta bloga |
+
+### Nadpisywanie danych strukturalnych (JSON-LD)
+
+Szablon `base.html.twig` generuje schemat JSON-LD `WebSite` w bloku
+`{% block structured_data %}`. Aby dodać `SearchAction`, `sameAs` lub
+niestandardowe dane `author` dla swojej strony:
+
+```twig
+{# local/templates/base.html.twig #}
+{% extends '@base/base.html.twig' %}
+
+{% block structured_data %}
+{{ json_ld(structured_data().webSite(
+    site_name,
+    site_base_url,
+    structured_data().person(site_author.name, site_base_url),
+    {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": site_base_url ~ path('search_' ~ locale) ~ '?q={search_term_string}'
+        },
+        "query-input": "required name=search_term_string"
+    }
+)) }}
+{% endblock %}
+```
+
+Dwie funkcje Twig wykonują całą robotę:
+
+- `json_ld(array)` — koduje tablicę PHP do JSON i opakowuje w znacznik
+  `<script type="application/ld+json">`.
+- `structured_data()` — zwraca instancję `StructuredDataBuilderInterface`,
+  umożliwiając łańcuchowe wywoływanie metod buildera.
+
+Builder automatycznie usuwa puste wartości (`null`, `''`, `[]`). Jeśli
+`site_author.email` nie jest ustawione w `_site.yaml`, klucz `email` jest
+nieobecny w danych wyjściowych zamiast pojawiać się jako pusty.
+
+Dostępne buildery: `webSite()`, `person()`, `blogPosting()`,
+`collectionPage()`, `breadcrumbList()`, `contactPage()`, `webPage()`,
+`organization()`, `imageObject()`.
 
 ## Nadpisywanie SCSS
 

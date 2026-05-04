@@ -34,7 +34,9 @@ Le `LocalizedRouteLoader` lit `local/content/_routes.yaml` et enregistre les rou
 | Fichier de Contenu | Slug Frontmatter | Locale | URL Générée |
 |---|---|---|---|
 | `pages/about/en.md` | `about` | EN | `/about/` |
-| `pages/about/de.md` | `about` | DE | `/de/about/` |
+| `pages/about/pl.md` | `o-projekcie` | PL | `/pl/o-projekcie/` |
+| `pages/about/de.md` | `ueber-uns` | DE | `/de/ueber-uns/` |
+| `pages/about/fr.md` | `a-propos` | FR | `/fr/a-propos/` |
 | `blog/releases/release-1-0-0/en.md` | `blog/release-1-0-0` | EN | `/blog/release-1-0-0/` |
 | `blog/releases/release-1-0-0/pl.md` | `blog/release-1-0-0` | PL | `/wpisy/release-1-0-0/` |
 
@@ -113,10 +115,11 @@ Méthodes importantes :
 | `MarkdownParser` | Convertit Markdown en HTML via CommonMark |
 | `SidebarDataProvider` | Assemble les données de la barre latérale (catégories, tags, derniers articles) |
 | `TagTranslationService` | Traduit les slugs de tags entre les locales |
+| `StructuredDataBuilder` | Crée des tableaux PHP typés pour les données structurées JSON-LD (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); suppression automatique des valeurs vides |
 
 ### Extensions Twig
 
-Cinq extensions Twig fournissent des données pour les templates :
+Huit extensions Twig fournissent des données pour les templates :
 
 | Extension | Type | Fournit |
 |---|---|---|
@@ -125,6 +128,9 @@ Cinq extensions Twig fournissent des données pour les templates :
 | `ContentTwigExtension` | Function | `content_url(directoryKey, locale)` — résout l'URL pour un élément de contenu par clé de répertoire |
 | `LangSwitcherExtension` | Function | `lang_switch_urls(otherLocales)` — résout les URLs du sélecteur de langue par locale : translation map, override contrôleur, puis fallbacks (archive → paginé → liste blog → accueil) |
 | `SrcsetExtension` | Filter | `srcset_media` — insère les attributs `srcset`/`sizes` dans les balises `<img>` pour les images responsives |
+| `StructuredDataExtension` | Function | `json_ld(array)` — encode un tableau PHP en JSON-LD et renvoie une balise `<script>` complète; `structured_data()` — renvoie le builder pour chaînage de méthodes comme `structured_data().blogPosting(...)` |
+| `SidebarExtension` | Function | `sidebar_data(locale)` — construit paresseusement les données de la barre latérale (derniers articles, catégories, tags, mois d'archive); appelé dans `base.html.twig` où la barre latérale est rendue |
+| `BreadcrumbExtension` | Function | `breadcrumbs(contentItem, locale, options)` — renvoie le tableau de breadcrumbs pour n'importe quel type de page |
 
 De plus, `cf_analytics_token` est enregistré comme globale Twig dans `config/packages/twig.yaml`, lié à la variable d'environnement `CF_ANALYTICS_TOKEN`.
 

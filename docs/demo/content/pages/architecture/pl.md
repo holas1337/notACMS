@@ -2,7 +2,7 @@
 title: "Architektura"
 description: "Jak działa notACMS wewnętrznie — pipeline treści, system routingu i proces budowania."
 template: page/doc
-slug: architecture
+slug: architektura
 menu:
   weight: 30
   label: "Architektura"
@@ -34,7 +34,9 @@ Trasy są generowane z drzewa treści. Każdy `ContentItem` ma URL zdefiniowany 
 | Plik treści | Slug frontmatter | Locale | Wygenerowany URL |
 |---|---|---|---|
 | `pages/about/en.md` | `about` | EN | `/about/` |
-| `pages/about/de.md` | `about` | DE | `/de/about/` |
+| `pages/about/pl.md` | `o-projekcie` | PL | `/pl/o-projekcie/` |
+| `pages/about/de.md` | `ueber-uns` | DE | `/de/ueber-uns/` |
+| `pages/about/fr.md` | `a-propos` | FR | `/fr/a-propos/` |
 | `blog/releases/release-1-0-0/en.md` | `blog/release-1-0-0` | EN | `/blog/release-1-0-0/` |
 | `blog/releases/release-1-0-0/pl.md` | `blog/release-1-0-0` | PL | `/wpisy/release-1-0-0/` |
 
@@ -113,10 +115,11 @@ Kluczowe metody:
 | `MarkdownParser` | Konwertuje Markdown do HTML przez CommonMark |
 | `SidebarDataProvider` | Składa dane paska bocznego (kategorie, tagi, ostatnie posty) |
 | `TagTranslationService` | Tłumaczy slugi tagów między locale |
+| `StructuredDataBuilder` | Buduje typowane tablice PHP dla danych strukturalnych JSON-LD (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); automatyczne usuwanie pustych wartości |
 
 ### Rozszerzenia Twig
 
-Pięć rozszerzeń Twig udostępnia dane w szablonach:
+Osiem rozszerzeń Twig udostępnia dane w szablonach:
 
 | Rozszerzenie | Typ | Udostępnia |
 |---|---|---|
@@ -125,6 +128,9 @@ Pięć rozszerzeń Twig udostępnia dane w szablonach:
 | `ContentTwigExtension` | Funkcja | `content_url(directoryKey, locale)` — rozwiązuje URL dla elementu treści po kluczu katalogu |
 | `LangSwitcherExtension` | Funkcja | `lang_switch_urls(otherLocales)` — rozwiązuje URL przełącznika języków dla każdego locale: mapa tłumaczeń, override kontrolera, następnie fallbacki (archiwum → paginacja → lista wpisów → strona główna) |
 | `SrcsetExtension` | Filter | `srcset_media` — przetwarza HTML, wstrzykując atrybuty `srcset`/`sizes` do tagów `<img>` w celu responsywności |
+| `StructuredDataExtension` | Funkcja | `json_ld(array)` — koduje tablicę PHP jako JSON-LD i zwraca pełny znacznik `<script>`; `structured_data()` — zwraca builder do łańcuchowego wywoływania metod, np. `structured_data().blogPosting(...)` |
+| `SidebarExtension` | Funkcja | `sidebar_data(locale)` — leniwie buduje dane paska bocznego (ostatnie wpisy, kategorie, tagi, miesiące archiwum); wywoływane w `base.html.twig` tam, gdzie sidebar jest renderowany |
+| `BreadcrumbExtension` | Funkcja | `breadcrumbs(contentItem, locale, options)` — zwraca tablicę breadcrumbs dla dowolnego typu strony |
 
 Dodatkowo, `cf_analytics_token` jest rejestrowany jako Twig global w `config/packages/twig.yaml`, powiązany ze zmienną środowiskową `CF_ANALYTICS_TOKEN`.
 

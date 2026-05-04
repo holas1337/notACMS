@@ -2,7 +2,7 @@
 title: "Anpassung"
 description: "Templates, Styles, PHP-Services und Server-Konfiguration überschreiben — alles aus dem local/-Verzeichnis."
 template: page/doc
-slug: customization
+slug: anpassung
 menu:
   weight: 40
   label: "Anpassung"
@@ -74,6 +74,48 @@ Erstelle die Datei am gleichen Pfad ohne `extends` — sie ersetzt das Original 
 | `templates/page/doc.html.twig` | Dokumentations-Layout |
 | `templates/blog/post.html.twig` | Blog-Post-Layout |
 
+### Strukturierte Daten (JSON-LD) überschreiben
+
+Das `base.html.twig`-Template gibt ein `WebSite`-JSON-LD-Schema im
+`{% block structured_data %}`-Block aus. Um `SearchAction`, `sameAs` oder
+benutzerdefinierte `author`-Daten für deine Website hinzuzufügen:
+
+```twig
+{# local/templates/base.html.twig #}
+{% extends '@base/base.html.twig' %}
+
+{% block structured_data %}
+{{ json_ld(structured_data().webSite(
+    site_name,
+    site_base_url,
+    structured_data().person(site_author.name, site_base_url),
+    {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": site_base_url ~ path('search_' ~ locale) ~ '?q={search_term_string}'
+        },
+        "query-input": "required name=search_term_string"
+    }
+)) }}
+{% endblock %}
+```
+
+Zwei Twig-Funktionen erledigen die Arbeit:
+
+- `json_ld(array)` — codiert ein PHP-Array als JSON und verpackt es in ein
+  `<script type="application/ld+json">`-Tag.
+- `structured_data()` — gibt die `StructuredDataBuilderInterface`-Instanz
+  zurück, um typisierte Builder-Methoden zu verketten.
+
+Der Builder entfernt automatisch leere Werte (`null`, `''`, `[]`). Wenn
+`site_author.email` in `_site.yaml` nicht gesetzt ist, fehlt der
+`email`-Schlüssel in der Ausgabe, anstatt als leer zu erscheinen.
+
+Verfügbare Builder: `webSite()`, `person()`, `blogPosting()`,
+`collectionPage()`, `breadcrumbList()`, `contactPage()`, `webPage()`,
+`organization()`, `imageObject()`.
+
 ## SCSS-Overrides
 
 `local/assets/` wird als zweiter Importmap-Entrypoint (`app-local`) geladen. Erstelle ein `local/assets/app.js`, das dein SCSS importiert:
@@ -118,7 +160,7 @@ import './styles/app_local.scss';
 >
 > Beide Entrypoints an `importmap()` zu übergeben garantiert die korrekte CSS-Ladereihenfolge: `app.css` (Original) zuerst, dann deine Overrides.
 
-> **Tipp:** Überschreibe immer CSS Custom Properties (`--accent`, `--bg`, etc.) statt direkter Hex-Werte. Das stellt sicher, dass Hell- und Dunkel-Modus mit deinen Markenfarben korrekt funktionieren. Die vollständige Token-Liste findest du in der [Design-Referenz](/de/design-reference/).
+> **Tipp:** Überschreibe immer CSS Custom Properties (`--accent`, `--bg`, etc.) statt direkter Hex-Werte. Das stellt sicher, dass Hell- und Dunkel-Modus mit deinen Markenfarben korrekt funktionieren. Die vollständige Token-Liste findest du in der [Design-Referenz](/de/design-referenz/).
 
 ## Custom PHP-Services
 

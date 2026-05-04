@@ -28,6 +28,7 @@ HTTP Request
   → nginx (DDEV)
   → PHP-FPM
   → Symfony Kernel
+  → DefaultLocaleRedirectListener (priority 34) — 301 redirects /{defaultLocale}/... to unprefixed URL
   → LocaleListener (priority 8) — detects /pl/ prefix → sets locale to 'pl'; default is 'en'
   → Router
   → Controller
@@ -87,8 +88,11 @@ HTTP Request
 | `TranslationMapTwigExtension` | `src/Twig/TranslationMapTwigExtension.php` | Twig global `translation_map` — `{directoryKey: {locale: url}}` mapping for language switcher and hreflang tags |
 | `ContentTwigExtension` | `src/Twig/ContentTwigExtension.php` | Twig functions `content_url(directoryKey, locale)` and `content_item(directoryKey, locale)` — resolve URL or full `ContentItem` by directory key |
 | `LangSwitcherExtension` | `src/Twig/LangSwitcherExtension.php` | Twig function `lang_switch_urls(otherLocales)` — resolves language switcher URLs per locale using translation map, controller overrides, and route-based fallbacks (archive → paginated → blog list → home) |
+| `StructuredDataExtension` | `src/Twig/StructuredDataExtension.php` | Twig functions `json_ld(data)` — renders array as `<script type="application/ld+json">` with `JSON_PRETTY_PRINT \| JSON_UNESCAPED_SLASHES`; and `structured_data()` — returns `StructuredDataBuilderInterface` for method chaining (e.g. `structured_data().person(...)`) |
+| `SidebarExtension` | `src/Twig/SidebarExtension.php` | Twig function `sidebar_data(locale)` — lazily builds `SidebarData` (recent posts, categories, tags, archive months) only when sidebar is rendered; gracefully returns `null` on error |
+| `BreadcrumbExtension` | `src/Twig/BreadcrumbExtension.php` | Twig function `breadcrumbs(contentItem, locale, options)` — returns breadcrumb array for any page type (home, blog list/post, archive, category, tag, static page) |
 
-**Global metadata:** `local/content/_site.yaml` — site name, base URL, locales config (first key = default), social links, and all site-level numeric/string settings (see Key Configuration Files). Loaded by `SiteConfigService` and exposed to templates via three Twig extensions: `SiteConfigExtension` (Twig globals: `site_name`, `site_base_url`, `site_description`, `site_social`, `site_author`, `site_locales`, `site_locales_list`, `site_default_locale`, `image_variant_widths`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`), `TranslationMapTwigExtension` (Twig global: `translation_map`), and `ContentTwigExtension` (Twig functions: `content_url()`, `content_item()`). Additionally, `cf_analytics_token` is registered as a Twig global in `config/packages/twig.yaml`, bound to the `CF_ANALYTICS_TOKEN` environment variable — used in `base.html.twig` to conditionally load the Cloudflare Web Analytics beacon script.
+**Global metadata:** `local/content/_site.yaml` — site name, base URL, locales config (first key = default), social links, and all site-level numeric/string settings (see Key Configuration Files). Loaded by `SiteConfigService` and exposed to templates via Twig extensions: `SiteConfigExtension` (Twig globals: `site_name`, `site_base_url`, `site_description`, `site_social`, `site_author`, `site_locales`, `site_locales_list`, `site_default_locale`, `image_variant_widths`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`), `TranslationMapTwigExtension` (Twig global: `translation_map`), `ContentTwigExtension` (Twig functions: `content_url()`, `content_item()`), `LangSwitcherExtension`, `SidebarExtension`, and `BreadcrumbExtension`. Additionally, `cf_analytics_token` is registered as a Twig global in `config/packages/twig.yaml`, bound to the `CF_ANALYTICS_TOKEN` environment variable — used in `base.html.twig` to conditionally load the Cloudflare Web Analytics beacon script.
 
 ---
 
@@ -130,6 +134,7 @@ All services are behind interfaces for testability. Controllers depend only on i
 |---|---|---|
 | `SiteConfigService` | `SiteConfigServiceInterface` | Central locale authority and config source: `getLocales()`, `getDefaultLocale()`, `getLocaleConfig()`, `getSiteConfig()`, `detectLocaleFromPath()`, `getUrlPrefix()`, `getBaseUrl()`, `getPostsPerPage()`, `getRssLimit()`, `getRecentPostsLimit()`, `getRelatedPostsLimit()`, `getImageVariantWidths()`, `getImageQuality()`, `getImageMagickFlags()`, `getNewPostDays()`, `getComingSoonRevealDays()`. Reads `local/content/_site.yaml`; locale list derived from `array_keys(site.locales)`, first key = default |
 | `TurnstileValidator` | `TurnstileValidatorInterface` | Verifies Cloudflare Turnstile CAPTCHA tokens against siteverify API |
+| `StructuredDataBuilder` | `StructuredDataBuilderInterface` | Builds typed PHP arrays for JSON-LD structured data (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); automatic empty-value stripping |
 | `ContactFormConfig` | — (value object) | Holds contact form config from `_site.yaml`: `email`, `from`, `fromName`, `topic` |
 
 ---
@@ -179,9 +184,8 @@ Route naming convention: `<name>_pl` / `<name>_en` (e.g. `home_pl`, `blog_list_e
 |---|---|---|
 | `locale` | `string` | `'en'` or `'pl'` |
 | `content` | `ContentItem\|null` | `ContentService::findByUrl()` |
-| `sidebar` | `SidebarData` | `SidebarDataProvider::getData()` |
 
-`translation_map` (`array`) is injected as a Twig global by `TranslationMapTwigExtension` — controllers no longer pass it explicitly.
+`translation_map` (`array`) is injected as a Twig global by `TranslationMapTwigExtension` — controllers no longer pass it explicitly. `sidebar` is no longer passed by controllers; templates call `sidebar_data(locale)` via `SidebarExtension` where needed.
 
 ---
 
@@ -350,7 +354,7 @@ The contact page (`/contact/`, `/pl/kontakt/`) is **pre-rendered static HTML** b
 | `local/content/_site.yaml` | **Locale list** (keys of `site.locales`, first = default), per-locale metadata (`og_locale`, `label`, `date_format`, `tagline`), site name, base URL (`base_url`), social links, contact form config (`contact_form.email/from/from_name/topic`), `posts_per_page`, `rss_limit`, `recent_posts_limit`, `related_posts_limit`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`, `image_variant_widths`, `image_quality`, `image_magick_flags` |
 | `local/content/_routes.yaml` | Locale-specific URL path overrides for structural routes (e.g. `blog_list: {pl: /wpisy/}`) |
 | `local/content/_tags.yaml` | Tag translations: canonical (default locale) tag → `{locale: equivalent}`. Used by `TagTranslationService::translate()` for language switcher on tag pages |
-| `config/services.yaml` | `notacms_content` parameter (default: `%kernel.project_dir%/local/content`, overridden to `tests/Fixtures/content` in test env); `notacms_static_dir` parameter (default: `%kernel.project_dir%/public/static`); service auto-discovery for `NotACms\` and `NotACms\Local\` namespaces |
+| `config/services.yaml` | `notacms_content` parameter (default: `%kernel.project_dir%/local/content`, overridden to `tests/Fixtures/content` in test env); `notacms.local_dir` parameter (default: `local`, overridden to `tests/Fixtures` in test env to decouple Twig paths from instance templates); `notacms_static_dir` parameter (default: `%kernel.project_dir%/public/static`); service auto-discovery for `NotACms\` and `NotACms\Local\` namespaces |
 | `.env` | `MAILER_DSN`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `URL` (bare domain, e.g. `example.com` — used by Docker Compose / Certbot; must match `base_url` in `_site.yaml`) |
 | `.ddev/config.yaml` | DDEV local environment: PHP 8.5, nginx-fpm, no database, Mailpit on port 1025 |
 | `config/packages/framework.yaml` | `default_locale: en` — Symfony internals only (translator fallback); must match first key in `_site.yaml` |

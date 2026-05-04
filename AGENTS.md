@@ -15,6 +15,22 @@ Examples:
 
 ---
 
+## Template tree locations
+
+This repo contains multiple template trees. When auditing, fixing bugs, or implementing features that involve templates, check **all layers** that override the relevant file.
+
+| Layer | Directory | Purpose |
+|---|---|---|
+| **Core** (bare) | `templates/` | Minimal wireframe templates shipped with the project. Always the fallback. |
+| **Demo** | `docs/demo/templates/` | Amber-phosphor reference theme shown at notacms.holas.pl. Copied to `local/` via `--demo` deploy. |
+| **User custom** | `local/templates/` | Active site-specific overrides (populated by `--demo` deploy or manual setup). Only applies if `local/` is a real directory, not a symlink (symlinked `local/` → `docs/demo/` means the demo layer already covers it). |
+| **User sites** | `local-*/templates/` | Additional pre-bundled or gitignored site configs. Only present if explicitly created/cloned (e.g. `local-holas.pl`). |
+| **Customization examples** | `docs/customization/*/templates/` | Isolated examples used as documentation snippets (old-template, self-hosted-fonts, custom-footer). Referenced in docs but not meant for direct use. |
+
+**Rule of thumb for template work:** If a fix applies to all themes, update core first, then check demo and any `local-*` folders for the same pattern. Demo and user sites often have independent template copies that drift from core.
+
+---
+
 ## Plans
 
 Non-trivial tasks are tracked as plan files in `.plans/` at the project root.
@@ -76,6 +92,7 @@ When the user asks for a **code review** (phrases like "review the code", "audit
 - Loose comparisons (`==`) — use `is same as()`
 - Hardcoded URL strings — use `path('route_' ~ locale)` or `content_url()`
 - Data passed to every render call that could be a global Twig variable instead
+- Globals registration boundary: static config passthroughs (e.g. `cf_analytics_token`) belong in `config/packages/twig.yaml` under `twig.globals`; computed or service-derived globals (`site_name`, `site_base_url`, `translation_map`, …) belong in PHP `GlobalsInterface` extensions in `src/Twig/`. Choose YAML when the value is a literal in `services.yaml` / env, choose PHP when the value requires a service call.
 
 **SCSS**
 - Hardcoded color/size values that have a `$variable` equivalent in `_variables.scss`
@@ -116,6 +133,30 @@ HTML mockups live in `.mockups/` at the project root. The folder is gitignored.
 When writing or editing any content (blog posts, pages, UI strings, descriptions), **read `local/docs/EDITOR_GUIDE.md`** before proceeding. It contains the site-specific reference for voice, categories, approved tags, titles, descriptions, intros, body structure, EN/PL parity, and image generation styles.
 
 `local/docs/EDITOR_GUIDE.md` is seeded from `docs/demo/docs/EDITOR_GUIDE.md` on first bootstrap and is gitignored — operators customise it for their own site. System-level documentation (frontmatter fields, URL structure, series, drafts, etc.) lives in `docs/EDITOR_GUIDE.md`.
+
+---
+
+## Content file format
+
+**Every content `.md` file MUST end with a trailing newline (`\n`) after the closing `---` of the frontmatter (or after the last line of body content).**
+
+The League CommonMark FrontMatter parser requires the closing `---` to be followed by a newline. Without it, the parser silently treats the file as having no frontmatter — `title`, `slug`, `menu.label`, etc. all return empty strings, and the URL collapses to `/` (because `slug=''` resolves to root). This is most damaging on `_index_*.md` files that contain only frontmatter and no body — `blog/_index_en.md` would render the blog list page with an empty `<title>` and `<h1>`.
+
+The parser in `src/Service/Content/MarkdownParser.php` defensively appends `\n` if missing, so files without trailing newlines still parse correctly. **But every new content file must still end with `\n` as the source-of-truth convention.** Editor settings should enforce this (`.editorconfig` already declares `insert_final_newline = true`).
+
+When creating a new content file via `Write` tool, ensure the final line ends with `\n`. To verify an existing file:
+
+```bash
+[ "$(tail -c 1 path/to/file.md | od -An -tx1 | tr -d ' ')" = "0a" ] && echo OK || echo MISSING
+```
+
+To fix in-place if missing:
+
+```bash
+[ -n "$(tail -c 1 path/to/file.md)" ] && echo "" >> path/to/file.md
+```
+
+**Use the `write-content` skill (`@write-content`) for creating new posts and pages** — it bundles the frontmatter checklist, slug rules, and trailing-newline guarantee.
 
 ---
 

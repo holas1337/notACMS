@@ -10,10 +10,7 @@
 
     {# Page header #}
     <div class="page-header">
-        {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
-            { label: site_name, url: path('home_' ~ locale) },
-            { label: index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }
-        ] }) }}
+        {{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(index_content|default(null), locale, {home_label: site_name}) }) }}
         <h1>
             {% if filter_type is same as('tag') %}
                 {{ 'releases.tagged_heading'|trans }} <span class="text-accent">#{{ filter_value }}</span>
@@ -55,28 +52,14 @@
 
 {% endblock %}
 
-{% block structured_data %}
-{% if posts is not empty %}
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "{{ block('title')|striptags|trim }}",
-    "url": "{{ site_base_url }}{{ app.request.pathInfo }}",
-    "mainEntity": {
-        "@type": "ItemList",
-        "numberOfItems": {{ posts|length }},
-        "itemListElement": [
-            {% for post in posts %}
-            {
-                "@type": "ListItem",
-                "position": {{ loop.index }},
-                "url": "{{ site_base_url }}{{ post.url() }}"
-            }{% if not loop.last %},{% endif %}
-            {% endfor %}
-        ]
-    }
-}
-</script>
-{% endif %}
-{% endblock %}
+{% block structured_data %}{% if posts is not empty %}{{ json_ld(structured_data().collectionPage(
+    block('title')|striptags|trim,
+    site_base_url ~ app.request.pathInfo,
+    posts|map((post, i) => {
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": site_base_url ~ post.url()
+    }),
+    null,
+    posts|length
+)) }}{% endif %}{% endblock %}

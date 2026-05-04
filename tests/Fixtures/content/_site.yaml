@@ -17,7 +17,8 @@ site:
     email: "test@example.com"
     url: "https://test.dev/about/"
   social:
-    github: "https://github.com/test/test"
+    - name: github
+      url: "https://github.com/test/test"
   posts_per_page: 10
   rss_limit: 20
   recent_posts_limit: 6

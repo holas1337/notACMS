@@ -4,20 +4,15 @@
 {% block meta_description %}{{ content.description() ?: content.excerpt(meta_description_length) }}{% endblock %}
 {% block og_title %}{{ content.title() }}{% endblock %}
 
-{% block structured_data %}
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "{{ site_author.name|e('js') }}",
-    "url": "{{ site_base_url }}",
-    "jobTitle": "{{ 'about.role'|trans|e('js') }}",
-    "description": "{{ 'about.headline'|trans|e('js') }}",
-    "email": "{{ site_author.email }}",
-    "sameAs": [{% for network, url in site_social %}"{{ url }}"{% if not loop.last %}, {% endif %}{% endfor %}]
-}
-</script>
-{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().person(
+    site_author.name,
+    site_base_url ~ content_url('about', locale),
+    'about.role'|trans,
+    'about.headline'|trans,
+    site_author.email ?? null,
+    [],
+    site_social|map((url, network) => url)
+)) }}{% endblock %}
 
 {% block body %}
 <article class="page-content" data-pagefind-body>

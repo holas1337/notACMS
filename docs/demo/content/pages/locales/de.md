@@ -2,7 +2,7 @@
 title: "Lokalisierung"
 description: "Sprachen hinzufügen, Inhalte übersetzen und URL-Muster für jede Locale konfigurieren."
 template: page/doc
-slug: locales
+slug: lokalisierung
 menu:
   weight: 50
   label: "Lokalisierung"
@@ -136,3 +136,7 @@ notACMS generiert automatisch `<link rel="alternate" hreflang="...">` Tags im `<
 ```
 
 > **Tipp:** Stets eine `x-default`-Übersetzung bereitstellen, die auf die primäre Sprache zeigt. notACMS übernimmt dies für die Standard-Locale automatisch.
+
+## Kanonische URL-Weiterleitung
+
+Der Aufruf einer URL mit Standard-Locale-Präfix (z. B. `/en/`, `/en/blog/`) löst eine **permanente 301-Weiterleitung** zur kanonischen URL ohne Präfix aus (`/`, `/blog/`). So werden doppelte Inhalte vermieden und Suchmaschinen indexieren ausschließlich die kanonischen URLs.

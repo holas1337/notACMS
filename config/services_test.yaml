@@ -1,2 +1,3 @@
 parameters:
     notacms_content: '%kernel.project_dir%/tests/Fixtures/content'
+    notacms.local_dir: 'tests/Fixtures'

@@ -2,7 +2,7 @@
 title: "Why I built notACMS"
 slug: "blog/the-idea"
 description: "The origin story of notACMS — why another static site generator, the AI-friendly philosophy, and the zero-database decision."
-date: 2024-11-01
+date: 2026-02-01
 category: releases
 tags: [announcement, open-source]
 template: blog/post

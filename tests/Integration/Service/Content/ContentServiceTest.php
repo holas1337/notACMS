@@ -191,9 +191,9 @@ final class ContentServiceTest extends TestCase
         $tree = new ContentTree();
         $tree->addPage(ContentItemFactory::page([], 'about', '/about/'));
         $this->contentTreeBuilder->method('build')->willReturn($tree);
-        $this->translationMapBuilder->method('build')->willReturn([
-            'about' => ['en' => '/about/', 'pl' => '/o-mnie/'],
-        ]);
+        $this->translationMapBuilder->method('build')->willReturn(
+            ['about' => ['en' => '/about/', 'pl' => '/o-mnie/']],
+        );
 
         $result = $this->service->getTranslationMap();
 

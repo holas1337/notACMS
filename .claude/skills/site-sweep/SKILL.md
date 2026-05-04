@@ -1,7 +1,7 @@
 ---
 name: site-sweep
 description: Audit the rendered site across all configured locales to verify routing, content, and link integrity. Use when the user asks to "sweep the site", "audit links", "check all pages", "verify routing", or similar.
-allowed-tools: Read, Glob, Grep, Bash, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__list_console_messages, mcp__chrome-devtools__list_network_requests, mcp__chrome-devtools__list_pages, mcp__chrome-devtools__new_page
+allowed-tools: Read, Glob, Grep, Bash, chrome-devtools_navigate_page, chrome-devtools_take_screenshot, chrome-devtools_list_console_messages, chrome-devtools_list_network_requests, chrome-devtools_list_pages, chrome-devtools_new_page
 ---
 
 # Site Sweep Skill

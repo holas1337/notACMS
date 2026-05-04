@@ -1,72 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% if filter_type is defined and filter_type is same as('archive') %}
-    {% set archive_date = archive_month is defined
-        ? ('%04d-%02d-01'|format(archive_year, archive_month))|date('F Y')
-        : archive_year %}
-{% endif %}
+{% set filter_title = blog_filter_title(
+    filter_type|default(null),
+    filter_value|default(null),
+    archive_year|default(null),
+    archive_month|default(null),
+    locale
+) %}
 
-{% block title %}
-    {% if filter_type is defined and filter_type is same as('category') %}
-        {{ filter_value|capitalize }} | {{ site_name }}
-    {% elseif filter_type is defined and filter_type is same as('tag') %}
-        #{{ filter_value }} | {{ site_name }}
-    {% elseif filter_type is defined and filter_type is same as('archive') %}
-        {{ archive_date }} | {{ site_name }}
-    {% else %}
-        {{ content_item('blog', locale).menuLabel() }} | {{ site_name }}
-    {% endif %}
-{% endblock %}
+{% block title %}{{ filter_title }} | {{ site_name }}{% endblock %}
 
-{% block og_title %}{%- if filter_type is defined and filter_type is same as('category') -%}{{ 'blog.category'|trans }}: {{ filter_value }}{%- elseif filter_type is defined and filter_type is same as('tag') -%}#{{ filter_value }}{%- elseif filter_type is defined and filter_type is same as('archive') -%}{{ 'blog.archive'|trans }}: {{ archive_date }}{%- else -%}{{ content_item('blog', locale).menuLabel() }}{%- endif -%}{% endblock %}
+{% block og_title %}{{ filter_title }}{% endblock %}
 
-{% block meta_description %}{% if filter_type is defined and filter_type is same as('category') %}{{ 'blog.meta.category'|trans({'%category%': filter_value|capitalize}) }}{% elseif filter_type is defined and filter_type is same as('tag') %}{{ 'blog.meta.tag'|trans({'%tag%': filter_value}) }}{% elseif filter_type is defined and filter_type is same as('archive') %}{% if archive_month is defined %}{{ 'blog.meta.archive_month'|trans({'%date%': archive_date}) }}{% else %}{{ 'blog.meta.archive_year'|trans({'%year%': archive_year}) }}{% endif %}{% else %}{{ 'blog.meta.index'|trans }}{% endif %}{% endblock %}
+{% block meta_description %}{% if filter_type is defined and filter_type is same as('category') %}{{ 'blog.meta.category'|trans({'%category%': filter_value|capitalize}) }}{% elseif filter_type is defined and filter_type is same as('tag') %}{{ 'blog.meta.tag'|trans({'%tag%': filter_value}) }}{% elseif filter_type is defined and filter_type is same as('archive') %}{% if archive_month is defined %}{{ 'blog.meta.archive_month'|trans({'%date%': filter_title}) }}{% else %}{{ 'blog.meta.archive_year'|trans({'%year%': archive_year}) }}{% endif %}{% else %}{{ 'blog.meta.index'|trans }}{% endif %}{% endblock %}
 
-{% block structured_data %}
-<script type="application/ld+json">{{ {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": block('title'),
-    "description": block('meta_description'),
-    "url": site_base_url ~ app.request.pathInfo,
-    "mainEntity": {
-        "@type": "ItemList",
-        "itemListElement": posts|map((post, i) => {
-            "@type": "ListItem",
-            "position": i + 1,
-            "url": site_base_url ~ post.url()
-        })
-    }
-}|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</script>
-{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().collectionPage(
+    block('title'),
+    site_base_url ~ app.request.pathInfo,
+    posts|map((post, i) => {
+        "@type": "ListItem",
+        "position": i + 1,
+        "url": site_base_url ~ post.url()
+    }),
+    block('meta_description')
+)) }}{% endblock %}
 
 {% block body %}
 <div class="page-content">
-{% set crumbs = [{label: content_item('home', locale).menuLabel(), url: path('home_' ~ locale)}] %}
-{% if filter_type is defined and filter_type is not null %}
-    {% set crumbs = crumbs|merge([{label: content_item('blog', locale).menuLabel(), url: path('blog_list_' ~ locale)}]) %}
-    {% if filter_type is same as('category') %}
-        {% set crumbs = crumbs|merge([{label: filter_value}]) %}
-    {% elseif filter_type is same as('tag') %}
-        {% set crumbs = crumbs|merge([{label: '#' ~ filter_value}]) %}
-    {% elseif filter_type is same as('archive') %}
-        {% set crumbs = crumbs|merge([{label: archive_date}]) %}
-    {% endif %}
-{% else %}
-    {% set crumbs = crumbs|merge([{label: content_item('blog', locale).menuLabel()}]) %}
-{% endif %}
-{{ include('components/breadcrumb.html.twig', { breadcrumbs: crumbs }) }}
+{{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(null, locale, {filter_type: filter_type|default(null), filter_value: filter_value|default(null), archive_date: filter_title}) }) }}
 
 <header class="archive-header">
-    {% if filter_type is same as('category') %}
-        <h1>{{ 'blog.category'|trans }}: {{ filter_value }}</h1>
-    {% elseif filter_type is same as('tag') %}
-        <h1>{{ 'blog.tags'|trans }}: #{{ filter_value }}</h1>
-    {% elseif filter_type is same as('archive') %}
-        <h1>{{ 'blog.archive'|trans }}: {{ archive_date }}</h1>
-    {% else %}
-        <h1>{{ content_item('blog', locale).menuLabel() }}</h1>
-    {% endif %}
+    <h1>{{ filter_title }}</h1>
 </header>
 
 {% if posts is not empty %}

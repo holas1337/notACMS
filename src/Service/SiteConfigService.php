@@ -38,13 +38,9 @@ final class SiteConfigService implements SiteConfigServiceInterface
         return $locales[0] ?? self::FALLBACK_LOCALE;
     }
 
-    public function getLocaleConfig(string $locale): array
-    {
-        $config = $this->load();
-
-        return $config['locales'][$locale] ?? [];
-    }
-
+    /**
+     * @return array<string, mixed> Raw _site.yaml "site" block
+     */
     public function getSiteConfig(): array
     {
         return $this->load();

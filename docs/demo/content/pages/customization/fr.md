@@ -2,7 +2,7 @@
 title: "Personnalisation"
 description: "Surcharger les templates, les styles, les services PHP et la configuration serveur — tout depuis le répertoire local/."
 template: page/doc
-slug: customization
+slug: personnalisation
 menu:
   weight: 40
   label: "Personnalisation"
@@ -74,6 +74,48 @@ Créez le fichier au même chemin sans `extends` — il remplace complètement l
 | `templates/page/doc.html.twig` | Layout de documentation |
 | `templates/blog/post.html.twig` | Layout d'article de blog |
 
+### Surcharger les données structurées (JSON-LD)
+
+Le template `base.html.twig` émet un schéma JSON-LD `WebSite` dans le bloc
+`{% block structured_data %}`. Pour ajouter `SearchAction`, `sameAs` ou
+des données `author` personnalisées pour votre site :
+
+```twig
+{# local/templates/base.html.twig #}
+{% extends '@base/base.html.twig' %}
+
+{% block structured_data %}
+{{ json_ld(structured_data().webSite(
+    site_name,
+    site_base_url,
+    structured_data().person(site_author.name, site_base_url),
+    {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": site_base_url ~ path('search_' ~ locale) ~ '?q={search_term_string}'
+        },
+        "query-input": "required name=search_term_string"
+    }
+)) }}
+{% endblock %}
+```
+
+Deux fonctions Twig font le travail :
+
+- `json_ld(array)` — encode un tableau PHP en JSON et l'enveloppe dans
+  une balise `<script type="application/ld+json">`.
+- `structured_data()` — renvoie l'instance `StructuredDataBuilderInterface`,
+  permettant d'enchaîner les méthodes typées du builder.
+
+Le builder supprime automatiquement les valeurs vides (`null`, `''`, `[]`).
+Si `site_author.email` n'est pas défini dans `_site.yaml`, la clé `email`
+est absente de la sortie au lieu d'apparaître vide.
+
+Builders disponibles : `webSite()`, `person()`, `blogPosting()`,
+`collectionPage()`, `breadcrumbList()`, `contactPage()`, `webPage()`,
+`organization()`, `imageObject()`.
+
 ## Surcharges SCSS
 
 `local/assets/` est chargé comme deuxième point d'entrée Importmap (`app-local`). Créez un `local/assets/app.js` qui importe votre SCSS :
@@ -118,7 +160,7 @@ import './styles/app_local.scss';
 >
 > Passer les deux points d'entrée à `importmap()` garantit l'ordre de chargement CSS correct : `app.css` (original) d'abord, puis vos surcharges.
 
-> **Astuce :** Surchargez toujours les propriétés CSS personnalisées (`--accent`, `--bg`, etc.) plutôt que des valeurs hex directes. Cela assure que les modes clair et sombre fonctionnent correctement avec vos couleurs de marque. La liste complète des tokens se trouve dans la [Référence Design](/fr/design-reference/).
+> **Astuce :** Surchargez toujours les propriétés CSS personnalisées (`--accent`, `--bg`, etc.) plutôt que des valeurs hex directes. Cela assure que les modes clair et sombre fonctionnent correctement avec vos couleurs de marque. La liste complète des tokens se trouve dans la [Référence Design](/fr/reference-design/).
 
 ## Services PHP Personnalisés
 

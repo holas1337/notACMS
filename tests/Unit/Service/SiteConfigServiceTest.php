@@ -116,36 +116,12 @@ final class SiteConfigServiceTest extends TestCase
         self::assertSame(SiteConfigServiceInterface::FALLBACK_LOCALE, $service->getDefaultLocale());
     }
 
-    public function testGetLocaleConfigReturnsConfigForLocale(): void
-    {
-        $this->writeConfig([
-            'locales' => [
-                'en' => ['label' => 'English', 'og_locale' => 'en_US'],
-                'pl' => ['label' => 'Polski', 'og_locale' => 'pl_PL'],
-            ],
-        ]);
-
-        $service = $this->createService();
-
-        self::assertSame(['label' => 'Polski', 'og_locale' => 'pl_PL'], $service->getLocaleConfig('pl'));
-    }
-
-    public function testGetLocaleConfigReturnsEmptyForUnknownLocale(): void
-    {
-        $this->writeConfig([
-            'locales' => ['en' => ['label' => 'English']],
-        ]);
-
-        $service = $this->createService();
-
-        self::assertSame([], $service->getLocaleConfig('de'));
-    }
-
-    public function testGetSiteConfigReturnsFullConfig(): void
+    public function testGetSiteConfigReturnsRawArray(): void
     {
         $this->writeConfig([
             'locales' => ['en' => ['label' => 'English']],
             'base_url' => 'https://example.com',
+            'name' => 'Test Site',
         ]);
 
         $service = $this->createService();
@@ -153,6 +129,21 @@ final class SiteConfigServiceTest extends TestCase
         $config = $service->getSiteConfig();
         self::assertSame(['en' => ['label' => 'English']], $config['locales']);
         self::assertSame('https://example.com', $config['base_url']);
+        self::assertSame('Test Site', $config['name']);
+    }
+
+    public function testGetSiteConfigPreservesCustomKeys(): void
+    {
+        $this->writeConfig([
+            'locales' => ['en' => ['label' => 'English']],
+            'name' => 'Test Site',
+            'custom_field' => 'custom_value',
+        ]);
+
+        $service = $this->createService();
+
+        $config = $service->getSiteConfig();
+        self::assertSame('custom_value', $config['custom_field']);
     }
 
     // ===== URL & Locale Detection =====

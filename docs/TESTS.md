@@ -16,6 +16,9 @@ ddev test --coverage-html          # Generate HTML coverage report
 tests/
 ├── bootstrap.php
 ├── TmpDirTrait.php
+├── Fixtures/
+│   ├── content/               # _site.yaml, _routes.yaml, _tags.yaml, blog/ posts, pages/
+│   └── templates/             # Empty — Twig falls through to core templates/
 ├── Unit/
 │   ├── Fixtures/
 │   │   └── ContentItemFactory.php
@@ -31,9 +34,11 @@ tests/
 │   │   │   └── TranslationMapBuilderTest.php
 │   │   ├── Image/
 │   │   │   └── ResponsiveImageServiceTest.php
-│   │   └── SiteConfigServiceTest.php
+│   │   ├── SiteConfigServiceTest.php
+│   │   └── StructuredDataBuilderTest.php
 │   └── Twig/
-│       └── SrcsetExtensionTest.php
+│       ├── SrcsetExtensionTest.php
+│       └── TranslationMapTwigExtensionTest.php
 └── Integration/
     ├── Command/
     │   └── BuildStaticSiteCommandTest.php

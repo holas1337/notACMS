@@ -24,15 +24,17 @@
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
     {% endblock %}
 
+    {% set has_content = content is defined and content is not null %}
+
     {# hreflang SEO tags #}
-    {% if content is defined and content is not null and content.directoryKey() %}
-        {% set tk = content.directoryKey() %}
-        {% if translation_map is defined and translation_map[tk] is defined %}
-            {% for lang, url in translation_map[tk] %}
+    {% if has_content and content.directoryKey() %}
+        {% set directoryKey = content.directoryKey() %}
+        {% if translation_map is defined and translation_map[directoryKey] is defined %}
+            {% for lang, url in translation_map[directoryKey] %}
                 <link rel="alternate" hreflang="{{ lang }}" href="{{ site_base_url }}{{ url }}">
             {% endfor %}
-            {% if translation_map[tk][site_default_locale] is defined %}
-                <link rel="alternate" hreflang="x-default" href="{{ site_base_url }}{{ translation_map[tk][site_default_locale] }}">
+            {% if translation_map[directoryKey][site_default_locale] is defined %}
+                <link rel="alternate" hreflang="x-default" href="{{ site_base_url }}{{ translation_map[directoryKey][site_default_locale] }}">
             {% endif %}
         {% endif %}
     {% endif %}
@@ -47,14 +49,15 @@
     <meta property="og:site_name" content="{{ site_name }}">
     <meta property="og:title" content="{% block og_title %}{{ site_name }}{% endblock %}">
     <meta property="og:description" content="{{ block('meta_description') }}">
-    {% if content is defined and content is not null and content.image() %}
-    <meta property="og:image" content="{{ site_base_url ~ content.image() }}">
+    {% set og_image_url = og_image_url(has_content ? content : null, site_base_url) %}
+
+    <meta property="og:image" content="{{ og_image_url }}">
+    {% if has_content and content.image() %}
     <meta property="og:image:width" content="1280">
     <meta property="og:image:height" content="720">
     <meta property="og:image:type" content="image/webp">
     {% else %}
     {% block og_default_image %}
-    <meta property="og:image" content="{{ site_base_url ~ asset('local/images/og-default.jpg') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/jpeg">
@@ -71,7 +74,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ block('og_title') }}">
     <meta name="twitter:description" content="{{ block('meta_description') }}">
-    <meta name="twitter:image" content="{{ content is defined and content is not null and content.image() ? site_base_url ~ content.image() : site_base_url ~ asset('local/images/og-default.jpg') }}">
+    <meta name="twitter:image" content="{{ og_image_url }}">
 
     <link rel="canonical" href="{{ site_base_url }}{{ app.request.pathInfo }}">
     <link rel="alternate" type="application/rss+xml" title="{{ site_name }} RSS" href="{{ path('rss_' ~ locale) }}">
@@ -94,21 +97,11 @@
     {# Phosphor Icons #}
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
 
-    {% block structured_data %}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "{{ site_name }}",
-        "url": "{{ site_base_url }}",
-        "author": {
-            "@type": "Person",
-            "name": "{{ site_author.name|e('js') }}",
-            "url": "{{ site_base_url }}"
-        }
-    }
-    </script>
-    {% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().webSite(
+    site_name,
+    site_base_url,
+    structured_data().person(site_author.name, site_base_url)
+)) }}{% endblock %}
 </head>
 <body class="locale-{{ locale ?? site_default_locale }}">
     <a href="#main-content" class="skip-link">{{ 'nav.skip_to_content'|trans }}</a>
@@ -225,7 +218,7 @@
 
     {% if cf_analytics_token %}
         <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
-                data-cf-beacon='{"token": "{{ cf_analytics_token }}"}'></script>
+                data-cf-beacon='{"token": {{ cf_analytics_token|json_encode }} }'></script>
     {% endif %}
 
 </body>

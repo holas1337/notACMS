@@ -5,7 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.2] - 2026-05-04
+
+### Added
+
+- **`StructuredDataBuilder` service** (`src/Service/StructuredDataBuilder.php` + interface) — fluent builder for Schema.org JSON-LD (`webSite`, `webPage`, `blogPosting`, `collectionPage`, `contactPage`, `person`). Inline `\|json_encode\|raw` JSON-LD blocks across core and demo templates were replaced with `{{ json_ld(structured_data().<type>(...)) }}`.
+- **`DefaultLocaleRedirectListener`** — issues a 301 from `/<default-locale>/...` to the canonical unprefixed URL (e.g. `/en/blog/` → `/blog/` when `en` is the default locale). Runs before `RouterListener` so requests don't 404 first. Refuses to redirect protocol-relative shapes (`/<default>//evil.com`).
+- **New Twig extensions** for previously inlined template logic — `BreadcrumbExtension` (`breadcrumbs()`), `SidebarExtension` (`sidebar_data()`), `BlogFilterExtension` (`blog_filter_title()`), `OgImageExtension` (`og_image_url()`), `PostBadgeExtension` (`post_badge()`). Each is `final readonly` with a focused unit test.
+- **`structured_data` blocks** on bare core templates `templates/page/contact.html.twig`, `templates/page/default.html.twig`, `templates/page/projects.html.twig` — bare deploys now emit Schema.org markup matching the demo theme.
+- **`ContentTree::directoryKeyMap`** — O(1) `findByDirectoryKey()` lookups, replacing the prior linear scan.
+- **`ArchiveYearData` value object** for archive-year aggregates returned to templates.
+- **AI-agent skills**: `.claude/skills/switch-theme/`, `.claude/skills/write-content/`.
+
+### Changed
+
+- **Inline JSON-LD removed from all core and demo templates** — replaced with the `json_ld()` / `structured_data()` helpers introduced above. Affects `templates/base.html.twig`, `templates/blog/list.html.twig`, `templates/blog/post.html.twig`, `templates/page/about.html.twig`, `templates/feed/sitemap.xml.twig`, and the corresponding `docs/demo/templates/` files.
+- **`directoryKey` rename** — internal abbreviation `tk` renamed to `directoryKey` across `src/`, core templates, and demo templates per the no-abbreviations naming rule. Custom templates referring to `tk` as a Twig local should rename to `directoryKey`.
+- **Customisation examples migrated** — `docs/customization/custom-footer/` and `docs/customization/self-hosted-fonts/` now use `json_ld(structured_data().webSite(...))` instead of inline JSON encoding. `docs/customization/old-template/` is intentionally **not** migrated (see Deprecated).
+- **Demo `about.html.twig` Person.url** corrected from `site_base_url` (site root) to `site_base_url ~ content_url('about', locale)` (the about page itself).
+- **`StructuredDataExtension`** uses `JSON_THROW_ON_ERROR` so encoding failures surface as exceptions instead of silently shipping `<script type="application/ld+json">false</script>`.
+- **Test suite decoupled from `local/`** — integration tests no longer load instance-specific templates from `local/templates/`, removing flakiness when `local/` is empty or seeded with a different theme.
+- `symfony/*` dependencies updated from v7.4.8 to v7.4.9 (filesystem, event-dispatcher, console, var-exporter, cache, dependency-injection, config, dotenv, type-info, form, mime, routing, framework-bundle, monolog-bridge, validator, web-profiler-bundle, http-client, asset-mapper). `phpstan/phpstan` 2.1.51 → 2.1.54. `phpunit/phpunit` 13.1.7 → 13.1.8.
+
+### Deprecated
+
+- **`docs/customization/old-template/`** is deprecated and will be removed in **1.2.0**. The package was a one-shot 1.0→1.1 transition aid for installs that wanted to keep the pre-redesign look. New customisation work should branch from `docs/customization/custom-footer/` or `docs/customization/self-hosted-fonts/` instead — those examples track current core conventions.
+
+### Fixed
+
+- **Open-redirect hardening in `DefaultLocaleRedirectListener`** — `Request::getPathInfo()` does not collapse repeated slashes, so `/<default-locale>//evil.com` would otherwise strip to a `Location: //evil.com` header (browser-cross-origin protocol-relative redirect). The listener now refuses to issue such redirects.
+- **XSS in search results** — `assets/search.js` interpolated the Pagefind `excerpt` into innerHTML without escaping. Now uses the existing `esc()` helper, matching the demo build (which already had this fix). Loses Pagefind's `<mark>` highlight tags as a deliberate trade-off.
 
 ## [1.1.1] - 2026-04-26
 

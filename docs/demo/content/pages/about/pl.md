@@ -1,6 +1,6 @@
 ---
 title: "O projekcie"
-slug: "about"
+slug: "o-projekcie"
 description: "notACMS — przyjazny dla AI generator stron statycznych zbudowany na Symfony. Zero bazy danych, czysty Markdown, jedno polecenie do wdrożenia."
 template: page/about
 menu:

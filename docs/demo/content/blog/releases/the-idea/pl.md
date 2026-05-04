@@ -2,7 +2,7 @@
 title: "Dlaczego zbudowałem notACMS"
 slug: "wpisy/the-idea"
 description: "Geneza notACMS — dlaczego kolejny generator stron statycznych, filozofia AI-friendly i decyzja o braku bazy danych."
-date: 2024-11-01
+date: 2026-02-01
 category: releases
 tags: [announcement, open-source]
 template: blog/post

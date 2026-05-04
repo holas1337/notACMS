@@ -7,6 +7,7 @@ namespace NotACms\Tests\Unit\Content;
 use NotACms\Content\ContentTree;
 use NotACms\Content\ValueObject\AdjacentPosts;
 use NotACms\Content\ValueObject\ArchiveMonth;
+use NotACms\Content\ValueObject\ArchiveYearData;
 use NotACms\Content\ValueObject\CategoryCount;
 use NotACms\Content\ValueObject\TagCount;
 use NotACms\Tests\Unit\Fixtures\ContentItemFactory;
@@ -617,9 +618,14 @@ final class ContentTreeTest extends TestCase
         $tree->addPost(ContentItemFactory::publishedPost(['date' => '2024-01-15']));
         $tree->addPost(ContentItemFactory::publishedPost(['date' => '2024-02-10']));
 
-        $years = $tree->getArchiveYears();
+        $archiveYears = $tree->getArchiveYears();
 
-        self::assertSame([2024 => 2, 2023 => 1], $years);
+        self::assertCount(2, $archiveYears);
+        self::assertInstanceOf(ArchiveYearData::class, $archiveYears[0]);
+        self::assertSame(2024, $archiveYears[0]->year);
+        self::assertSame(2, $archiveYears[0]->count);
+        self::assertSame(2023, $archiveYears[1]->year);
+        self::assertSame(1, $archiveYears[1]->count);
     }
 
     public function testGetArchiveYearsSortsNewestFirst(): void
@@ -628,11 +634,10 @@ final class ContentTreeTest extends TestCase
         $tree->addPost(ContentItemFactory::publishedPost(['date' => '2023-01-15']));
         $tree->addPost(ContentItemFactory::publishedPost(['date' => '2024-01-15']));
 
-        $years = $tree->getArchiveYears();
+        $archiveYears = $tree->getArchiveYears();
 
-        $keys = array_keys($years);
-        self::assertSame(2024, $keys[0]);
-        self::assertSame(2023, $keys[1]);
+        self::assertSame(2024, $archiveYears[0]->year);
+        self::assertSame(2023, $archiveYears[1]->year);
     }
 
     // ===== getAllPages =====

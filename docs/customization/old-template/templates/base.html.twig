@@ -37,14 +37,15 @@
     <meta property="og:site_name" content="{{ site_name }}">
     <meta property="og:title" content="{% block og_title %}{{ site_name }}{% endblock %}">
     <meta property="og:description" content="{{ block('meta_description') }}">
+    {% set og_image_url = og_image_url(content is defined ? content : null, site_base_url) %}
+
+    <meta property="og:image" content="{{ og_image_url }}">
     {% if content is defined and content is not null and content.image() %}
-    <meta property="og:image" content="{{ site_base_url ~ content.image() }}">
     <meta property="og:image:width" content="1280">
     <meta property="og:image:height" content="720">
     <meta property="og:image:type" content="image/webp">
     {% else %}
     {% block og_default_image %}
-    <meta property="og:image" content="{{ site_base_url ~ asset('local/images/og-default.jpg') }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/jpeg">
@@ -61,7 +62,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ block('og_title') }}">
     <meta name="twitter:description" content="{{ block('meta_description') }}">
-    <meta name="twitter:image" content="{{ content is defined and content is not null and content.image() ? site_base_url ~ content.image() : site_base_url ~ asset('local/images/og-default.jpg') }}">
+    <meta name="twitter:image" content="{{ og_image_url }}">
 
     <link rel="canonical" href="{{ site_base_url }}{{ app.request.pathInfo }}">
     <link rel="alternate" type="application/rss+xml" title="{{ site_name }} RSS" href="{{ path('rss_' ~ locale) }}">
@@ -124,6 +125,7 @@
                     {% block body %}{% endblock %}
                 </div>
                 <aside class="content-sidebar">
+                    {% set sidebar = sidebar_data(locale) %}
                     {% block sidebar_top %}
                     {{ include('components/sidebar_top.html.twig') }}
                     {% endblock %}
@@ -153,7 +155,7 @@
     <script src="{{ asset('nav-toggle.js') }}" defer></script>
     {% if cf_analytics_token %}
         <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
-                data-cf-beacon='{"token": "{{ cf_analytics_token }}"}'></script>
+                data-cf-beacon='{"token": {{ cf_analytics_token|json_encode }} }'></script>
     {% endif %}
 
 </body>

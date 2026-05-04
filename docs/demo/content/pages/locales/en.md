@@ -136,3 +136,7 @@ notACMS automatically generates `<link rel="alternate" hreflang="...">` tags in 
 ```
 
 > **Tip:** Always provide an `x-default` translation pointing to your primary language. notACMS handles this automatically for the default locale.
+
+## Canonical URL Redirect
+
+Visiting a default-locale-prefixed URL (e.g. `/en/`, `/en/blog/`) issues a **301 permanent redirect** to the unprefixed canonical equivalent (`/`, `/blog/`). This prevents duplicate content and ensures search engines index only the canonical URLs.

@@ -172,6 +172,10 @@ Each target locale has specific conventions. Follow the guide for the locale you
 | "redeploy" | "ponowne wdrożenie" |
 | "changelog" | "lista zmian" |
 | "skille" | "skrypty" or "umiejętności" depending on context |
+| "customizować" / "customizujesz" | "dostosowywać" / "dostosowujesz" or "modyfikować" |
+| "kompatybilność" | "zgodność" |
+| "seed / seedowanie" (CLI) | "inicjować" / "inicjalizacja" or seedowanie in backticks when referring to the --seed flag |
+| "reseed" | "ponowne seedowanie" in backticks, "ponowna inicjalizacja" otherwise |
 | "suite testów" | "zestaw testów" |
 | "content" (as noun) | "treść" |
 | "seed / seedowanie" | "seedowanie" in backticks for the CLI concept, "inicjalizacja" otherwise |
@@ -289,9 +293,13 @@ Each target locale has specific conventions. Follow the guide for the locale you
 
 ### Frontmatter Decisions
 
-**Slug strategy** (decide once, apply consistently):
-- Option A: Keep consistent with source → `/es/manual/`
-- Option B: Localized → `/es/guia/`
+**Slug strategy** (translate per locale — always):
+The `slug` frontmatter field defines the URL path for each locale. **Always translate the slug** to the target locale's word for the page, not the source locale's. This produces locale-appropriate URLs like `/pl/architektura/` instead of `/pl/architecture/`.
+
+- Translate `slug: about` → PL `slug: o-projekcie`, DE `slug: ueber-uns`, FR `slug: a-propos`
+- Keep `slug` identical across locales only when the word is identical (e.g., `architecture` in EN/FR)
+- `slug` is per-locale in each `.md` file — change it in the target locale's frontmatter
+- `_routes.yaml` only handles structural routes (blog, search, contact), NOT page slugs
 
 **Menu weight:**
 - Must match source exactly (sort order alignment)
@@ -352,6 +360,15 @@ grep -q "^slug:" "{target}" && echo "SLUG OK"
 
 # Check body not empty (has content after frontmatter)
 awk '/^---$/{found++} found==2 && NF' "{target}" | head -1
+
+# Verify slug is translated (not identical to source slug)
+source_slug=$(grep "^slug:" "{source}" | sed 's/^slug: *//; s/"//g')
+target_slug=$(grep "^slug:" "{target}" | sed 's/^slug: *//; s/"//g')
+if [ "$source_slug" != "$target_slug" ] && [ -n "$target_slug" ]; then
+    echo "SLUG TRANSLATED: $source_slug → $target_slug"
+else
+    echo "WARNING: Slug not translated (still '$target_slug'). Consider localizing."
+fi
 ```
 
 ### Translation Map Verification

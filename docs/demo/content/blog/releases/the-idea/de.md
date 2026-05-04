@@ -2,7 +2,7 @@
 title: "Warum ich notACMS gebaut habe"
 slug: "beitraege/the-idea"
 description: "Die Entstehungsgeschichte von notACMS — warum ein weiterer Static Site Generator, die KI-freundliche Philosophie und die Datenbank-Entscheidung."
-date: 2024-11-01
+date: 2026-02-01
 category: releases
 tags: [announcement, open-source]
 template: blog/post

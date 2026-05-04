@@ -7,11 +7,7 @@
 {% block body %}
 <div class="container container--prose">
 
-    {% set current_path = app.request.pathInfo %}
-    {{ include('components/breadcrumb.html.twig', { breadcrumbs: [
-        { label: site_name, url: path('home_' ~ locale) },
-        { label: content.title() }
-    ] }) }}
+    {{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(content, locale, {home_label: site_name}) }) }}
 
     <article data-pagefind-body>
         <header class="page-header">

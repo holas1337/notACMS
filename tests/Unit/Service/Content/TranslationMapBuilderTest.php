@@ -96,7 +96,6 @@ final class TranslationMapBuilderTest extends TestCase
 
         $result = $this->builder->build(['en' => $tree]);
 
-        // URL '0' is not empty, so it's included
         self::assertSame(['my-post' => ['en' => '0']], $result);
     }
 

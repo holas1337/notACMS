@@ -1,6 +1,6 @@
 twig:
     paths:
-        '%kernel.project_dir%/local/templates': ''
+        '%kernel.project_dir%/%notacms.local_dir%/templates': ''
         '%kernel.project_dir%/templates': 'base'
     file_name_pattern: '*.twig'
     globals:

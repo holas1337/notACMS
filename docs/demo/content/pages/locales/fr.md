@@ -2,7 +2,7 @@
 title: "Localisation"
 description: "Ajouter des langues, traduire le contenu et configurer les patterns d'URL pour chaque locale."
 template: page/doc
-slug: locales
+slug: localisation
 menu:
   weight: 50
   label: "Localisation"
@@ -136,3 +136,7 @@ notACMS génère automatiquement les balises `<link rel="alternate" hreflang="..
 ```
 
 > **Astuce :** Fournissez toujours une traduction `x-default` pointant vers la langue principale. notACMS gère cela automatiquement pour la locale par défaut.
+
+## Redirection vers l'URL canonique
+
+Accéder à une URL préfixée par la locale par défaut (ex. `/en/`, `/en/blog/`) déclenche une **redirection permanente 301** vers l'URL canonique sans préfixe (`/`, `/blog/`). Cela évite le contenu dupliqué et garantit que les moteurs de recherche n'indexent que les URLs canoniques.
