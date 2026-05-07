@@ -13,6 +13,7 @@ Audit the rendered site across all configured locales to verify routing, content
 ### 1. Initialization & Cleanup
 - **Clean Slate**: Always start by clearing browser cache or using `ignoreCache: true` for the first navigation to avoid stale results.
 - **Memory Reset**: Ignore previous snapshots to ensure the current state of the site is analyzed.
+- **Profile switch note**: If a profile was just switched via `local-deploy.sh`, PHP-FPM's realpath cache still holds the old resolved symlink path. Always run `ddev restart` after switching profiles *before* starting the sweep — otherwise first page loads may return 500 errors even though the static build succeeded.
 
 ### 2. Discovery Phase
 Use the following steps to map the site regardless of the theme or content:

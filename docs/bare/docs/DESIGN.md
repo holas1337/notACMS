@@ -13,6 +13,7 @@ colors:
   code-bg: "#f3f4f6"
   success: "#16a34a"
   danger: "#dc2626"
+  primary: "{colors.accent}"
   card-bg: "#ffffff"
   card-border: "#e5e7eb"
 typography:
@@ -114,20 +115,20 @@ The design says: *"Here are all the pieces. Style them however you want."*
 
 The palette is deliberately small — two neutrals, one accent, two semantic colors.
 
-- **Accent (#2563EB):** Links, primary buttons, active nav, focus outlines
-- **Accent hover (#1d4ed8):** Hover and active states
-- **Surface (#ffffff):** Page background
-- **Surface secondary (#f8f9fa):** Elevated surfaces — alerts, buttons, badges, code blocks
-- **Text (#111827):** Headings, body copy, primary content
-- **Text muted (#6b7280):** Metadata, captions, dates, secondary information
-- **Border (#e5e7eb):** Dividers, input borders, card separators, table borders
-- **Success (#16a34a):** Form validation success, positive indicators
-- **Danger (#dc2626):** Validation errors, destructive actions
-- **Code background (#f3f4f6):** Inline code and preformatted blocks
+- **Accent ({colors.accent}):** Links, primary buttons, active nav, focus outlines
+- **Accent hover ({colors.accent-h}):** Hover and active states
+- **Surface ({colors.surface}):** Page background
+- **Surface secondary ({colors.surface}):** Elevated surfaces — alerts, buttons, badges, code blocks
+- **Text ({colors.text}):** Headings, body copy, primary content
+- **Text muted ({colors.text-muted}):** Metadata, captions, dates, secondary information
+- **Border ({colors.border}):** Dividers, input borders, card separators, table borders
+- **Success ({colors.success}):** Form validation success, positive indicators
+- **Danger ({colors.danger}):** Validation errors, destructive actions
+- **Code background ({colors.code-bg}):** Inline code and preformatted blocks
 
 ### Component tokens
 
-Cards and elevated elements use **{colors.card-bg}** (#ffffff) and **{colors.card-border}** (#e5e7eb), identical to surface and border by default. Override these in `local/assets/styles/` to give cards distinct styling without touching component CSS.
+Cards and elevated elements use **{colors.card-bg}** ({colors.card-bg}) and **{colors.card-border}** ({colors.card-border}), identical to surface and border by default. Override these in `local/assets/styles/` to give cards distinct styling without touching component CSS.
 
 ---
 
