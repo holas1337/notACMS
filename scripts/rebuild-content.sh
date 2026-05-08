@@ -60,6 +60,7 @@ elif [ -f assets/images/favicon.ico ]; then
 fi
 
 echo "==> Building search index"
+rm -rf public/pagefind
 # Pinned to pagefind@1.5.0 — later versions ship a jemalloc-linked ARM64 binary
 # that crashes on 16K-page hosts (e.g. Raspberry Pi 5) with
 # "<jemalloc>: Unsupported system page size".
