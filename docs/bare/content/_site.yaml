@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/site.schema.json
 site:
   name: "notACMS"
   description: "A static-first CMS that generates plain HTML from Markdown"

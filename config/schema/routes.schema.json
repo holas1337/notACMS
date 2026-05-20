@@ -1,0 +1,89 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/routes.schema.json",
+    "title": "notACMS _routes.yaml",
+    "description": "Locale-specific URL path overrides for structural routes. Only non-default locales that need a different path from the auto-prefixed default require entries here. Routes not listed auto-prefix the default EN path with /{locale}/.",
+    "type": "object",
+    "required": ["routes"],
+    "additionalProperties": false,
+    "properties": {
+        "routes": {
+            "type": "object",
+            "description": "Map of route name → locale overrides. The 15 platform route names are documented as properties below; custom routes from user-added controllers may be added freely.",
+            "additionalProperties": true,
+            "properties": {
+                "blog_list": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Blog post listing page. Default EN path: /blog/"
+                },
+                "blog_list_paginated": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Paginated blog listing. Default EN path: /blog/page/{page}/"
+                },
+                "blog_category": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Posts filtered by category slug. Default EN path: /blog/{category}/"
+                },
+                "blog_tag": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Posts filtered by tag slug. Default EN path: /tag/{tag}/"
+                },
+                "blog_archive": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Monthly archive page. Default EN path: /archive/{year}/{month}/"
+                },
+                "blog_archive_year": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Yearly archive page. Default EN path: /archive/{year}/"
+                },
+                "rss": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "RSS feed. Default EN path: /feed/"
+                },
+                "home": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Homepage. Default EN path: /"
+                },
+                "search": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Pagefind full-text search page. Default EN path: /search/"
+                },
+                "contact": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Contact form page. Default EN path: /contact/"
+                },
+                "api_contact": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Contact form POST API endpoint. Default EN path: /api/contact"
+                },
+                "projects": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Projects / portfolio listing page. Default EN path: /projects/"
+                },
+                "static_page": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "Generic static page catch-all (low priority). Default EN path: /{slug}/"
+                },
+                "error_404": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "404 Not Found error page. Default EN path: /404/"
+                },
+                "error_500": {
+                    "$ref": "#/$defs/routeOverride",
+                    "description": "500 Internal Server Error page. Default EN path: /500/"
+                }
+            }
+        }
+    },
+    "$defs": {
+        "routeOverride": {
+            "type": "object",
+            "description": "Map of locale code → localized URL path. Include only non-default locales that need a path different from the auto-prefixed default. Use {param} placeholders matching the route's requirements.",
+            "additionalProperties": {
+                "type": "string",
+                "pattern": "^/",
+                "description": "URL path starting with /. May contain {param} placeholders, e.g. /wpisy/{category}/ or /archiwum/{year}/{month}/."
+            }
+        }
+    }
+}

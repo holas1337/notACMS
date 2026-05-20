@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/tags.schema.json",
+    "title": "notACMS _tags.yaml",
+    "description": "Tag translation map. Top-level keys are canonical tag slugs in the default (EN) locale. Each value maps other locale codes to their translated slug equivalent. Tags that are identical across all locales can be omitted — they pass through unchanged.",
+    "type": "object",
+    "additionalProperties": {
+        "$ref": "#/$defs/tagTranslation"
+    },
+    "$defs": {
+        "tagTranslation": {
+            "type": "object",
+            "description": "Map of locale code → translated slug for this tag. Omit a locale to use the canonical slug unchanged in that locale.",
+            "additionalProperties": {
+                "type": "string",
+                "description": "Translated tag slug in the target locale. Must be URL-safe: lowercase letters, digits, and hyphens only."
+            }
+        }
+    }
+}

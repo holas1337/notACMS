@@ -1,0 +1,67 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/page.frontmatter.schema.json",
+    "title": "notACMS Page Frontmatter",
+    "description": "YAML frontmatter for static page Markdown files (*.md inside pages/ directories). All platform-defined fields are listed; themes may add custom fields freely.",
+    "type": "object",
+    "required": ["title", "slug"],
+    "additionalProperties": true,
+    "properties": {
+        "title": {
+            "type": "string",
+            "description": "Page title. Shown in <h1>, <title>, og:title, and navigation (unless menu.label overrides it)."
+        },
+        "slug": {
+            "type": "string",
+            "description": "Full URL path for this locale, e.g. about or kontakt. The locale URL prefix (e.g. /pl/) is added automatically by the router. Do not include the leading slash."
+        },
+        "description": {
+            "type": "string",
+            "description": "Short description. Used as meta description and og:description. Recommended on all pages."
+        },
+        "image": {
+            "type": "string",
+            "description": "Path to the featured image WebP file, e.g. /media/my-page/featured.webp. Used in og:image and the page header."
+        },
+        "image_alt": {
+            "type": "string",
+            "description": "Alt text for the featured image. Required when image is set. Must visually describe the image."
+        },
+        "toc": {
+            "type": "boolean",
+            "default": false,
+            "description": "Controls the Table of Contents. Omit to use the default behavior. Set true to force-show; set false to suppress. Default: false."
+        },
+        "dynamic": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, the page is skipped during static pre-rendering and always served live by Symfony. Default: false."
+        },
+        "template": {
+            "type": "string",
+            "default": "page/default",
+            "description": "Twig template to render this page with, without the .html.twig extension, e.g. page/about or page/doc. Default: page/default."
+        },
+        "menu": {
+            "$ref": "#/$defs/menu"
+        }
+    },
+    "$defs": {
+        "menu": {
+            "type": "object",
+            "description": "Navigation entry for this page. Omit entirely to exclude the page from the nav.",
+            "additionalProperties": false,
+            "properties": {
+                "weight": {
+                    "type": "integer",
+                    "default": 50,
+                    "description": "Navigation sort order. Lower values appear earlier. Default: 50."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Text shown in the navigation link. Defaults to the page title if omitted."
+                }
+            }
+        }
+    }
+}

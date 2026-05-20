@@ -93,6 +93,8 @@ local/content/
 | `related` | list | Non | Slugs d'articles connexes manuels |
 | `menu` | object | Non | Configuration de navigation : `weight` (ordre de tri) et `label` (surcharge) |
 
+> **Schémas lisibles par les machines :** [`post.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/post.frontmatter.schema.json), [`page.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/page.frontmatter.schema.json), [`category.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/category.frontmatter.schema.json)
+
 ---
 
 ## Images

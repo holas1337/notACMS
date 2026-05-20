@@ -1,0 +1,211 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/site.schema.json",
+    "title": "notACMS _site.yaml",
+    "description": "Site-wide configuration for a notACMS instance. All settings live under the top-level `site:` key. Core platform fields are documented here; themes may add additional keys freely.",
+    "type": "object",
+    "required": ["site"],
+    "additionalProperties": false,
+    "properties": {
+        "site": {
+            "type": "object",
+            "description": "Root site configuration block.",
+            "required": ["name", "description", "base_url", "locales"],
+            "additionalProperties": true,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Site display name. Used in og:site_name, <title> fallback, and RSS channel title."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Site-wide description. Used as og:description fallback and RSS channel description."
+                },
+                "base_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Canonical base URL without trailing slash, e.g. https://example.com. Used for sitemap, RSS, og:url, and must match the URL env var in production."
+                },
+                "locales": {
+                    "type": "object",
+                    "description": "Supported locales. Keys are BCP 47 locale codes (e.g. en, pl, de, fr). The first key is the default locale — its routes use no URL prefix. Additional locales are prefixed with /{code}/. Minimum one locale required.",
+                    "minProperties": 1,
+                    "additionalProperties": {
+                        "$ref": "#/$defs/localeConfig"
+                    }
+                },
+                "author": {
+                    "type": "object",
+                    "description": "Site author or owner. Core fields listed below; themes may add arbitrary keys (expertise, recommendations, open_source, skills, etc.) consumed in Twig templates.",
+                    "additionalProperties": true,
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "description": "Author display name. Used in RSS <author> and structured data."
+                        },
+                        "initials": {
+                            "type": "string",
+                            "description": "Short initials shown in avatar placeholder when no image is available."
+                        },
+                        "email": {
+                            "type": "string",
+                            "description": "Author contact email. May be an empty string to omit from output."
+                        },
+                        "url": {
+                            "type": "string",
+                            "description": "URL to author's about or profile page."
+                        },
+                        "avatar": {
+                            "type": "string",
+                            "description": "Path or URL to author avatar image."
+                        }
+                    }
+                },
+                "social": {
+                    "description": "Social profile links. Two shapes are supported depending on the active theme: a keyed object {platform: url} or an array of {name, url} objects.",
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "description": "Keyed object: platform slug → absolute URL. E.g. github: https://github.com/you",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "type": "array",
+                            "description": "Array of {name, url} objects for ordered or annotated social links.",
+                            "items": {
+                                "type": "object",
+                                "required": ["name", "url"],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Platform slug, e.g. github, linkedin, drupal."
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "description": "Absolute URL to the profile page."
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "posts_per_page": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 10,
+                    "description": "Number of posts per page on blog listing and paginated archive pages. Default: 10."
+                },
+                "rss_limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 20,
+                    "description": "Maximum number of posts included in the RSS feed. Default: 20."
+                },
+                "recent_posts_limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 6,
+                    "description": "Number of posts shown in the recent posts sidebar widget. Default: 6."
+                },
+                "related_posts_limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 3,
+                    "description": "Number of related posts shown at the bottom of a single post page. Default: 3."
+                },
+                "new_post_days": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 90,
+                    "description": "A post published within this many days receives a NEW badge on post cards. Set to 0 to disable the badge entirely. Default: 90."
+                },
+                "coming_soon_reveal_days": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 14,
+                    "description": "A scheduled post becomes visible in listings this many days before its publish date, showing a Coming Soon placeholder. Default: 14."
+                },
+                "meta_description_length": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 160,
+                    "description": "Maximum character length for auto-generated meta description tags. Default: 160."
+                },
+                "image_variant_widths": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "default": [640, 960],
+                    "description": "Pixel widths for responsive image variants generated during the static build. Default: [640, 960]."
+                },
+                "image_quality": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 82,
+                    "description": "WebP/JPEG quality (1–100) for generated image variants. Higher = better quality, larger files. Default: 82."
+                },
+                "image_magick_flags": {
+                    "type": "string",
+                    "default": "-strip",
+                    "description": "Extra ImageMagick convert flags appended to every image conversion command. Default: \"-strip\"."
+                },
+                "contact_form": {
+                    "type": "object",
+                    "description": "Contact form mailer settings. Required when the contact route is active and RUNTIME_PHP_ENABLED=true.",
+                    "required": ["email", "from", "from_name", "topic"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "email": {
+                            "type": "string",
+                            "description": "Recipient email address for contact form submissions."
+                        },
+                        "from": {
+                            "type": "string",
+                            "description": "Sender address used in the From: header of outgoing emails."
+                        },
+                        "from_name": {
+                            "type": "string",
+                            "description": "Sender display name used in the From: header."
+                        },
+                        "topic": {
+                            "type": "string",
+                            "description": "Email subject prefix prepended to the user-supplied subject, e.g. [MySite]."
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "$defs": {
+        "localeConfig": {
+            "type": "object",
+            "description": "Per-locale settings. Core fields listed; themes may add arbitrary keys (tagline_commands, font_preload, etc.) consumed directly in Twig templates.",
+            "required": ["label", "og_locale", "date_format"],
+            "additionalProperties": true,
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "description": "Human-readable language name shown in the locale switcher, e.g. English, Polski, Deutsch."
+                },
+                "og_locale": {
+                    "type": "string",
+                    "description": "og:locale value in IETF format with underscore separator, e.g. en_US, pl_PL, de_DE."
+                },
+                "date_format": {
+                    "type": "string",
+                    "description": "PHP date() format string used to display post dates in this locale, e.g. M d, Y or d.m.Y."
+                },
+                "tagline": {
+                    "type": "string",
+                    "description": "Short site tagline shown in the hero or header area for this locale."
+                }
+            }
+        }
+    }
+}

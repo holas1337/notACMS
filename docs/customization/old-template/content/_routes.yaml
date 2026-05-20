@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/routes.schema.json
 # Locale-specific URL path overrides for structural routes.
 # Only non-default locales that differ from the default (EN) path need entries here.
 # Routes not listed: non-default locales auto-prefix the default path with /{locale}/.
