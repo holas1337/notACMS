@@ -174,6 +174,8 @@ If you don't want the page in the navigation menu, omit the `menu` fields entire
 
 ## Frontmatter reference
 
+> **Machine-readable:** JSON Schema files for all content types live in `config/schema/` — `post.frontmatter.schema.json`, `page.frontmatter.schema.json`, `category.frontmatter.schema.json`.
+
 | Field | Type | Default | Required | Description |
 |---|---|---|---|---|
 | `title` | string | — | **yes** | Page/post title. Shown in `<h1>`, `<title>`, og:title. |

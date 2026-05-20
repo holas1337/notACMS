@@ -38,20 +38,21 @@ colors:
   terminal-dot-close: "#ff5f57"
   terminal-dot-min: "#ffbd2e"
   terminal-dot-max: "#28c840"
-  overlay-bg: "rgba(0, 0, 0, 0.6)"
-  divider-on-dark: "rgba(255, 255, 255, 0.08)"
-  nav-sep: "rgba(255, 255, 255, 0.15)"
-  btn-outline-hover-border: "rgba(255, 255, 255, 0.3)"
+  overlay-bg: "#00000099"
+  divider-on-dark: "#ffffff14"
+  nav-sep: "#ffffff26"
+  btn-outline-hover-border: "#ffffff4d"
   footer-bg: "#0e0d0b"
   footer-text: "#f8f9fa"
   hero-accent: "#FFB000"
   hero-accent-h: "#FFCA28"
   hero-text: "#f8f9fa"
-  hero-muted: "rgba(248, 249, 250, 0.65)"
-  hero-glow: "rgba(255, 176, 0, 0.12)"
-  hero-glow-2: "rgba(255, 176, 0, 0.06)"
-  hero-grid: "rgba(255, 255, 255, 0.025)"
+  hero-muted: "#f8f9faa6"
+  hero-glow: "#ffb0001f"
+  hero-glow-2: "#ffb0000f"
+  hero-grid: "#ffffff06"
   on-accent: "#0e0d0b"
+  primary: "{colors.accent}"
 typography:
   headline:
     fontFamily: Inter
@@ -115,6 +116,8 @@ components:
     borderColor: "{colors.border-dark}"
     rounded: "{rounded.xl}"
     padding: 16px
+  card-hover:
+    borderColor: "{colors.accent}"
   tag-pill:
     backgroundColor: "{colors.surface-elevated}"
     textColor: "{colors.text-muted}"
@@ -128,25 +131,25 @@ components:
   alert-success:
     backgroundColor: "#dcfce7"
     textColor: "{colors.success}"
-    borderColor: "rgba(72, 187, 120, 0.35)"
+    borderColor: "#48bb7859"
     rounded: "{rounded.lg}"
     padding: 12px
   alert-success-dark:
-    backgroundColor: "rgba(72, 187, 120, 0.08)"
+    backgroundColor: "#48bb7814"
     textColor: "{colors.success-dark}"
-    borderColor: "rgba(72, 187, 120, 0.2)"
+    borderColor: "#48bb7833"
     rounded: "{rounded.lg}"
     padding: 12px
   alert-danger:
     backgroundColor: "#fee2e2"
     textColor: "{colors.danger}"
-    borderColor: "rgba(229, 62, 62, 0.3)"
+    borderColor: "#e53e3e4d"
     rounded: "{rounded.lg}"
     padding: 12px
   alert-danger-dark:
-    backgroundColor: "rgba(229, 62, 62, 0.07)"
+    backgroundColor: "#e53e3e12"
     textColor: "{colors.danger-dark}"
-    borderColor: "rgba(229, 62, 62, 0.2)"
+    borderColor: "#e53e3e33"
     rounded: "{rounded.lg}"
     padding: 12px
 ---
@@ -214,10 +217,10 @@ Utility tokens used on always-dark surfaces for interactive and decorative eleme
 
 | Token | Value | Usage |
 |---|---|---|
-| `--overlay-bg` | `rgba(0, 0, 0, 0.6)` | Search overlay backdrop |
-| `--divider-on-dark` | `rgba(255, 255, 255, 0.08)` | Separator lines on dark surfaces (e.g. hero stat strip) |
-| `--nav-sep` | `rgba(255, 255, 255, 0.15)` | Language switcher `/` separator in nav |
-| `--btn-outline-hover-border` | `rgba(255, 255, 255, 0.3)` | `.btn-outline` border on hover (always-dark hero) |
+| `--overlay-bg` | `#00000099` | Search overlay backdrop |
+| `--divider-on-dark` | `#ffffff14` | Separator lines on dark surfaces (e.g. hero stat strip) |
+| `--nav-sep` | `#ffffff26` | Language switcher `/` separator in nav |
+| `--btn-outline-hover-border` | `#ffffff4d` | `.btn-outline` border on hover (always-dark hero) |
 
 ### Accent variants
 
@@ -320,7 +323,7 @@ Uses **{components.card}** (light) and **{components.card-dark}** (dark) tokens.
 
 ### Prev/Next Navigation (`.prev-next-nav`)
 
-2-column grid at bottom of docs and blog posts. Each `.prev-next-card` has 1px border, **{rounded.lg}** radius, hover state shifts border to **{colors.accent}**. Contains `.prev-next-dir` (mono, **{typography.label}** uppercase label) and `.prev-next-title` (accent-colored). Single column on mobile.
+2-column grid at bottom of docs and blog posts. Each `.prev-next-card` has 1px border, **{rounded.lg}** radius, hover state shifts border to **{colors.accent}**. Contains `.prev-next-dir` (mono, **{typography.label.fontFamily}** uppercase label) and `.prev-next-title` (accent-colored). Single column on mobile.
 
 ### Callouts (`.callout`)
 
@@ -375,3 +378,4 @@ Layout sections with responsive padding (**{spacing.xxl}** → **{spacing.xl}** 
 - Don't use more than two font weights on a single screen (regular + bold/semi-bold)
 - Don't mix Inter and JetBrains Mono in the same text block — each has its role
 - Don't create new CSS classes in local overrides that duplicate component patterns — extend or override with custom properties
+

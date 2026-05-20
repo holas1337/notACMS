@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/tags.schema.json
 tags:
   - general
   - demo

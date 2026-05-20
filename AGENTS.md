@@ -160,6 +160,27 @@ To fix in-place if missing:
 
 ---
 
+## Config & frontmatter schemas
+
+JSON Schema draft-07 files for all notACMS configuration and content frontmatter live in `config/schema/`. An AI assistant in another project can fetch any schema directly from the main branch:
+
+```
+https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/<name>.schema.json
+```
+
+| Schema file | Describes |
+|---|---|
+| `config/schema/site.schema.json` | `local/content/_site.yaml` — site-wide settings, locales, social links, contact form |
+| `config/schema/routes.schema.json` | `local/content/_routes.yaml` — locale URL path overrides for structural routes |
+| `config/schema/tags.schema.json` | `local/content/_tags.yaml` — tag translation map |
+| `config/schema/post.frontmatter.schema.json` | Blog post Markdown frontmatter |
+| `config/schema/page.frontmatter.schema.json` | Static page Markdown frontmatter |
+| `config/schema/category.frontmatter.schema.json` | Category index Markdown frontmatter |
+
+All schemas use `additionalProperties: true` on user-extensible objects so themes and site authors can add custom fields freely. Descriptions are written for AI consumption — rich, with defaults and constraints explained.
+
+---
+
 ## Design system documentation (DESIGN.md)
 
 notACMS supports Google's [google-labs-code/design.md](https://github.com/google-labs-code/design.md) open specification for describing a visual identity to AI coding agents.

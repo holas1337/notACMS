@@ -1,0 +1,129 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/post.frontmatter.schema.json",
+    "title": "notACMS Post Frontmatter",
+    "description": "YAML frontmatter for blog post Markdown files (*.md inside blog/ category directories). All platform-defined fields are listed; themes may add custom fields freely.",
+    "type": "object",
+    "required": ["title", "slug", "date"],
+    "additionalProperties": true,
+    "properties": {
+        "title": {
+            "type": "string",
+            "description": "Post title. Shown in <h1>, <title>, og:title, RSS, and post cards."
+        },
+        "slug": {
+            "type": "string",
+            "description": "Full URL path for this locale, e.g. blog/my-post or wpisy/moj-wpis. The locale URL prefix (e.g. /pl/) is added automatically by the router. Do not include the leading slash."
+        },
+        "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Publication date in YYYY-MM-DD format. A past or today date = published. A future date = scheduled: excluded from listings, RSS, and sitemap until the date arrives; renders a Coming Soon page at its URL in the meantime."
+        },
+        "description": {
+            "type": "string",
+            "description": "Short description (1–2 sentences). Used as meta description, og:description, and post card excerpt. Recommended on all posts."
+        },
+        "category": {
+            "type": "string",
+            "description": "Localized category slug matching the directory name under blog/, e.g. general or releases. Each category must have a corresponding _index_en.md (and other locale index files)."
+        },
+        "tags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "List of tag slugs. Each tag gets its own listing page at /tag/{tag}/. Use the canonical (default locale) slug — translations are defined in _tags.yaml."
+        },
+        "image": {
+            "type": "string",
+            "description": "Path to the featured image WebP file, e.g. /media/my-post/featured.webp. Always WebP format. Used in og:image, post cards, and the post header."
+        },
+        "image_alt": {
+            "type": "string",
+            "description": "Alt text for the featured image. Required when image is set. Must visually describe the image — not simply repeat the post title. Improves accessibility (WCAG) and image SEO."
+        },
+        "draft": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, the post is excluded from all listings, the static build, RSS, and sitemap. Only visible in dev mode with the draft preview toolbar enabled. Default: false."
+        },
+        "pinned": {
+            "description": "Pin this post to the top of all listings until the given date (inclusive). Set to a YYYY-MM-DD date string to activate; set to false to disable. Auto-unpins once the date passes. Stacks with NEW and RECENTLY UPDATED badges.",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "description": "Pin until this date (YYYY-MM-DD, inclusive)."
+                },
+                {
+                    "type": "boolean",
+                    "const": false,
+                    "description": "Pinning disabled (default)."
+                }
+            ]
+        },
+        "toc": {
+            "type": "boolean",
+            "default": false,
+            "description": "Controls the Table of Contents. Omit to use the default behavior (auto-show on posts with 3+ headings). Set true to force-show; set false to suppress."
+        },
+        "featured": {
+            "type": "boolean",
+            "default": false,
+            "description": "Projects only. If true, the post appears in the curated grid on the /projects/ page. Has no effect on other post types. Default: false."
+        },
+        "series": {
+            "type": "string",
+            "description": "Series key (kebab-case). Posts sharing the same key form a series with previous/next navigation. Must match in all locale files of the series."
+        },
+        "series_order": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "1-based position of this post within its series. Determines display order in the series navigation. Required when series is set."
+        },
+        "related": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Manual list of related post slugs (locale-independent last path segment). Overrides or supplements automatic related posts. Each slug must match the last segment of an existing post's URL."
+        },
+        "updated": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Date of last meaningful content update (YYYY-MM-DD). Triggers a RECENTLY UPDATED badge on post cards for 90 days. Set only for significant changes — corrected facts, rewritten sections, updated commands. Do not set for typo fixes or minor wording tweaks."
+        },
+        "dynamic": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, the page is skipped during static pre-rendering and always served live by Symfony. Use for pages that require server-side logic at request time. Default: false."
+        },
+        "template": {
+            "type": "string",
+            "default": "page/default",
+            "description": "Twig template to render this post with, without the .html.twig extension, e.g. blog/post or page/doc. Default: page/default."
+        },
+        "menu": {
+            "$ref": "#/$defs/menu"
+        }
+    },
+    "$defs": {
+        "menu": {
+            "type": "object",
+            "description": "Navigation entry for this page. Omit entirely to exclude the page from the nav.",
+            "additionalProperties": false,
+            "properties": {
+                "weight": {
+                    "type": "integer",
+                    "default": 50,
+                    "description": "Navigation sort order. Lower values appear earlier. Default: 50."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Text shown in the navigation link. Defaults to the page title if omitted."
+                }
+            }
+        }
+    }
+}

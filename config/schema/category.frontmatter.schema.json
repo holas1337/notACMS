@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/category.frontmatter.schema.json",
+    "title": "notACMS Category Index Frontmatter",
+    "description": "YAML frontmatter for category index Markdown files (_index_en.md, _index_pl.md, etc. inside blog/ category directories). Defines the category listing page. All platform-defined fields are listed; themes may add custom fields freely.",
+    "type": "object",
+    "required": ["title", "slug"],
+    "additionalProperties": true,
+    "properties": {
+        "title": {
+            "type": "string",
+            "description": "Category display name. Shown as the listing page <h1> and <title>."
+        },
+        "slug": {
+            "type": "string",
+            "description": "Full URL path for the category listing in this locale, e.g. blog/general or wpisy/ogolne. The locale prefix is added automatically by the router. Do not include the leading slash."
+        },
+        "description": {
+            "type": "string",
+            "description": "Short description of the category. Used as meta description and og:description."
+        },
+        "dynamic": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, the category listing is skipped during static pre-rendering and served live by Symfony. Default: false."
+        },
+        "template": {
+            "type": "string",
+            "default": "page/default",
+            "description": "Twig template to render this category listing with, without the .html.twig extension, e.g. blog/list. Default: page/default."
+        },
+        "menu": {
+            "$ref": "#/$defs/menu"
+        }
+    },
+    "$defs": {
+        "menu": {
+            "type": "object",
+            "description": "Navigation entry for this category. Omit entirely to exclude from the nav. Top-level blog categories may appear in nav; subcategories typically do not.",
+            "additionalProperties": false,
+            "properties": {
+                "weight": {
+                    "type": "integer",
+                    "default": 50,
+                    "description": "Navigation sort order. Lower values appear earlier. Default: 50."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Text shown in the navigation link. Defaults to the category title if omitted."
+                }
+            }
+        }
+    }
+}

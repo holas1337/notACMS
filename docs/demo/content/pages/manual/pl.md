@@ -93,6 +93,8 @@ local/content/
 | `related` | list | Nie | Ręczne slugi powiązanych postów |
 | `menu` | object | Nie | Konfiguracja nav: `weight` (kolejność sortowania) i `label` (nadpisanie) |
 
+> **Schematy czytelne maszynowo:** [`post.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/post.frontmatter.schema.json), [`page.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/page.frontmatter.schema.json), [`category.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/category.frontmatter.schema.json)
+
 ---
 
 ## Obrazy

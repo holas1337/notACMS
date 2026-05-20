@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2026-05-20
+
+### Added
+
+- **JSON Schema files** for all config and content frontmatter — six JSON Schema draft-07 files in `config/schema/`: `site.schema.json`, `routes.schema.json`, `tags.schema.json`, `post.frontmatter.schema.json`, `page.frontmatter.schema.json`, `category.frontmatter.schema.json`. Schemas are optimised for AI-assisted authoring with rich descriptions, defaults, and constraint explanations. Schemas are fetchable directly from the main branch at `https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/<name>.schema.json`.
+- **`yaml-language-server` comments** added to all template YAML files (`_site.yaml`, `_routes.yaml`, `_tags.yaml`) in `docs/bare/`, `docs/demo/`, and `docs/customization/old-template/`, pointing to the raw GitHub schema URL — enables in-editor validation and autocomplete without project configuration.
+- **Schema documentation** in `AGENTS.md` (new "Config & frontmatter schemas" section), `docs/EDITOR_GUIDE.md` (blockquote in frontmatter reference), `docs/ARCHITECTURE.md` (schema column on content config rows), and `docs/demo/content/pages/manual/` (schema links in all four locales).
+- **AI-agent skills**: `.claude/skills/generate-featured-image/` — generates, reviews, and deploys featured images using Draw Things.
+
+### Fixed
+
+- **Stale Pagefind fragments** — `scripts/rebuild-content.sh` now wipes `public/pagefind/` before reindexing. Previously, removing or renaming content left orphaned fragment files that Pagefind served alongside fresh results.
+
+### Changed
+
+- **DESIGN.md token hygiene** — hardcoded `rgba()`/hex values replaced with token references in `docs/bare/docs/DESIGN.md` and `docs/demo/docs/DESIGN.md`. `primary: "{colors.accent}"` alias added to both. `card-hover` component token (accent border on hover) added to the demo DESIGN.md. `typography.label` reference corrected in demo DESIGN.md.
+
+### Security
+
+- **Symfony 7.4.8 → 7.4.12** — 21 CVEs fixed. Notable: CVE-2026-45073 (SQL injection in `Cache` via unsanitized prefix), CVE-2026-45071 (XXE in `DomCrawler`), CVE-2026-45075 (HEAD bypass of `#[IsGranted]`/`#[IsCsrfTokenValid]`/`#[IsSignatureValid]`), CVE-2026-45072 (XSS in `TwigBridge::CodeExtension`), CVE-2026-45068 (header injection in `SendmailTransport`), CVE-2026-45067 (line-break injection in `Mime\Address`), CVE-2026-45305/45304/45133 (YAML parser ReDoS/recursion), CVE-2026-45066/45064/45753 (three `HtmlSanitizer` bypasses). Full list: [symfony.com/blog/symfony-7-4-12-released](https://symfony.com/blog/symfony-7-4-12-released).
+- **Twig 3.24.0 → 3.26.0** — 4 CVEs fixed, all sandbox bypasses: CVE-2026-46635 (property allowlist bypass via `column` filter), CVE-2026-46638 (incomplete fix for CVE-2024-45411 — cached template skips `checkSecurity()`), CVE-2026-24425 (source policy bypass), CVE-2026-47732 (multiple `__toString()` bypasses via string coercion).
+
 ## [1.1.2] - 2026-05-04
 
 ### Added

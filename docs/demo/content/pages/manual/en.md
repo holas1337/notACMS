@@ -93,6 +93,8 @@ local/content/
 | `related` | list | No | Manual related post slugs |
 | `menu` | object | No | Nav config: `weight` (sort order) and `label` (override) |
 
+> **Machine-readable schemas:** [`post.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/post.frontmatter.schema.json), [`page.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/page.frontmatter.schema.json), [`category.frontmatter.schema.json`](https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/category.frontmatter.schema.json)
+
 ---
 
 ## Images
