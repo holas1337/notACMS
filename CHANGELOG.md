@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2026-05-28
+
+### Changed
+
+- `symfony/polyfill-*` updated from v1.37.0 to v1.38.1. `phpstan/phpstan` 2.1.55 → 2.2.1. `phpunit/phpunit` 13.1.10 → 13.1.13. `rector/rector` 2.4.4 → 2.4.5.
+
+### Security
+
+- **Symfony 7.4.12 → 7.4.13** (all components unified) — 6 CVEs fixed. Notable: CVE-2026-48489 (Security firewall bypass — attacker-controlled `_failure_path` honored on `failure_forward` internal subrequest), CVE-2026-48736 (SSRF bypass in `NoPrivateNetworkHttpClient` / `IpUtils` via IPv6 transition address forms), CVE-2026-48761/48760 (two further `HtmlSanitizer` bypasses — unfiltered URL attributes on `<object>`, `<applet>`, `<iframe>`, `<img>`, `<meta refresh>`, and BiDi marks/Unicode whitespace in URLs), CVE-2026-48784 (`UrlGenerator` misencodes chained `../`/`./` segments), CVE-2026-48747 (Mailer: Mailomat webhook signature algorithm not pinned to SHA-256). Full list: [symfony.com/blog/symfony-7-4-13-released](https://symfony.com/blog/symfony-7-4-13-released).
+- **Twig 3.26.0 → 3.27.0** — 5 CVEs fixed, all sandbox bypasses: CVE-2026-46636 (allow-list bypass when sandbox state changes between renders in long-lived workers), CVE-2026-48808 (`column` filter bypasses property allowlist under `SourcePolicyInterface`), CVE-2026-48806 (`__toString()` bypass via dynamic mapping keys in array expressions), CVE-2026-48807 (`__toString()` bypass via `Traversable` in `join`/`replace` filters and `in`/`not in` operators), CVE-2026-48805 (sandbox state regression in deprecated internal wrappers).
+
 ## [1.1.3] - 2026-05-20
 
 ### Added
