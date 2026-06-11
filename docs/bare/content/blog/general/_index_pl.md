@@ -1,6 +1,6 @@
 ---
 title: "Ogólne"
-slug: "blog/general"
+slug: "wpisy/general"
 description: "Wpisy ogólne."
 template: blog/list
 ---

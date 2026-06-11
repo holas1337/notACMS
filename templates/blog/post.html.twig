@@ -40,8 +40,8 @@
 
 <article data-pagefind-body>
     <header class="post-header">
-        {% if content.isDraft() %}<div class="alert alert-warning">[DRAFT] This post is not published</div>{% endif %}
-        {% if content.isScheduled() %}<div class="alert alert-info">[PLANNED] Scheduled for {{ content.date()|date('Y-m-d') }}</div>{% endif %}
+        {% if content.isDraft() %}<div class="alert alert-warning">{{ 'blog.draft_banner'|trans }}</div>{% endif %}
+        {% if content.isScheduled() %}<div class="alert alert-info">{{ 'blog.scheduled_banner'|trans({'%date%': content.date()|date('Y-m-d')}) }}</div>{% endif %}
         {{ include('components/featured_image.html.twig', { item: content, sizes: '(max-width: 48em) 100vw, 720px' }) }}
         <h1 data-pagefind-meta="title">{{ content.title() }}</h1>
         <p class="post-meta">

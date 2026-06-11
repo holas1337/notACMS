@@ -4,6 +4,11 @@ nav:
   main: Main navigation
   prev: ← Previous
   next: Next →
+  label:
+    home: Home
+    blog: Blog
+    about: About
+    contact: Contact
 blog:
   read_more: Read more
   updated_on: Updated on
@@ -11,6 +16,8 @@ blog:
   tags: Tags
   no_posts: No posts found.
   archive: Archive
+  draft_banner: '[DRAFT] This post is not published'
+  scheduled_banner: '[PLANNED] Scheduled for %date%'
   all_posts: All posts
   share: Share
   share_on_x: Share on X
@@ -52,6 +59,8 @@ contact:
     send: Send
     success: Message sent. Thank you!
     error: Something went wrong. Please check your details and try again.
+breadcrumb:
+  label: Breadcrumb
 pagination:
   label: Pagination
   next: Next
@@ -81,6 +90,7 @@ coming_soon:
   title: Coming Soon
   heading: Coming Soon
   description: This post is not published yet.
+  publishing: 'Publishing: %date%'
 code:
   copy: copy
   copied: copied!

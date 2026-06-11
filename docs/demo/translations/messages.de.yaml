@@ -119,7 +119,7 @@ coming_soon:
   title: Demnächst
   heading: Demnächst verfügbar
   description: Dieser Beitrag wurde noch nicht veröffentlicht.
-  publishing: Veröffentlichung
+  publishing: 'Veröffentlichung: %date%'
 code:
   copy: kopieren
   copied: kopiert!
@@ -144,6 +144,7 @@ site:
   nav_prev: Zurück
   nav_next: Weiter
   open_navigation: Navigation öffnen
+  page_navigation: Seitennavigation
   contact: Kontakt
 home:
   hero_badge: Open Source · PHP / Symfony
@@ -151,6 +152,7 @@ home:
   hero_sub: Schreib Markdown. Definiere Struktur in YAML. Führe einen Befehl aus.
     Erhalte reines statisches HTML — keine Datenbank, keine Laufzeit, keine Überraschungen.
   hero_cta: Loslegen
+  stats_label: Statistiken
   stat_db: Datenbanktabellen
   stat_static: Statische Ausgabe
   stat_ai: KI-freundliche Struktur

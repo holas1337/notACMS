@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.5] - 2026-06-11
+
+### Changed
+
+- **Hardcoded UI strings moved to translation keys** across bare (core) and demo themes. Core post template `[DRAFT]`/`[PLANNED]` banners are now `blog.draft_banner`/`blog.scheduled_banner` trans keys; coming-soon publishing date uses a `%date%` placeholder in `coming_soon.publishing`. Core navigation null-safety improved: `content_item()` return values are cached and checked before calling `.menuLabel()`, with `nav.label.*` trans keys as fallbacks. Demo template hardcoded strings replaced: `Tags:` label, `Post navigation`/`Page navigation`/`Key stats` aria-labels, and `breadcrumb` aria-label across all theme layers. New translation keys added to core EN/PL, demo EN/DE/FR/PL, and local-holas.pl EN/PL.
+
 ## [1.1.4] - 2026-05-28
 
 ### Changed

@@ -52,7 +52,7 @@
             {{ include('components/prev_next_nav.html.twig', {
                 prev: prev_page ? { url: content_url(prev_page.dir, locale), title: prev_page.label } : null,
                 next: next_page ? { url: content_url(next_page.dir, locale), title: next_page.label } : null,
-                aria_label: 'Page navigation'
+                aria_label: 'site.page_navigation'|trans
             }) }}
         </article>
     </div>

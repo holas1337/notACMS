@@ -1,4 +1,4 @@
-<nav class="breadcrumb" aria-label="breadcrumb">
+<nav class="breadcrumb" aria-label="{{ 'breadcrumb.label'|trans }}">
     <ol class="breadcrumb__list">
         {% for crumb in breadcrumbs %}
         <li{% if loop.last %} aria-current="page"{% endif %}>

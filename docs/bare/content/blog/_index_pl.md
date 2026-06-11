@@ -1,6 +1,6 @@
 ---
 title: "Blog"
-slug: "blog"
+slug: "wpisy"
 description: "Wpisy o notACMS."
 template: blog/list
 menu:

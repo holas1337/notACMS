@@ -73,7 +73,7 @@
         {# Tags #}
         {% if content.tags() is not empty %}
         <div class="post-tags" data-pagefind-ignore>
-            <span class="post-tags-label">Tags:</span>
+            <span class="post-tags-label">{{ 'blog.tags'|trans }}:</span>
             {% for tag in content.tags() %}
                 <a href="{{ path('blog_tag_' ~ locale, {tag: tag}) }}" class="tag-pill">{{ tag }}</a>
             {% endfor %}
@@ -86,7 +86,7 @@
     {{ include('components/prev_next_nav.html.twig', {
         prev: prev_post is defined and prev_post ? { url: prev_post.url(), title: prev_post.title() } : null,
         next: next_post is defined and next_post ? { url: next_post.url(), title: next_post.title() } : null,
-        aria_label: 'Post navigation'
+        aria_label: 'blog.post_navigation'|trans
     }) }}
 
 </div>

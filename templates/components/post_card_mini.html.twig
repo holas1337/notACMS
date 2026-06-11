@@ -2,7 +2,7 @@
     <div class="post-card-mini__body">
         <a href="{{ post.url() }}">
             {{ post.title() }}
-            {% if post.isScheduled() %}<span class="badge">[{{ 'badge.planned'|trans }}]</span>{% endif %}
+            {% if post.isScheduled() %}<span class="badge">{{ 'badge.planned'|trans }}</span>{% endif %}
         </a>
         <span class="post-card-mini__meta">
             {{ include('components/post_meta_line.html.twig') }}

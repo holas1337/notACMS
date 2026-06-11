@@ -4,6 +4,11 @@ nav:
   main: Nawigacja główna
   prev: ← Poprzedni
   next: Następny →
+  label:
+    home: Strona główna
+    blog: Blog
+    about: O mnie
+    contact: Kontakt
 blog:
   read_more: Czytaj dalej
   updated_on: Zaktualizowano
@@ -11,6 +16,8 @@ blog:
   tags: Tagi
   no_posts: Brak wpisów.
   archive: Archiwum
+  draft_banner: '[SZKIC] Ten wpis nie jest opublikowany'
+  scheduled_banner: '[ZAPLANOWANY] Zaplanowany na %date%'
   all_posts: Wszystkie wpisy
   share: Udostępnij
   share_on_x: Udostępnij na X
@@ -52,6 +59,8 @@ contact:
     send: Wyślij
     success: Wiadomość została wysłana. Dziękujemy!
     error: Coś poszło nie tak. Sprawdź dane i spróbuj ponownie.
+breadcrumb:
+  label: Ścieżka nawigacyjna
 pagination:
   label: Paginacja
   next: Następna
@@ -81,6 +90,7 @@ coming_soon:
   title: Już wkrótce
   heading: Już wkrótce
   description: Ten wpis nie został jeszcze opublikowany.
+  publishing: 'Publikacja: %date%'
 code:
   copy: kopiuj
   copied: skopiowano!

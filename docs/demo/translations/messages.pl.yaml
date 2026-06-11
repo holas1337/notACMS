@@ -118,7 +118,7 @@ coming_soon:
   title: Już wkrótce
   heading: Już wkrótce
   description: Ten wpis nie został jeszcze opublikowany.
-  publishing: Publikacja
+  publishing: 'Publikacja: %date%'
 code:
   copy: kopiuj
   copied: skopiowano!
@@ -143,12 +143,14 @@ site:
   nav_prev: Poprzedni
   nav_next: Następny
   open_navigation: Otwórz nawigację
+  page_navigation: Nawigacja między stronami
 home:
   hero_badge: Open Source · PHP / Symfony
   hero_heading: Generator stron statycznych, który<br><em>po prostu nie przeszkadza.</em>
   hero_sub: Pisz w Markdown. Definiuj strukturę w YAML. Uruchom jedno polecenie. Uzyskaj
     czysty statyczny HTML — brak bazy danych, brak serwera, brak niespodzianek.
   hero_cta: Zacznij
+  stats_label: Kluczowe statystyki
   stat_db: Tabel w bazie danych
   stat_static: Statyczny wynik
   stat_ai: Przyjazna struktura

@@ -116,7 +116,7 @@ coming_soon:
   title: Bientôt disponible
   heading: Bientôt disponible
   description: Cet article n'est pas encore publié.
-  publishing: Publication
+  publishing: 'Publication : %date%'
 code:
   copy: copier
   copied: copié !
@@ -141,12 +141,14 @@ site:
   nav_prev: Précédent
   nav_next: Suivant
   open_navigation: Ouvrir la navigation
+  page_navigation: Navigation de page
 home:
   hero_badge: Open Source · PHP / Symfony
   hero_heading: Le générateur de sites statiques<br><em>qui ne vous gêne pas.</em>
   hero_sub: Écrivez en Markdown. Définissez la structure en YAML. Exécutez une commande.
     Obtenez du HTML statique pur — pas de base de données, pas d'exécution, pas de surprises.
   hero_cta: Commencer
+  stats_label: Statistiques clés
   stat_db: Tables de base de données
   stat_static: Sortie statique
   stat_ai: Structure conviviale pour l'IA

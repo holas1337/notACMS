@@ -117,7 +117,7 @@ coming_soon:
   title: Coming Soon
   heading: Coming Soon
   description: This post is not published yet.
-  publishing: Publishing
+  publishing: 'Publishing: %date%'
 code:
   copy: copy
   copied: copied!
@@ -142,12 +142,14 @@ site:
   nav_prev: Previous
   nav_next: Next
   open_navigation: Open navigation
+  page_navigation: Page navigation
 home:
   hero_badge: Open Source · PHP / Symfony
   hero_heading: The static site generator that<br><em>gets out of your way.</em>
   hero_sub: Write Markdown. Define structure in YAML. Run one command. Get pure static
     HTML — no database, no runtime, no surprises.
   hero_cta: Get Started
+  stats_label: Key stats
   stat_db: Database tables
   stat_static: Static output
   stat_ai: Friendly structure
