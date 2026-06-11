@@ -53,6 +53,7 @@ site:
     drupal: "https://www.drupal.org/u/holas"
   posts_per_page: 10
   rss_limit: 20
+  llms_limit: 5
   recent_posts_limit: 5
   related_posts_limit: 3
   new_post_days: 90

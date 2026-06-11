@@ -33,6 +33,7 @@ site:
   # See SiteConfigServiceInterface for default values
   posts_per_page: 10
   rss_limit: 20                # items in RSS feed
+  llms_limit: 5                # posts listed in /llms.txt per locale
   recent_posts_limit: 6        # posts shown in sidebar "Recent"
   related_posts_limit: 3       # posts shown in "Related Posts"
   new_post_days: 14            # age at which "[NEW]" badge appears

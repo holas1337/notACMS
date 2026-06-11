@@ -264,6 +264,24 @@ final class SiteConfigServiceTest extends TestCase
         self::assertSame(5, $service->getRssLimit());
     }
 
+    public function testGetLlmsLimitReturnsConfiguredValue(): void
+    {
+        $this->writeConfig(['locales' => ['en' => []], 'llms_limit' => 10]);
+
+        $service = $this->createService();
+
+        self::assertSame(10, $service->getLlmsLimit());
+    }
+
+    public function testGetLlmsLimitReturnsDefault(): void
+    {
+        $this->writeConfig(['locales' => ['en' => []]]);
+
+        $service = $this->createService();
+
+        self::assertSame(SiteConfigServiceInterface::DEFAULT_LLMS_LIMIT, $service->getLlmsLimit());
+    }
+
     public function testGetRecentPostsLimitReturnsConfiguredValue(): void
     {
         $this->writeConfig(['locales' => ['en' => []], 'recent_posts_limit' => 3]);

@@ -321,6 +321,7 @@ Most behaviour values are read from `local/content/_site.yaml` under the `site:`
 |---|---|---|
 | `posts_per_page` | `10` | Posts per listing page |
 | `rss_limit` | `20` | Items in the RSS feed |
+| `llms_limit` | `5` | Posts listed per locale in `/llms.txt` |
 | `recent_posts_limit` | `6` | Posts shown in sidebar "Recent" |
 | `related_posts_limit` | `3` | Posts shown in "Related Posts" |
 | `new_post_days` | `14` | Age at which `[NEW]` badge appears |

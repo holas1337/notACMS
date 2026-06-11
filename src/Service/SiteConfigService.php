@@ -87,6 +87,11 @@ final class SiteConfigService implements SiteConfigServiceInterface
         return (int) ($this->load()['rss_limit'] ?? self::DEFAULT_RSS_LIMIT);
     }
 
+    public function getLlmsLimit(): int
+    {
+        return (int) ($this->load()['llms_limit'] ?? self::DEFAULT_LLMS_LIMIT);
+    }
+
     public function getRecentPostsLimit(): int
     {
         return (int) ($this->load()['recent_posts_limit'] ?? self::DEFAULT_RECENT_POSTS_LIMIT);

@@ -92,7 +92,7 @@ HTTP Request
 | `SidebarExtension` | `src/Twig/SidebarExtension.php` | Twig function `sidebar_data(locale)` — lazily builds `SidebarData` (recent posts, categories, tags, archive months) only when sidebar is rendered; gracefully returns `null` on error |
 | `BreadcrumbExtension` | `src/Twig/BreadcrumbExtension.php` | Twig function `breadcrumbs(contentItem, locale, options)` — returns breadcrumb array for any page type (home, blog list/post, archive, category, tag, static page) |
 
-**Global metadata:** `local/content/_site.yaml` — site name, base URL, locales config (first key = default), social links, and all site-level numeric/string settings (see Key Configuration Files). Loaded by `SiteConfigService` and exposed to templates via Twig extensions: `SiteConfigExtension` (Twig globals: `site_name`, `site_base_url`, `site_description`, `site_social`, `site_author`, `site_locales`, `site_locales_list`, `site_default_locale`, `image_variant_widths`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`), `TranslationMapTwigExtension` (Twig global: `translation_map`), `ContentTwigExtension` (Twig functions: `content_url()`, `content_item()`), `LangSwitcherExtension`, `SidebarExtension`, and `BreadcrumbExtension`. Additionally, `cf_analytics_token` is registered as a Twig global in `config/packages/twig.yaml`, bound to the `CF_ANALYTICS_TOKEN` environment variable — used in `base.html.twig` to conditionally load the Cloudflare Web Analytics beacon script.
+**Global metadata:** `local/content/_site.yaml` — site name, base URL, locales config (first key = default), social links, and all site-level numeric/string settings (see Key Configuration Files). Loaded by `SiteConfigService` and exposed to templates via Twig extensions: `SiteConfigExtension` (Twig globals: `site_name`, `site_base_url`, `site_description`, `site_social`, `site_author`, `site_locales`, `site_locales_list`, `site_default_locale`, `image_variant_widths`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`), `TranslationMapTwigExtension` (Twig global: `translation_map`), `ContentTwigExtension` (Twig functions: `content_url()`, `content_item()`), `LangSwitcherExtension`, `SidebarExtension`, and `BreadcrumbExtension`. Additionally, `cf_analytics_token` and `notacms_project_url` are registered as Twig globals in `config/packages/twig.yaml`; `cf_analytics_token` is bound to the `CF_ANALYTICS_TOKEN` environment variable and used in `base.html.twig` to conditionally load the Cloudflare Web Analytics beacon script; `notacms_project_url` holds the notACMS GitHub URL used in `feed/llms.txt.twig`.
 
 ---
 
@@ -132,7 +132,7 @@ All services are behind interfaces for testability. Controllers depend only on i
 
 | Service | Interface | Purpose |
 |---|---|---|
-| `SiteConfigService` | `SiteConfigServiceInterface` | Central locale authority and config source: `getLocales()`, `getDefaultLocale()`, `getLocaleConfig()`, `getSiteConfig()`, `detectLocaleFromPath()`, `getUrlPrefix()`, `getBaseUrl()`, `getPostsPerPage()`, `getRssLimit()`, `getRecentPostsLimit()`, `getRelatedPostsLimit()`, `getImageVariantWidths()`, `getImageQuality()`, `getImageMagickFlags()`, `getNewPostDays()`, `getComingSoonRevealDays()`. Reads `local/content/_site.yaml`; locale list derived from `array_keys(site.locales)`, first key = default |
+| `SiteConfigService` | `SiteConfigServiceInterface` | Central locale authority and config source: `getLocales()`, `getDefaultLocale()`, `getLocaleConfig()`, `getSiteConfig()`, `detectLocaleFromPath()`, `getUrlPrefix()`, `getBaseUrl()`, `getPostsPerPage()`, `getRssLimit()`, `getLlmsLimit()`, `getRecentPostsLimit()`, `getRelatedPostsLimit()`, `getImageVariantWidths()`, `getImageQuality()`, `getImageMagickFlags()`, `getNewPostDays()`, `getComingSoonRevealDays()`. Reads `local/content/_site.yaml`; locale list derived from `array_keys(site.locales)`, first key = default |
 | `TurnstileValidator` | `TurnstileValidatorInterface` | Verifies Cloudflare Turnstile CAPTCHA tokens against siteverify API |
 | `StructuredDataBuilder` | `StructuredDataBuilderInterface` | Builds typed PHP arrays for JSON-LD structured data (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); automatic empty-value stripping |
 | `ContactFormConfig` | — (value object) | Holds contact form config from `_site.yaml`: `email`, `from`, `fromName`, `topic` |
@@ -171,7 +171,7 @@ Each generated route gets a `locale` default parameter, so controller methods re
 | `ProjectsController` | `GET /projects/` | `GET /pl/realizacje/` | `GET /de/projekte/` |
 | `SearchController` | `GET /search/` | `GET /pl/szukaj/` | `GET /de/suchen/` |
 | `ErrorController` | `GET /404/`, `GET /500/` | `GET /pl/404/`, `GET /pl/500/` | `GET /de/404/`, `GET /de/500/` |
-| `PageController` | `GET /{slug}/`, `GET /sitemap.xml`, `GET /robots.txt` | `GET /pl/{slug}/` | `GET /de/{slug}/` |
+| `PageController` | `GET /{slug}/`, `GET /sitemap.xml`, `GET /robots.txt`, `GET /llms.txt` | `GET /pl/{slug}/` | `GET /de/{slug}/` |
 | `StyleguideController` | `GET /styleguide/` (dev only) | — | — |
 | `DraftPreviewController` | `GET /dev/drafts/toggle` | (same, no locale prefix) | (same) |
 | `ScheduledPreviewController` | `GET /dev/scheduled/toggle` | (same, no locale prefix) | (same) |
@@ -202,7 +202,7 @@ Route naming convention: `<name>_pl` / `<name>_en` (e.g. `home_pl`, `blog_list_e
 - Recompresses all `.webp` originals in `public/static/media/` in-place via `ImageResizer::optimize()` (`optimizeOriginals()`) — strips EXIF metadata and applies max WebP encoder effort; skips variant files (`-640w`/`-960w` suffix); runs before variant generation so variants are derived from already-stripped sources
 - Generates responsive image variants (`-640w.webp`, `-960w.webp`) for all `.webp` images wider than 640px using `ImageResizer::resize()` (`generateResponsiveImages()`); used by `srcset` in templates and `srcset_media` Twig filter
 - `renderPages()` handles all HTML rendering (posts, listings, pages, error pages, sitemap, RSS) and returns a `RenderResult` value object with `pages`, `skipped`, and `errors` counts
-- Renders sitemap and RSS feeds (EN at `/feed/`, PL at `/pl/feed/`)
+- Renders sitemap, RSS feeds (EN at `/feed/`, PL at `/pl/feed/`), and `/llms.txt`
 
 **Search index** — Pagefind is run via `npx pagefind@1.5.0 --site public/static` after `app:build`. There is no PHP command for this step. The version is pinned because later Pagefind releases ship a jemalloc-linked ARM64 binary that crashes on 16K-page kernels (e.g. Raspberry Pi 5) — tracked upstream at [Pagefind#1147](https://github.com/Pagefind/pagefind/issues/1147).
 
@@ -299,7 +299,8 @@ templates/
 ├── feed/
 │   ├── rss.xml.twig            ← RSS with content:encoded, categories
 │   ├── robots.txt.twig         ← served by PageController at /robots.txt
-│   └── sitemap.xml.twig        ← XML sitemap with hreflang + image entries
+│   ├── sitemap.xml.twig        ← XML sitemap with hreflang + image entries
+│   └── llms.txt.twig           ← LLM context file served by PageController at /llms.txt
 ├── email/
 │   └── contact.html.twig       ← email template for contact form submissions
 └── components/                 ← reusable partials ({{ include('components/...') }})
@@ -351,7 +352,7 @@ The contact page (`/contact/`, `/pl/kontakt/`) is **pre-rendered static HTML** b
 
 | File | Purpose |
 |---|---|
-| `local/content/_site.yaml` | **Locale list** (keys of `site.locales`, first = default), per-locale metadata (`og_locale`, `label`, `date_format`, `tagline`), site name, base URL (`base_url`), social links, contact form config (`contact_form.email/from/from_name/topic`), `posts_per_page`, `rss_limit`, `recent_posts_limit`, `related_posts_limit`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`, `image_variant_widths`, `image_quality`, `image_magick_flags`. JSON Schema: `config/schema/site.schema.json` |
+| `local/content/_site.yaml` | **Locale list** (keys of `site.locales`, first = default), per-locale metadata (`og_locale`, `label`, `date_format`, `tagline`), site name, base URL (`base_url`), social links, contact form config (`contact_form.email/from/from_name/topic`), `posts_per_page`, `rss_limit`, `llms_limit`, `recent_posts_limit`, `related_posts_limit`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`, `image_variant_widths`, `image_quality`, `image_magick_flags`. JSON Schema: `config/schema/site.schema.json` |
 | `local/content/_routes.yaml` | Locale-specific URL path overrides for structural routes (e.g. `blog_list: {pl: /wpisy/}`). JSON Schema: `config/schema/routes.schema.json` |
 | `local/content/_tags.yaml` | Tag translations: canonical (default locale) tag → `{locale: equivalent}`. Used by `TagTranslationService::translate()` for language switcher on tag pages. JSON Schema: `config/schema/tags.schema.json` |
 | `config/services.yaml` | `notacms_content` parameter (default: `%kernel.project_dir%/local/content`, overridden to `tests/Fixtures/content` in test env); `notacms.local_dir` parameter (default: `local`, overridden to `tests/Fixtures` in test env to decouple Twig paths from instance templates); `notacms_static_dir` parameter (default: `%kernel.project_dir%/public/static`); service auto-discovery for `NotACms\` and `NotACms\Local\` namespaces |

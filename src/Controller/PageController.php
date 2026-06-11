@@ -20,6 +20,32 @@ final class PageController extends AbstractController
     ) {
     }
 
+    #[Route('/llms.txt', name: 'llms_txt')]
+    public function llmsTxt(): Response
+    {
+        $llmsLimit = $this->siteConfigService->getLlmsLimit();
+        $postsByLocale = [];
+        foreach ($this->siteConfigService->getLocales() as $locale) {
+            $postsByLocale[$locale] = array_slice($this->contentService->getTree($locale)->getAllPosts(), 0, $llmsLimit);
+        }
+
+        $defaultLocale = $this->siteConfigService->getDefaultLocale();
+        $contentTree = $this->contentService->getTree($defaultLocale);
+        $homeUrl = $this->generateUrl('home_'.$defaultLocale);
+        $pages = array_values(array_filter(
+            $contentTree->getAllPages(),
+            fn (ContentItem $contentItem): bool => !$contentItem->isDynamic() && '' !== $contentItem->url() && $homeUrl !== $contentItem->url(),
+        ));
+
+        $response = $this->render('feed/llms.txt.twig', [
+            'posts_by_locale' => $postsByLocale,
+            'pages' => $pages,
+        ]);
+        $response->headers->set('Content-Type', 'text/plain; charset=UTF-8');
+
+        return $response;
+    }
+
     #[Route('/robots.txt', name: 'robots')]
     public function robots(): Response
     {

@@ -16,6 +16,8 @@ interface SiteConfigServiceInterface
 
     public const int DEFAULT_RSS_LIMIT = 20;
 
+    public const int DEFAULT_LLMS_LIMIT = 5;
+
     public const int DEFAULT_RECENT_POSTS_LIMIT = 6;
 
     public const int DEFAULT_RELATED_POSTS_LIMIT = 3;
@@ -49,6 +51,8 @@ interface SiteConfigServiceInterface
     public function getPostsPerPage(): int;
 
     public function getRssLimit(): int;
+
+    public function getLlmsLimit(): int;
 
     public function getRecentPostsLimit(): int;
 

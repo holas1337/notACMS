@@ -5,6 +5,7 @@ twig:
     file_name_pattern: '*.twig'
     globals:
         cf_analytics_token: '%env(CF_ANALYTICS_TOKEN)%'
+        notacms_project_url: 'https://github.com/holas1337/notACMS'
 
 when@test:
     twig:

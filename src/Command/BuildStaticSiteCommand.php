@@ -201,7 +201,7 @@ final class BuildStaticSiteCommand extends Command
             }
         }
 
-        $feedUrls = [$this->route('robots'), $this->route('sitemap')];
+        $feedUrls = [$this->route('robots'), $this->route('sitemap'), $this->route('llms_txt')];
         foreach ($this->siteConfigService->getLocales() as $locale) {
             $feedUrls[] = $this->route('rss_'.$locale);
         }
