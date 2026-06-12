@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-06-13
+
+### Fixed
+
+- **nginx `charset utf-8`**: plain-text responses (`/llms.txt`, `/robots.txt`) were served without a charset declaration — browsers rendered non-ASCII characters as garbage. `charset utf-8;` added at the server-block level in `docker/nginx.conf.template`.
+- **Ambiguous directory key warning deferred**: the "Ambiguous directory key" build warning fired during tree construction regardless of whether the bare key was ever used in `content_item()` / `content_url()`. The warning is now emitted only when an ambiguous bare-key lookup actually occurs (`findByDirectoryKey()`), and fires at most once per ambiguous key per build.
+
+### Added
+
+- **Theme Building and Security demo pages** — two new documentation pages in all four locales (EN/DE/FR/PL) added to the demo theme: `theme-building/` (weight 45, covers template layer hierarchy, context contracts, Twig API, ContentItem API, portability rules) and `security/` (weight 80, covers threat model, security features, CSRF design, deployment best practices). Navigation template and `page/doc.html.twig` updated to register both pages in the nav dropdown, sidebar, and prev/next chain.
+
+### Internal
+
+- **Docs references updated**: `CLAUDE.md` architecture reference and `AGENTS.md` docs inventory updated to include `SECURITY.md` and `docs/THEME_BUILDING.md` (count: nine → ten).
+
 ## [1.2.0] - 2026-06-12
 
 ### Breaking changes

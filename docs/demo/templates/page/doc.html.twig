@@ -13,11 +13,13 @@
 {# Determine sidebar active state from current path #}
 {% set current_path = app.request.pathInfo %}
 {% set doc_pages = [
-    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: content_item('manual', locale).menuLabel() ?? 'Manual' },
-    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: content_item('architecture', locale).menuLabel() ?? 'Architecture' },
-    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: content_item('customization', locale).menuLabel() ?? 'Customization' },
-    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: content_item('locales', locale).menuLabel() ?? 'Locales' },
-    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: content_item('styleguide', locale).menuLabel() ?? 'Design Reference' },
+    { dir: 'manual',          slug: 'manual',           icon: 'ph-book-open',      label: content_item('manual', locale).menuLabel() ?? 'Manual' },
+    { dir: 'architecture',    slug: 'architecture',     icon: 'ph-tree-structure', label: content_item('architecture', locale).menuLabel() ?? 'Architecture' },
+    { dir: 'customization',   slug: 'customization',    icon: 'ph-sliders',        label: content_item('customization', locale).menuLabel() ?? 'Customization' },
+    { dir: 'theme-building',  slug: 'theme-building',   icon: 'ph-paint-brush',    label: content_item('theme-building', locale).menuLabel() ?? 'Theme Building' },
+    { dir: 'locales',         slug: 'locales',          icon: 'ph-globe',          label: content_item('locales', locale).menuLabel() ?? 'Locales' },
+    { dir: 'styleguide',      slug: 'design-reference', icon: 'ph-palette',        label: content_item('styleguide', locale).menuLabel() ?? 'Design Reference' },
+    { dir: 'security',        slug: 'security',         icon: 'ph-shield-check',   label: content_item('security', locale).menuLabel() ?? 'Security' },
 ] %}
 
 {# Prev/next navigation — derived from doc_pages #}
