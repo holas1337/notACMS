@@ -16,7 +16,7 @@ final readonly class ContentItemFactory
      *
      * @param array<string, mixed> $frontMatter
      */
-    public static function create(array $frontMatter = [], string $htmlContent = '<p>Test content</p>', string $locale = self::DEFAULT_LOCALE, ?string $directoryKey = null, ?string $sourcePath = null, string $url = ''): ContentItem
+    public static function create(array $frontMatter = [], string $htmlContent = '<p>Test content</p>', string $locale = self::DEFAULT_LOCALE, ?string $directoryKey = null, ?string $sourcePath = null, string $url = '', bool $isPost = false): ContentItem
     {
         return new ContentItem(
             frontMatter: array_merge(['title' => self::DEFAULT_TITLE], $frontMatter),
@@ -26,6 +26,7 @@ final readonly class ContentItemFactory
             sourcePath: $sourcePath,
             isIndexItem: false,
             directoryKey: $directoryKey,
+            isPostItem: $isPost,
         );
     }
 
@@ -38,6 +39,7 @@ final readonly class ContentItemFactory
             frontMatter: array_merge(['date' => '2024-01-01'], $frontMatter),
             directoryKey: $directoryKey ?? 'test-post',
             url: $url,
+            isPost: true,
         );
     }
 
@@ -50,6 +52,7 @@ final readonly class ContentItemFactory
             frontMatter: array_merge(['date' => '2099-12-31'], $frontMatter),
             directoryKey: $directoryKey ?? 'scheduled-post',
             url: $url,
+            isPost: true,
         );
     }
 
@@ -62,6 +65,7 @@ final readonly class ContentItemFactory
             frontMatter: array_merge(['draft' => true], $frontMatter),
             directoryKey: $directoryKey ?? 'draft-post',
             url: $url,
+            isPost: true,
         );
     }
 
@@ -74,6 +78,7 @@ final readonly class ContentItemFactory
             frontMatter: array_merge(['pinned' => '2099-01-01'], $frontMatter),
             directoryKey: $directoryKey ?? 'pinned-post',
             url: $url,
+            isPost: true,
         );
     }
 

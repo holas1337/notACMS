@@ -12,7 +12,7 @@
         {% if post.date() %}
             {% set days_until = (((post.date()|date('U') - "now"|date('U')) / 86400)|round(0, 'ceil')) %}
             {% if days_until <= coming_soon_reveal_days %}
-                <p class="coming-soon__date">{{ 'coming_soon.publishing'|trans }}: {{ post.date()|date('Y-m-d') }}</p>
+                <p class="coming-soon__date">{{ 'coming_soon.publishing'|trans({'%date%': post.date()|date('Y-m-d')}) }}</p>
             {% endif %}
         {% endif %}
         <a href="{{ path('home_' ~ locale) }}" class="btn btn-primary">{{ 'error.go_home'|trans }}</a>

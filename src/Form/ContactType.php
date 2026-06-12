@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace NotACms\Form;
 
-use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -18,11 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class ContactType extends AbstractType
 {
     public const string FIELD_TURNSTILE = 'turnstile_token';
-
-    public function __construct(
-        private readonly SiteConfigServiceInterface $siteConfigService,
-    ) {
-    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -63,7 +57,6 @@ final class ContactType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'locale' => $this->siteConfigService->getDefaultLocale(),
             'csrf_protection' => false,
             'attr' => ['id' => 'contact-form', 'novalidate' => 'novalidate'],
         ]);

@@ -3,17 +3,23 @@
 {% set blog_url = path('blog_list_' ~ locale) %}
 {% set about_url = content_url('about', locale) %}
 {% set contact_url = path('contact_' ~ locale) %}
+{# Post URLs are date-first (not /blog/-prefixed), and list pages carry no `content`,
+   so the blog section is detected from the URL shape. Revisit once ContentItem::isPost lands. #}
 {% set is_blog = current_path starts with blog_url or current_path matches '#^/([a-z]{2}/)?\\d{4}/#' %}
 
+{% set _home_item    = content_item('home',    locale) %}
+{% set _blog_item    = content_item('blog',    locale) %}
+{% set _about_item   = content_item('about',   locale) %}
+{% set _contact_item = content_item('contact', locale) %}
 {% set nav_items = [
-    { label: content_item('home', locale).menuLabel(),    url: home_url,    active: current_path is same as(home_url) },
-    { label: content_item('blog', locale).menuLabel(),    url: blog_url,    active: is_blog },
-    { label: content_item('about', locale).menuLabel(),   url: about_url,   active: current_path is same as(about_url) },
-    { label: content_item('contact', locale).menuLabel(), url: contact_url, active: current_path is same as(contact_url) },
+    { label: _home_item    ? _home_item.menuLabel()    : 'nav.label.home'|trans,    url: home_url,    active: current_path is same as(home_url) },
+    { label: _blog_item    ? _blog_item.menuLabel()    : 'nav.label.blog'|trans,    url: blog_url,    active: is_blog },
+    { label: _about_item   ? _about_item.menuLabel()   : 'nav.label.about'|trans,   url: about_url,   active: current_path is same as(about_url) },
+    { label: _contact_item ? _contact_item.menuLabel() : 'nav.label.contact'|trans, url: contact_url, active: current_path is same as(contact_url) },
 ] %}
 
 <nav aria-label="{{ 'nav.main'|trans }}">
-    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="{{ 'nav.menu'|trans }}">
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="{{ 'nav.menu'|trans }}" title="{{ 'nav.menu'|trans }}">
         <span class="nav-toggle__bar"></span>
         <span class="nav-toggle__bar"></span>
         <span class="nav-toggle__bar"></span>

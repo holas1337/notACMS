@@ -24,8 +24,14 @@ final class ContentTree
     /** @var array<string, ContentItem> */
     private array $directoryKeyMap = [];
 
+    /** @var array<string, string|false> basename → full directory key, false when ambiguous */
+    private array $directoryKeyBasenames = [];
+
     /** @var ContentItem[]|null */
     private ?array $sortedPosts = null;
+
+    /** @var list<string> */
+    private array $warnings = [];
 
     public function __construct(
         private readonly bool $includeDrafts = false,
@@ -37,25 +43,87 @@ final class ContentTree
     {
         $this->posts[] = $contentItem;
         $this->sortedPosts = null;
-        if ('' !== $contentItem->url() && '0' !== $contentItem->url()) {
-            $this->urlMap[$contentItem->url()] = $contentItem;
-        }
-
-        if (null !== $contentItem->directoryKey() && !array_key_exists($contentItem->directoryKey(), $this->directoryKeyMap)) {
-            $this->directoryKeyMap[$contentItem->directoryKey()] = $contentItem;
-        }
+        $this->registerInMaps($contentItem);
     }
 
     public function addPage(ContentItem $contentItem): void
     {
         $this->pages[] = $contentItem;
-        if ('' !== $contentItem->url() && '0' !== $contentItem->url()) {
-            $this->urlMap[$contentItem->url()] = $contentItem;
+        $this->registerInMaps($contentItem);
+    }
+
+    public function addWarning(string $warning): void
+    {
+        $this->warnings[] = $warning;
+    }
+
+    /** @return list<string> */
+    public function getWarnings(): array
+    {
+        return $this->warnings;
+    }
+
+    private function registerInMaps(ContentItem $contentItem): void
+    {
+        if (!$this->isVisible($contentItem)) {
+            return;
         }
 
-        if (null !== $contentItem->directoryKey() && !array_key_exists($contentItem->directoryKey(), $this->directoryKeyMap)) {
-            $this->directoryKeyMap[$contentItem->directoryKey()] = $contentItem;
+        $url = $contentItem->url();
+        if ('' !== $url && '0' !== $url) {
+            $existing = $this->urlMap[$url] ?? null;
+            if ($existing instanceof ContentItem && $existing->sourcePath !== $contentItem->sourcePath) {
+                $this->addWarning(sprintf(
+                    'Duplicate URL %s: %s overwritten by %s',
+                    $url,
+                    $existing->sourcePath ?? '?',
+                    $contentItem->sourcePath ?? '?',
+                ));
+            }
+
+            $this->urlMap[$url] = $contentItem;
         }
+
+        $this->registerDirectoryKey($contentItem);
+    }
+
+    private function registerDirectoryKey(ContentItem $contentItem): void
+    {
+        $directoryKey = $contentItem->directoryKey();
+        if (null === $directoryKey) {
+            return;
+        }
+
+        if (!array_key_exists($directoryKey, $this->directoryKeyMap)) {
+            $this->directoryKeyMap[$directoryKey] = $contentItem;
+        }
+
+        $basename = basename($directoryKey);
+        if ($basename === $directoryKey) {
+            return;
+        }
+
+        if (!array_key_exists($basename, $this->directoryKeyBasenames)) {
+            $this->directoryKeyBasenames[$basename] = $directoryKey;
+
+            return;
+        }
+
+        if (false !== $this->directoryKeyBasenames[$basename] && $this->directoryKeyBasenames[$basename] !== $directoryKey) {
+            $this->addWarning(sprintf(
+                'Ambiguous directory key "%s" (%s vs %s) — use the full path in content_item()/content_url()',
+                $basename,
+                $this->directoryKeyBasenames[$basename],
+                $directoryKey,
+            ));
+            $this->directoryKeyBasenames[$basename] = false;
+        }
+    }
+
+    private function isVisible(ContentItem $contentItem): bool
+    {
+        return ($this->includeDrafts || !$contentItem->isDraft())
+            && ($this->includeScheduled || !$contentItem->isScheduled());
     }
 
     public function findByUrl(string $url): ?ContentItem
@@ -65,7 +133,13 @@ final class ContentTree
 
     public function findByDirectoryKey(string $directoryKey): ?ContentItem
     {
-        return $this->directoryKeyMap[$directoryKey] ?? null;
+        if (isset($this->directoryKeyMap[$directoryKey])) {
+            return $this->directoryKeyMap[$directoryKey];
+        }
+
+        $fullKey = $this->directoryKeyBasenames[$directoryKey] ?? null;
+
+        return is_string($fullKey) ? ($this->directoryKeyMap[$fullKey] ?? null) : null;
     }
 
     /** @return ContentItem[] */
@@ -74,7 +148,7 @@ final class ContentTree
         if (null === $this->sortedPosts) {
             $posts = array_values(array_filter(
                 $this->posts,
-                fn (ContentItem $contentItem): bool => ($this->includeDrafts || !$contentItem->isDraft()) && ($this->includeScheduled || !$contentItem->isScheduled()),
+                $this->isVisible(...),
             ));
             usort($posts, function (ContentItem $a, ContentItem $b): int {
                 if ($a->isPinned() !== $b->isPinned()) {
@@ -248,7 +322,10 @@ final class ContentTree
     /** @return ContentItem[] */
     public function getAllPages(): array
     {
-        $pages = $this->pages;
+        $pages = array_values(array_filter(
+            $this->pages,
+            $this->isVisible(...),
+        ));
         usort($pages, fn (ContentItem $a, ContentItem $b): int => $a->menuWeight() <=> $b->menuWeight());
 
         return $pages;
@@ -259,7 +336,16 @@ final class ContentTree
     {
         return array_values(array_filter(
             $this->pages,
-            fn (ContentItem $contentItem): bool => !$contentItem->isDynamic(),
+            fn (ContentItem $contentItem): bool => $this->isVisible($contentItem) && !$contentItem->isDynamic(),
+        ));
+    }
+
+    /** @return ContentItem[] non-dynamic, visible pages with a real URL, excluding the home page */
+    public function getPublishableStaticPages(string $homeUrl): array
+    {
+        return array_values(array_filter(
+            $this->getStaticPages(),
+            fn (ContentItem $contentItem): bool => '' !== $contentItem->url() && $contentItem->url() !== $homeUrl,
         ));
     }
 
@@ -282,10 +368,26 @@ final class ContentTree
         return array_merge($this->posts, $this->pages);
     }
 
+    public function getSeriesPosition(ContentItem $contentItem): int
+    {
+        $series = $contentItem->series();
+        if (null === $series) {
+            return 1;
+        }
+
+        foreach ($this->getSeriesPosts($series) as $index => $seriesPost) {
+            if ($seriesPost->isSame($contentItem)) {
+                return $index + 1;
+            }
+        }
+
+        return 1;
+    }
+
     public function getAdjacentPosts(ContentItem $contentItem): AdjacentPosts
     {
         $posts = array_values($this->getAllPosts());
-        $currentIndex = array_find_key($posts, fn ($post): bool => $post->url() === $contentItem->url());
+        $currentIndex = array_find_key($posts, fn (ContentItem $post): bool => $post->isSame($contentItem));
 
         if (null === $currentIndex) {
             return new AdjacentPosts(prev: null, next: null);

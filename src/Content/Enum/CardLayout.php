@@ -14,6 +14,6 @@ enum CardLayout: string
     /** @return list<string> */
     public static function cycle(): array
     {
-        return array_map(fn (self $l) => $l->value, self::cases());
+        return array_map(fn (self $cardLayout) => $cardLayout->value, self::cases());
     }
 }

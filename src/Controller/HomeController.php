@@ -22,9 +22,8 @@ final class HomeController extends AbstractController
     #[LocalizedRoute('home', path: '/')]
     public function home(string $locale): Response
     {
-        $contentTree = $this->contentService->getTree($locale);
         $prefix = $this->siteConfigService->getUrlPrefix($locale);
-        $page = $contentTree->findByUrl($prefix);
+        $page = $this->contentService->findByUrl($prefix, $locale);
 
         return $this->render('page/home.html.twig', [
             'content' => $page,

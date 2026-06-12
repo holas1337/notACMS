@@ -13,18 +13,8 @@
 {% block body %}
 {{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(content, locale, {home_label: site_name}) }) }}
 
-<div class="projects-page" data-pagefind-body>
-    <article>
-        <header class="page-header">
-            <h1 data-pagefind-meta="title">{{ content.title() }}</h1>
-            {% if content.description() %}
-                <p class="page-header-desc">{{ content.description() }}</p>
-            {% endif %}
-        </header>
-        <div class="page-body prose">
-            {{ content.htmlContent|srcset_media|raw }}
-        </div>
-    </article>
+<div class="projects-page">
+    {{ include('components/page_article.html.twig', { show_image: false }) }}
 
     {% if featured_projects is defined and featured_projects is not empty %}
     <ul class="projects-list">

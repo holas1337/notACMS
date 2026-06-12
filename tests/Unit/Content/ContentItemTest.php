@@ -329,12 +329,19 @@ final class ContentItemTest extends TestCase
         self::assertFalse($item->isPinned());
     }
 
-    public function testIsPinnedReturnsFalseForToday(): void
+    public function testIsPinnedReturnsTrueForToday(): void
     {
         $today = (new \DateTimeImmutable('today'))->format('Y-m-d');
         $item = ContentItemFactory::create(['pinned' => $today]);
 
-        self::assertFalse($item->isPinned());
+        self::assertTrue($item->isPinned());
+    }
+
+    public function testIsPinnedReturnsTrueForBooleanTrue(): void
+    {
+        $item = ContentItemFactory::create(['pinned' => true]);
+
+        self::assertTrue($item->isPinned());
     }
 
     public function testIsPinnedHandlesInvalidDate(): void

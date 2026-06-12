@@ -66,6 +66,7 @@ final class BreadcrumbExtensionTest extends TestCase
             htmlContent: '',
             locale: 'en',
             directoryKey: 'blog/' . $title,
+            isPostItem: true,
         );
     }
 
@@ -78,7 +79,7 @@ final class BreadcrumbExtensionTest extends TestCase
         if (null !== $blog) {
             $tree->addPage($blog);
         }
-        $this->contentService->method('getTree')->willReturn($tree);
+        $this->contentService->method('findByDirectoryKey')->willReturnCallback(static fn (string $directoryKey, string $locale) => $tree->findByDirectoryKey($directoryKey));
     }
 
     // ---- Home crumb ----
@@ -93,10 +94,10 @@ final class BreadcrumbExtensionTest extends TestCase
         $result = $this->extension->getBreadcrumbs($home, 'en');
 
         self::assertCount(2, $result);
-        self::assertSame('Start', $result[0]['label']);
-        self::assertSame('/', $result[0]['url']);
-        self::assertSame('Home Page', $result[1]['label']);
-        self::assertNull($result[1]['url']);
+        self::assertSame('Start', $result[0]->label);
+        self::assertSame('/', $result[0]->url);
+        self::assertSame('Home Page', $result[1]->label);
+        self::assertNull($result[1]->url);
     }
 
     public function testStaticPageHomeCrumbFallsBackToTitleWhenNoMenuLabel(): void
@@ -109,7 +110,7 @@ final class BreadcrumbExtensionTest extends TestCase
 
         $result = $this->extension->getBreadcrumbs($page, 'en');
 
-        self::assertSame('Home Page', $result[0]['label']);
+        self::assertSame('Home Page', $result[0]->label);
     }
 
     public function testHomeCrumbOptionOverridesMenuLabel(): void
@@ -122,7 +123,7 @@ final class BreadcrumbExtensionTest extends TestCase
 
         $result = $this->extension->getBreadcrumbs($page, 'en', ['home_label' => 'notACMS']);
 
-        self::assertSame('notACMS', $result[0]['label']);
+        self::assertSame('notACMS', $result[0]->label);
     }
 
     // ---- Blog list crumbs ----
@@ -137,9 +138,9 @@ final class BreadcrumbExtensionTest extends TestCase
         $result = $this->extension->getBreadcrumbs(null, 'en');
 
         self::assertCount(2, $result);
-        self::assertSame('Start', $result[0]['label']);
-        self::assertSame('Articles', $result[1]['label']);
-        self::assertSame('/blog/', $result[1]['url']);
+        self::assertSame('Start', $result[0]->label);
+        self::assertSame('Articles', $result[1]->label);
+        self::assertSame('/blog/', $result[1]->url);
     }
 
     public function testBlogListWithBlogContentItem(): void
@@ -152,7 +153,7 @@ final class BreadcrumbExtensionTest extends TestCase
         $result = $this->extension->getBreadcrumbs($blog, 'en');
 
         self::assertCount(2, $result);
-        self::assertSame('Articles', $result[1]['label']);
+        self::assertSame('Articles', $result[1]->label);
     }
 
     public function testBlogListFilteredByCategory(): void
@@ -168,8 +169,8 @@ final class BreadcrumbExtensionTest extends TestCase
         ]);
 
         self::assertCount(3, $result);
-        self::assertSame('tutorials', $result[2]['label']);
-        self::assertNull($result[2]['url']);
+        self::assertSame('tutorials', $result[2]->label);
+        self::assertNull($result[2]->url);
     }
 
     public function testBlogListFilteredByTag(): void
@@ -185,7 +186,7 @@ final class BreadcrumbExtensionTest extends TestCase
         ]);
 
         self::assertCount(3, $result);
-        self::assertSame('#symfony', $result[2]['label']);
+        self::assertSame('#symfony', $result[2]->label);
     }
 
     public function testBlogListFilteredByArchive(): void
@@ -201,7 +202,7 @@ final class BreadcrumbExtensionTest extends TestCase
         ]);
 
         self::assertCount(3, $result);
-        self::assertSame('January 2024', $result[2]['label']);
+        self::assertSame('January 2024', $result[2]->label);
     }
 
     // ---- Blog post crumbs ----
@@ -218,13 +219,13 @@ final class BreadcrumbExtensionTest extends TestCase
         $result = $this->extension->getBreadcrumbs($post, 'en');
 
         self::assertCount(4, $result);
-        self::assertSame('Home Page', $result[0]['label']);
-        self::assertSame('Blog', $result[1]['label']);
-        self::assertSame('/blog/', $result[1]['url']);
-        self::assertSame('tutorials', $result[2]['label']);
-        self::assertSame('/blog/category/', $result[2]['url']);
-        self::assertSame('My Post', $result[3]['label']);
-        self::assertNull($result[3]['url']);
+        self::assertSame('Home Page', $result[0]->label);
+        self::assertSame('Blog', $result[1]->label);
+        self::assertSame('/blog/', $result[1]->url);
+        self::assertSame('tutorials', $result[2]->label);
+        self::assertSame('/blog/category/', $result[2]->url);
+        self::assertSame('My Post', $result[3]->label);
+        self::assertNull($result[3]->url);
     }
 
     public function testBlogPostWithoutCategory(): void
@@ -239,7 +240,7 @@ final class BreadcrumbExtensionTest extends TestCase
         $result = $this->extension->getBreadcrumbs($post, 'en');
 
         self::assertCount(3, $result);
-        self::assertSame('No Category Post', $result[2]['label']);
+        self::assertSame('No Category Post', $result[2]->label);
     }
 
     // ---- getLabel edge cases ----
@@ -257,6 +258,6 @@ final class BreadcrumbExtensionTest extends TestCase
         $result = $this->extension->getBreadcrumbs($index, 'en');
 
         self::assertCount(2, $result);
-        self::assertSame('All Posts', $result[1]['label']);
+        self::assertSame('All Posts', $result[1]->label);
     }
 }

@@ -1,5 +1,7 @@
 # Customisation Guide
 
+> Looking for *what your templates can use* (context variables, Twig functions, globals, required translation keys)? That contract lives in [THEME_BUILDING.md](THEME_BUILDING.md). This guide covers *how to override* things.
+
 notACMS is designed to be customised without touching core files. Everything goes
 in a `local/` directory at the project root — it is gitignored, so your changes
 are never overwritten by upstream updates.
@@ -321,6 +323,7 @@ Most behaviour values are read from `local/content/_site.yaml` under the `site:`
 |---|---|---|
 | `posts_per_page` | `10` | Posts per listing page |
 | `rss_limit` | `20` | Items in the RSS feed |
+| `llms_limit` | `5` | Posts listed per locale in `/llms.txt` |
 | `recent_posts_limit` | `6` | Posts shown in sidebar "Recent" |
 | `related_posts_limit` | `3` | Posts shown in "Related Posts" |
 | `new_post_days` | `14` | Age at which `[NEW]` badge appears |
@@ -615,22 +618,22 @@ The `docs/customization/` directory contains complete, copy-paste-ready examples
 | `self-hosted-fonts` | Full base replacement + SCSS | Add custom fonts — shows preload, `@font-face`, and replacing system fonts |
 | `php-service-decorator` | PHP `#[AsDecorator]` | Skip Turnstile validation — shows `NotACms\Local\` namespace and decorator pattern |
 | `twig-filter` | PHP `#[AsTwigFilter]` | Add `|excerpt` filter — shows `NotACms\Local\` namespace and Twig attribute |
-| `old-template` | Full standalone override | Restore old template after core redesign — templates, SCSS, JS, fonts, translations, images all self-contained |
 
 ---
 
 ## Upgrading from an older version
 
-If you were running notACMS before the core redesign, the new default templates are incompatible with the old layout. The `docs/customization/old-template/` directory is a complete snapshot of the pre-redesign theme — all templates, SCSS, fonts, images, and translations — packaged as a ready-to-drop-in local override.
+If you were running notACMS before the core redesign (pre-1.1.0), the `old-template` compatibility package shipped through v1.1.x. It was removed in v1.2.0 — if you still need it, copy `docs/customization/old-template/` from a v1.1.x tag.
 
 ```bash
+# from a v1.1.x checkout:
 cp -r docs/customization/old-template/. local/
 ddev build
 ```
 
 Your site will render exactly as it did before. You can then adopt new design elements selectively by removing individual files from `local/`.
 
-If you had your own customisations on top of the old template (custom SCSS, component overrides, etc.), see `docs/customization/old-template/README.md` for migration notes.
+If you had your own customisations on top of the old template (custom SCSS, component overrides, etc.), see the package README in the v1.1.x tag for migration notes.
 
 ---
 

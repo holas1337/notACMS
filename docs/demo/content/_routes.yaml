@@ -35,7 +35,6 @@ routes:
   contact:
     pl: /kontakt/
     de: /kontakt/
-    fr: /contact/
   projects:
     pl: /realizacje/
     de: /projekte/

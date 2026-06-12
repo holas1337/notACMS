@@ -6,10 +6,11 @@ namespace NotACms\Command;
 
 use NotACms\Content\ValueObject\RenderResult;
 use NotACms\Service\Content\ContentCacheInterface;
-use NotACms\Service\Content\ContentServiceInterface;
-use NotACms\Service\Image\ImageResizerInterface;
-use NotACms\Service\Image\ResponsiveImageServiceInterface;
+use NotACms\Service\Content\ContentTreeProviderInterface;
 use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\StaticBuild\MediaPublisherInterface;
+use NotACms\Service\StaticBuild\StaticPageRendererInterface;
+use NotACms\Service\StaticBuild\StaticUrlCollectorInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,10 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsCommand(name: 'app:build', description: 'Build static HTML site')]
@@ -30,14 +27,13 @@ final class BuildStaticSiteCommand extends Command
     private const string PAGEFIND_OUTPUT = 'public/pagefind';
 
     public function __construct(
-        private readonly HttpKernelInterface $httpKernel,
-        private readonly ContentServiceInterface $contentService,
+        private readonly ContentTreeProviderInterface $contentTreeProvider,
         private readonly ContentCacheInterface $contentCache,
-        private readonly ImageResizerInterface $imageResizer,
-        private readonly ResponsiveImageServiceInterface $responsiveImageService,
         private readonly SiteConfigServiceInterface $siteConfigService,
         private readonly UrlGeneratorInterface $urlGenerator,
-        #[Autowire('%notacms_content%')] private readonly string $contentDir,
+        private readonly StaticUrlCollectorInterface $staticUrlCollector,
+        private readonly StaticPageRendererInterface $staticPageRenderer,
+        private readonly MediaPublisherInterface $mediaPublisher,
         #[Autowire('%notacms_static_dir%')] private readonly string $staticDir,
     ) {
         parent::__construct();
@@ -52,6 +48,12 @@ final class BuildStaticSiteCommand extends Command
             'Output directory',
             $this->staticDir,
         );
+        $this->addOption(
+            'force',
+            null,
+            InputOption::VALUE_NONE,
+            'Allow clearing an output directory other than the configured static dir',
+        );
     }
 
     protected function execute(
@@ -61,11 +63,21 @@ final class BuildStaticSiteCommand extends Command
         $symfonyStyle = new SymfonyStyle($input, $output);
         $symfonyStyle->title('Building static site');
 
-        $outputDir = $input->getOption('output-dir') ?? $this->staticDir;
+        $outputDir = (string) ($input->getOption('output-dir') ?? $this->staticDir);
         $filesystem = new Filesystem();
 
         $symfonyStyle->section('Clearing output directory');
         if (is_dir($outputDir)) {
+            if (rtrim($outputDir, '/') !== rtrim($this->staticDir, '/') && true !== $input->getOption('force')) {
+                $symfonyStyle->error(sprintf(
+                    'Refusing to clear existing directory "%s" (configured static dir is "%s") — pass --force to override.',
+                    $outputDir,
+                    $this->staticDir,
+                ));
+
+                return Command::FAILURE;
+            }
+
             $filesystem->remove($outputDir);
         }
 
@@ -75,11 +87,14 @@ final class BuildStaticSiteCommand extends Command
             $this->contentCache->invalidateCache($locale);
         }
 
-        $renderResult = $this->renderPages($outputDir, $filesystem, $symfonyStyle, $output);
+        $renderResult = $this->renderPages($outputDir, $symfonyStyle, $output);
 
-        $this->copyMediaFiles($outputDir, $filesystem, $symfonyStyle);
-        $optimized = $this->optimizeOriginals($outputDir, $symfonyStyle);
-        $variants = $this->generateResponsiveImages($outputDir, $symfonyStyle);
+        $mediaPublishResult = $this->mediaPublisher->publish($outputDir);
+        if ($symfonyStyle->isVerbose()) {
+            foreach ($mediaPublishResult->notes as $note) {
+                $symfonyStyle->text('  '.$note);
+            }
+        }
 
         $symfonyStyle->newLine();
         $symfonyStyle->success(
@@ -87,160 +102,78 @@ final class BuildStaticSiteCommand extends Command
                 'Generated %d pages (%d skipped), optimized %d images, generated %d responsive variants',
                 $renderResult->pages,
                 $renderResult->skipped,
-                $optimized,
-                $variants,
+                $mediaPublishResult->optimized,
+                $mediaPublishResult->variants,
             ),
         );
 
-        if ([] !== $renderResult->errors) {
-            $symfonyStyle->warning('Errors encountered:');
-            foreach ($renderResult->errors as $err) {
-                $symfonyStyle->text('  - '.$err);
-            }
-        }
+        $this->printWarnings($symfonyStyle, $renderResult, $mediaPublishResult->warnings);
 
         $symfonyStyle->text(sprintf('Output: %s', $outputDir));
         $symfonyStyle->text(
-            'Next step: npx pagefind --site '.$input->getOption('output-dir').' --output-path '.self::PAGEFIND_OUTPUT,
+            'Next step: npx pagefind --site '.$outputDir.' --output-path '.self::PAGEFIND_OUTPUT,
         );
 
         return Command::SUCCESS;
     }
 
-    /**
-     * @return string[]
-     */
-    private function collectRoutes(): array
-    {
-        $routes = [];
-
-        foreach ($this->siteConfigService->getLocales() as $locale) {
-            $tree = $this->contentService->getTree($locale);
-
-            $routes[] = $this->route('home_'.$locale);
-            $routes[] = $this->route('blog_list_'.$locale);
-
-            $posts = $tree->getAllPosts();
-            $totalPages = (int) ceil(count($posts) / $this->siteConfigService->getPostsPerPage());
-            for ($page = 2; $page <= $totalPages; ++$page) {
-                $routes[] = $this->route('blog_list_paginated_'.$locale, ['page' => $page]);
-            }
-
-            foreach ($posts as $post) {
-                $routes[] = $post->url();
-            }
-
-            foreach ($tree->getScheduledPosts() as $post) {
-                $routes[] = $post->url();
-            }
-
-            foreach ($tree->getAllCategories() as $categoryCount) {
-                $routes[] = $this->route('blog_category_'.$locale, ['category' => $categoryCount->slug]);
-            }
-
-            foreach ($tree->getAllTags() as $tag) {
-                $routes[] = $this->route('blog_tag_'.$locale, ['tag' => $tag->slug]);
-            }
-
-            foreach ($tree->getArchiveMonths() as $archive) {
-                $routes[] = $this->route('blog_archive_'.$locale, [
-                    'year' => $archive->year,
-                    'month' => sprintf('%02d', $archive->month),
-                ]);
-            }
-
-            foreach ($tree->getArchiveYears() as $archiveYear) {
-                $routes[] = $this->route('blog_archive_year_'.$locale, ['year' => $archiveYear->year]);
-            }
-
-            $homeUrl = $this->route('home_'.$locale);
-            foreach ($tree->getStaticPages() as $page) {
-                if (
-                    !$page->isDynamic()
-                    && '' !== $page->url()
-                    && $page->url() !== $homeUrl
-                ) {
-                    $routes[] = $page->url();
-                }
-            }
-
-            $routes[] = $this->route('search_'.$locale);
-        }
-
-        return array_unique($routes);
-    }
-
     private function renderPages(
         string $outputDir,
-        Filesystem $filesystem,
         SymfonyStyle $symfonyStyle,
         OutputInterface $output,
     ): RenderResult {
-        $routes = $this->collectRoutes();
+        $staticUrlCollection = $this->staticUrlCollector->collect();
         $symfonyStyle->section('Rendering pages');
-        $symfonyStyle->text(sprintf('Collected %d URLs to render', count($routes)));
+        $symfonyStyle->text(sprintf('Collected %d URLs to render', count($staticUrlCollection->urls)));
+        if ($output->isVerbose()) {
+            foreach ($staticUrlCollection->notes as $note) {
+                $symfonyStyle->text('  '.$note);
+            }
+        }
 
         $pages = 0;
         $skipped = 0;
         $errors = [];
 
-        foreach ($routes as $url) {
+        foreach ($staticUrlCollection->urls as $url) {
             try {
-                $html = $this->renderUrl($url);
-                $this->writeHtml($outputDir, $url, $html, $filesystem);
+                $html = $this->staticPageRenderer->render($url);
+                $this->staticPageRenderer->writePage($outputDir, $url, $html);
                 ++$pages;
                 if ($output->isVerbose()) {
                     $symfonyStyle->text('  ✓ '.$url);
                 }
-            } catch (\Throwable $e) {
-                $errors[] = $url.': '.$e->getMessage();
+            } catch (\Throwable $throwable) {
+                $errors[] = $url.': '.$throwable->getMessage();
                 ++$skipped;
                 if ($output->isVerbose()) {
-                    $symfonyStyle->text(sprintf('  ✗ %s: ', $url).$e->getMessage());
+                    $symfonyStyle->text(sprintf('  ✗ %s: ', $url).$throwable->getMessage());
                 }
             }
         }
 
-        $feedUrls = [$this->route('robots'), $this->route('sitemap')];
+        $feedUrls = [
+            $this->urlGenerator->generate('robots'),
+            $this->urlGenerator->generate('sitemap'),
+            $this->urlGenerator->generate('llms_txt'),
+        ];
         foreach ($this->siteConfigService->getLocales() as $locale) {
-            $feedUrls[] = $this->route('rss_'.$locale);
+            $feedUrls[] = $this->urlGenerator->generate('rss_'.$locale);
         }
 
         foreach ($feedUrls as $url) {
             try {
-                $content = $this->renderUrl($url);
-                $path = $outputDir.$url;
-                if (str_ends_with($url, '/')) {
-                    $filesystem->dumpFile(rtrim($path, '/').'/index.xml', $content);
-                } else {
-                    $filesystem->dumpFile($path, $content);
-                }
-
+                $content = $this->staticPageRenderer->render($url);
+                $this->staticPageRenderer->writeFeed($outputDir, $url, $content);
                 ++$pages;
-            } catch (\Throwable $e) {
-                $errors[] = $url.': '.$e->getMessage();
+            } catch (\Throwable $throwable) {
+                $errors[] = $url.': '.$throwable->getMessage();
             }
         }
 
-        $errorPages = [];
-        foreach ($this->siteConfigService->getLocales() as $locale) {
-            $prefix = ltrim($this->siteConfigService->getUrlPrefix($locale), '/');
-            $errorPages[$this->route('error_404_'.$locale)] = $prefix.'404.html';
-            $errorPages[$this->route('error_500_'.$locale)] = $prefix.'500.html';
-        }
-
-        foreach ($errorPages as $url => $filename) {
-            $request = Request::create($url, Request::METHOD_GET);
-            $request->attributes->set('_static_build', true);
-            $response = $this->httpKernel->handle(
-                $request,
-                HttpKernelInterface::SUB_REQUEST,
-                false,
-            );
-            $filesystem->dumpFile(
-                $outputDir.'/'.$filename,
-                (string) $response->getContent(),
-            );
+        foreach ($this->collectErrorPages() as $url => $filename) {
+            $content = $this->staticPageRenderer->render($url, allowErrorStatus: true);
+            $this->staticPageRenderer->writeFile($outputDir, $filename, $content);
             ++$pages;
             if ($output->isVerbose()) {
                 $symfonyStyle->text('  ✓ error page → '.$filename);
@@ -250,158 +183,46 @@ final class BuildStaticSiteCommand extends Command
         return new RenderResult($pages, $skipped, $errors);
     }
 
-    private function optimizeOriginals(string $outputDir, SymfonyStyle $symfonyStyle): int
+    /**
+     * @return array<string, string> URL => output filename
+     */
+    private function collectErrorPages(): array
     {
-        $mediaDir = $outputDir.'/media';
-        if (!is_dir($mediaDir)) {
-            return 0;
+        $errorPages = [];
+        foreach ($this->siteConfigService->getLocales() as $locale) {
+            $prefix = ltrim($this->siteConfigService->getUrlPrefix($locale), '/');
+            $errorPages[$this->urlGenerator->generate('error_404_'.$locale)] = $prefix.'404.html';
+            $errorPages[$this->urlGenerator->generate('error_500_'.$locale)] = $prefix.'500.html';
         }
 
-        $finder = new Finder()->files()->in($mediaDir)->name('*.webp');
-        $optimized = 0;
-
-        foreach ($finder as $file) {
-            $baseName = $file->getFilenameWithoutExtension();
-
-            if ($this->isVariantFile($baseName)) {
-                continue;
-            }
-
-            $this->imageResizer->optimize($file->getRealPath());
-            ++$optimized;
-            if ($symfonyStyle->isVerbose()) {
-                $symfonyStyle->text(
-                    '  optimized: '.
-                        basename($file->getPath()).
-                        '/'.
-                        $file->getFilename(),
-                );
-            }
-        }
-
-        if (0 < $optimized) {
-            $symfonyStyle->text(sprintf('Optimized %d original image(s)', $optimized));
-        }
-
-        return $optimized;
-    }
-
-    private function generateResponsiveImages(
-        string $outputDir,
-        SymfonyStyle $symfonyStyle,
-    ): int {
-        $mediaDir = $outputDir.'/media';
-        if (!is_dir($mediaDir)) {
-            return 0;
-        }
-
-        $finder = new Finder()->files()->in($mediaDir)->name('*.webp');
-        $generated = 0;
-
-        foreach ($finder as $file) {
-            $baseName = $file->getFilenameWithoutExtension();
-
-            if ($this->isVariantFile($baseName)) {
-                continue;
-            }
-
-            $filePath = $file->getRealPath();
-            $imageInfo = @getimagesize($filePath);
-
-            if (false === $imageInfo) {
-                continue;
-            }
-
-            $width = $imageInfo[0];
-            $dir = $file->getPath();
-
-            $variantWidths = $this->responsiveImageService->getVariantWidths($width);
-
-            foreach ($variantWidths as $variantWidth) {
-                $this->imageResizer->resize($filePath, $dir.'/'.$baseName.'-'.$variantWidth.'w.webp', $variantWidth);
-                ++$generated;
-
-                if ($symfonyStyle->isVerbose()) {
-                    $symfonyStyle->text('  variant: '.basename($dir).'/'.$baseName.'-'.$variantWidth.'w.webp');
-                }
-            }
-        }
-
-        if (0 < $generated) {
-            $symfonyStyle->text(
-                sprintf('Generated %d responsive image variant(s)', $generated),
-            );
-        }
-
-        return $generated;
-    }
-
-    private function copyMediaFiles(
-        string $outputDir,
-        Filesystem $filesystem,
-        SymfonyStyle $symfonyStyle,
-    ): void {
-        $contentDir = $this->contentDir;
-        $finder = new Finder()->directories()->in($contentDir)->name('files');
-
-        $copied = 0;
-        foreach ($finder as $dir) {
-            $postDirName = basename($dir->getPath());
-            $targetDir = $outputDir.'/media/'.$postDirName;
-            $filesystem->mirror($dir->getRealPath(), $targetDir);
-            ++$copied;
-            if ($symfonyStyle->isVerbose()) {
-                $symfonyStyle->text(sprintf('  media: %s/', $postDirName));
-            }
-        }
-
-        if (0 < $copied) {
-            $symfonyStyle->text(
-                sprintf('Copied media from %d content directories', $copied),
-            );
-        }
-    }
-
-    private function renderUrl(string $url): string
-    {
-        $request = Request::create($url, Request::METHOD_GET);
-        $request->attributes->set('_static_build', true);
-
-        $response = $this->httpKernel->handle(
-            $request,
-            HttpKernelInterface::SUB_REQUEST,
-            false,
-        );
-
-        if (Response::HTTP_BAD_REQUEST <= $response->getStatusCode()) {
-            throw new \RuntimeException(sprintf('HTTP %d for %s', $response->getStatusCode(), $url));
-        }
-
-        return (string) $response->getContent();
-    }
-
-    private function writeHtml(
-        string $outputDir,
-        string $url,
-        string $html,
-        Filesystem $filesystem,
-    ): void {
-        // '/' → /index.html, '/foo/' → /foo/index.html
-        $path = '/' === $url ? '' : rtrim($url, '/');
-        $filePath = $outputDir.$path.'/index.html';
-        $filesystem->dumpFile($filePath, $html);
+        return $errorPages;
     }
 
     /**
-     * @param array<string, mixed> $params
+     * @param list<string> $mediaWarnings
      */
-    private function route(string $name, array $params = []): string
+    private function printWarnings(SymfonyStyle $symfonyStyle, RenderResult $renderResult, array $mediaWarnings): void
     {
-        return $this->urlGenerator->generate($name, $params);
-    }
+        $contentWarnings = [];
+        foreach ($this->siteConfigService->getLocales() as $locale) {
+            foreach ($this->contentTreeProvider->getTree($locale)->getWarnings() as $contentWarning) {
+                $contentWarnings[] = $contentWarning;
+            }
+        }
 
-    private function isVariantFile(string $baseName): bool
-    {
-        return array_any($this->siteConfigService->getImageVariantWidths(), fn ($width): bool => str_ends_with($baseName, '-'.$width.'w'));
+        $contentWarnings = array_unique(array_merge($contentWarnings, $mediaWarnings));
+        if ([] !== $contentWarnings) {
+            $symfonyStyle->warning('Content warnings:');
+            foreach ($contentWarnings as $contentWarning) {
+                $symfonyStyle->text('  - '.$contentWarning);
+            }
+        }
+
+        if ([] !== $renderResult->errors) {
+            $symfonyStyle->warning('Errors encountered:');
+            foreach ($renderResult->errors as $error) {
+                $symfonyStyle->text('  - '.$error);
+            }
+        }
     }
 }

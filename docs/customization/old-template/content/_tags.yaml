@@ -1,8 +1,0 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/holas1337/notACMS/main/config/schema/tags.schema.json
-# Tag translations grouped by default locale (EN) slug.
-# Each entry maps the canonical tag to its equivalents in other locales.
-# Tags identical across all locales are omitted.
-tutorial:
-  pl: poradnik
-community:
-  pl: spolecznosc

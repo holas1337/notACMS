@@ -73,19 +73,7 @@
     flex-shrink: 0;
 }
 
-.feature-card h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 0.4rem;
-}
 
-.feature-card p {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin: 0;
-}
 
 // ---------------------------------------------------------------------------
 // .prev-next-nav — prev/next navigation (docs + posts)
@@ -270,7 +258,7 @@
     height: 72px;
     border-radius: 50%;
     flex-shrink: 0;
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    background: linear-gradient(135deg, var(--text-muted) 0%, color-mix(in srgb, var(--text-muted) 70%, black) 100%);
     display: flex;
     align-items: center;
     justify-content: center;

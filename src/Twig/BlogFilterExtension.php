@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace NotACms\Twig;
 
+use NotACms\Content\Enum\FilterType;
 use NotACms\Service\Content\ContentServiceInterface;
+use NotACms\Service\Content\ContentTreeBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Attribute\AsTwigFunction;
 
@@ -24,20 +26,19 @@ final readonly class BlogFilterExtension
         ?int $archiveMonth,
         string $locale,
     ): string {
-        if ('category' === $filterType) {
+        if (FilterType::Category->value === $filterType) {
             return ucfirst((string) $filterValue);
         }
 
-        if ('tag' === $filterType) {
+        if (FilterType::Tag->value === $filterType) {
             return '#'.$filterValue;
         }
 
-        if ('archive' === $filterType) {
+        if (FilterType::Archive->value === $filterType) {
             return $this->formatArchiveDate($archiveYear, $archiveMonth, $locale);
         }
 
-        $contentTree = $this->contentService->getTree($locale);
-        $blog = $contentTree->findByDirectoryKey('blog');
+        $blog = $this->contentService->findByDirectoryKey(ContentTreeBuilderInterface::BLOG_DIRECTORY_KEY, $locale);
 
         return $blog?->menuLabel() ?? $this->translator->trans('blog.title');
     }
@@ -53,6 +54,6 @@ final readonly class BlogFilterExtension
 
         $date = new \DateTimeImmutable(sprintf('%04d-%02d-01', $year ?? 0, $month ?? 1));
 
-        return $intlDateFormatter->format($date);
+        return (string) $intlDateFormatter->format($date);
     }
 }

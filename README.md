@@ -24,7 +24,7 @@ notACMS is a static site generator built on Symfony 7.4. Write content in Markdo
 - **`local/` overrides** — templates, SCSS, translations, nginx config, and content all live in `local/` so you never modify core files
 - **Two themes out of the box** — ship the minimal **bare** wireframe for custom builds, or the polished **demo** (amber-phosphor with dark mode, search overlay, docs sidebar) shown on the live site above
 
-> Upgrading from 1.0.0? See [UPGRADE-1.1.md](UPGRADE-1.1.md). A drop-in compatibility package at `docs/customization/old-template/` restores the 1.0.0 look.
+> Upgrading from 1.0.0? See [UPGRADE-1.1.md](UPGRADE-1.1.md). The drop-in `old-template` compatibility package shipped through v1.1.x — copy it from a v1.1.x tag if needed.
 
 ## Quickstart
 
@@ -94,6 +94,7 @@ Set `NGINX_PORT=80` in `.env.local` to expose on port 80.
 | [docs/STYLEGUIDE.md](docs/STYLEGUIDE.md) | Design tokens, components, and the living styleguide |
 | [docs/LOCALES.md](docs/LOCALES.md) | How to add, remove, or manage locales |
 | [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) | How to override templates, JS, SCSS, and nginx config via `local/` |
+| [docs/THEME_BUILDING.md](docs/THEME_BUILDING.md) | Theme API reference — template contexts, Twig functions & globals, ContentItem API, required translation keys |
 | [docs/TESTING.md](docs/TESTING.md) | How to run tests, write new tests, and the coverage strategy |
 | [docs/TESTS.md](docs/TESTS.md) | Quick reference: test file map, fixtures, naming conventions |
 

@@ -25,7 +25,7 @@ colors:
   success-dark: "#9ae6b4"
   danger: "#e53e3e"
   danger-dark: "#fc8181"
-  nav-bg: "#0e0d0b"
+  nav-bg: "rgba(14, 13, 11, 0.95)"
   nav-text: "#f8f9fa"
   nav-muted: "#9ca3af"
   terminal-bg: "#0d1117"
@@ -53,6 +53,28 @@ colors:
   hero-grid: "#ffffff06"
   on-accent: "#0e0d0b"
   primary: "{colors.accent}"
+  sidebar-bg: "#f8f9fa"
+  sidebar-bg-dark: "#111009"
+  accent-bg: "#fffbeb"
+  accent-bg-dark: "rgba(255, 176, 0, 0.08)"
+  accent-border: "rgba(180, 83, 9, 0.2)"
+  accent-border-dark: "rgba(255, 176, 0, 0.2)"
+  hero-bg: "#0e0d0b"
+  footer-muted: "#9ca3af"
+  footer-border: "rgba(255, 255, 255, 0.06)"
+  nav-border: "rgba(255, 255, 255, 0.06)"
+  nav-subtle-bg: "rgba(255, 255, 255, 0.05)"
+  nav-hover-bg: "rgba(255, 255, 255, 0.07)"
+  nav-active-bg: "rgba(255, 255, 255, 0.1)"
+  nav-active-border: "rgba(255, 255, 255, 0.18)"
+  code-border: "#d0d7de"
+  code-border-dark: "#21262d"
+  code-text: "#24292f"
+  code-text-dark: "#c9d1d9"
+  code-comment: "#6e7781"
+  code-comment-dark: "#4b5563"
+  code-label-bg: "#eaeef2"
+  code-label-bg-dark: "#161b22"
 typography:
   headline:
     fontFamily: Inter
@@ -110,12 +132,12 @@ components:
     backgroundColor: "{colors.surface}"
     borderColor: "{colors.border}"
     rounded: "{rounded.xl}"
-    padding: 16px
+    padding: 32px
   card-dark:
     backgroundColor: "{colors.surface-dark}"
     borderColor: "{colors.border-dark}"
     rounded: "{rounded.xl}"
-    padding: 16px
+    padding: 32px
   card-hover:
     borderColor: "{colors.accent}"
   tag-pill:
@@ -129,25 +151,25 @@ components:
     rounded: "{rounded.pill}"
     padding: 8px
   alert-success:
-    backgroundColor: "#dcfce7"
+    backgroundColor: "rgba(72, 187, 120, 0.1)"
     textColor: "{colors.success}"
     borderColor: "#48bb7859"
     rounded: "{rounded.lg}"
     padding: 12px
   alert-success-dark:
-    backgroundColor: "#48bb7814"
+    backgroundColor: "rgba(72, 187, 120, 0.08)"
     textColor: "{colors.success-dark}"
     borderColor: "#48bb7833"
     rounded: "{rounded.lg}"
     padding: 12px
   alert-danger:
-    backgroundColor: "#fee2e2"
+    backgroundColor: "rgba(229, 62, 62, 0.08)"
     textColor: "{colors.danger}"
     borderColor: "#e53e3e4d"
     rounded: "{rounded.lg}"
     padding: 12px
   alert-danger-dark:
-    backgroundColor: "#e53e3e12"
+    backgroundColor: "rgba(229, 62, 62, 0.07)"
     textColor: "{colors.danger-dark}"
     borderColor: "#e53e3e33"
     rounded: "{rounded.lg}"
@@ -247,7 +269,7 @@ The typography strategy leverages two distinct font families: **Inter** for narr
 
 ### Larger headings
 
-H1 hero uses `clamp(2rem, 6vw, 4rem)`. Section headings use `clamp(1.75rem, 3.5vw, 2.5rem)`.
+H1 hero uses `clamp(2.5rem, 6vw, 4.5rem)`. Section headings use `clamp(1.75rem, 3.5vw, 2.5rem)`.
 
 ---
 
@@ -272,10 +294,11 @@ A strict **{spacing.sm}** spacing scale (with **{spacing.xs}** half-step for mic
 
 Depth is achieved through **Tonal Layers** rather than heavy shadows. The background uses a soft off-white (**{colors.surface-secondary}**) in light mode or very dark (**{colors.surface-secondary-dark}**) in dark, while primary content sits on pure white (**{colors.surface}**) or near-black (**{colors.surface-dark}**) cards.
 
-Shadows are reserved for specific hover/focus interactions only. The shadow scale exists in SCSS but is rarely used:
-- `$shadow-sm`: 0 1px 2px rgba(0, 0, 0, .06) — subtle hover lift
-- `$shadow`: 0 2px 8px rgba(0, 0, 0, .08) — moderate elevation (unused)
-- `$shadow-lg`: 0 8px 24px rgba(0, 0, 0, .12) — high elevation (unused)
+Shadows are reserved for specific floating-surface interactions only. The shadow scale exists in SCSS but is rarely used:
+- `$shadow-sm`: 0 1px 2px rgba(0, 0, 0, .06) — unused
+- `$shadow`: 0 2px 8px rgba(0, 0, 0, .08) — unused
+- `$shadow-lg`: 0 8px 24px rgba(0, 0, 0, .12) — dropdowns (docs nav, language switcher)
+- `$shadow-xl` — search overlay panel
 
 The header uses a glass effect (`backdrop-filter: blur`) rather than shadows. Cards use 1px borders with `--card-border` / `--border` and `--card-bg` / `--bg-surface` backgrounds.
 
@@ -375,7 +398,7 @@ Layout sections with responsive padding (**{spacing.xxl}** → **{spacing.xl}** 
 - Do use JetBrains Mono for metadata, dates, labels, and code — never for body text
 - Don't use light-mode tokens on always-dark surfaces or dark-mode tokens on light surfaces
 - Don't add `box-shadow` to cards — the design is flat by convention
-- Don't use more than two font weights on a single screen (regular + bold/semi-bold)
+- Prefer few font weights per screen; body copy stays regular (400), emphasis uses 600–700. (The homepage hero/stat sections deliberately span 400–800.)
 - Don't mix Inter and JetBrains Mono in the same text block — each has its role
 - Don't create new CSS classes in local overrides that duplicate component patterns — extend or override with custom properties
 

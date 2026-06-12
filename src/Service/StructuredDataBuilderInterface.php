@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace NotACms\Service;
 
+use NotACms\Content\ValueObject\BlogPostingData;
+
 interface StructuredDataBuilderInterface
 {
     public const string SCHEMA_CONTEXT = 'https://schema.org';
@@ -25,14 +27,11 @@ interface StructuredDataBuilderInterface
     public function person(string $name, ?string $url = null, ?string $jobTitle = null, ?string $description = null, ?string $email = null, array $expertiseTags = [], array $socialUrls = []): array;
 
     /**
-     * @param array<int, string>        $keywords
-     * @param array<string, mixed>|null $image
-     * @param array<string, mixed>|null $author
-     * @param array<string, mixed>|null $publisher
+     * @param BlogPostingData|array<string, mixed> $blogPostingData a BlogPostingData VO, or a named map (e.g. a Twig hash) matching its constructor
      *
      * @return array<string, mixed>
      */
-    public function blogPosting(string $headline, string $url, string $inLanguage, string $datePublished, ?string $dateModified = null, ?string $description = null, int $wordCount = 0, ?string $articleSection = null, array $keywords = [], ?array $image = null, ?array $author = null, ?array $publisher = null, ?string $mainEntityOfPage = null): array;
+    public function blogPosting(BlogPostingData|array $blogPostingData): array;
 
     /**
      * @param array<int, array<string, mixed>> $items

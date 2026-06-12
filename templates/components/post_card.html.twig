@@ -1,13 +1,12 @@
 <article class="post-card border-bottom mb-3 pb-3{% if post.isDraft() %} post-card--draft{% elseif post.isScheduled() %} post-card--scheduled{% endif %}">
     <div class="post-card-body">
         <p class="post-card-meta">
-            {% if post.category() %}{{ post.category() }}<span class="post-meta-sep">&bull;</span>{% endif %}
-            {% if post.date() %}{{ post.date()|date(site_locales[locale].date_format) }}{% endif %}
+            {{ include('components/post_meta_line.html.twig') }}
         </p>
         <h2>
             <a href="{{ post.url() }}">{{ post.title() }}</a>
-            {% if post.isDraft() %}<span class="badge">[{{ 'badge.draft'|trans }}]</span>{% endif %}
-            {% if post.isScheduled() %}<span class="badge">[{{ 'badge.planned'|trans }}]</span>{% endif %}
+            {% if post.isDraft() %}<span class="badge">{{ 'badge.draft'|trans }}</span>{% endif %}
+            {% if post.isScheduled() %}<span class="badge">{{ 'badge.planned'|trans }}</span>{% endif %}
             {% if featured is defined and featured or post.isPinned() %}<span class="badge">{{ 'badge.pinned'|trans }}</span>{% endif %}
             {% set badge = post_badge(post, new_post_days) %}
             {% if badge is same as('new') %}

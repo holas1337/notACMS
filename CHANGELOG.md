@@ -5,6 +5,92 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-06-12
+
+### Breaking changes
+
+Full migration guide with before/after snippets: [UPGRADE-1.2.md](UPGRADE-1.2.md).
+
+- **`getTree()` moved off the content facade**: `ContentServiceInterface` is now a pure query facade (gains `findByDirectoryKey()`, `getPostsByTag/Category/YearMonth/Year()`); tree-level consumers inject the new `ContentTreeProviderInterface { getTree(locale) }` instead. `local/src` code calling `getTree()` via `ContentServiceInterface` must swap the injected interface (one line).
+- **`structured_data().blogPosting()` now takes a named map** (backed by the `BlogPostingData` VO) instead of 13 positional arguments — see UPGRADE-1.2.md for the before/after Twig snippet. Core, demo, and holas.pl post templates are updated.
+- **`lang_switch_url` context key removed**: the language switcher consumes a typed `LangSwitchContext` (context key `lang_switch`) resolved by the new `LangSwitchUrlResolver`; tag pages get per-locale URLs for **all** other locales via `TagLangSwitchResolver` (previously only the first other locale — broken on 3+-locale sites). Theme templates calling `lang_switch_urls()` are unaffected.
+- **`SiteConfigServiceInterface` split** into `LocaleConfigInterface` + `SiteSettingsInterface` + `ImageConfigInterface` via interface composition — existing type-hints keep working; narrow consumers now inject only the slice they use.
+- **`ContentItem::directoryKey()` now returns the full relative content path** (e.g. `pages/about` instead of `about`), fixing silent collisions between same-named directories in different sections (translation map, hreflang, `content_item()` lookups). `content_item()`/`content_url()`/`findByDirectoryKey()` still accept a bare basename when it is unambiguous, so theme literals like `content_item('about', locale)` keep working; ambiguous basenames return null with a build warning. Breaking only if you compare `directoryKey()` against a literal or index `translation_map` with hand-written basenames.
+
+### Changed
+
+- **Pinned semantics**: `pinned: <date>` is now inclusive (the post stays pinned *on* that date, as documented in the editor guide), and `pinned: true` pins indefinitely (previously silently never pinned).
+- **Category/tag URL normalization**: uppercase or spaced `category:`/`tags:` values are lowercased (spaces → hyphens) for grouping and URLs instead of crashing URL generation with an `InvalidParameterException`; a build warning asks the author to fix the frontmatter.
+- **Post detection by location, not date**: new `ContentItem::isPost()` (set from the `blog/` content prefix) replaces the date-presence heuristic — dated static pages no longer receive blog-post breadcrumbs. Also new: `ContentItem::isSame()`, `ContentTree::getSeriesPosition()`, `ContentTree::getPublishableStaticPages()`.
+- **Static build decomposed**: `app:build` is now orchestration over three services (`StaticUrlCollector`, `StaticPageRenderer`, `MediaPublisher` in `src/Service/StaticBuild/`) — same CLI name, options, and output. `#[LocalizedRoute]` attributes are now also discovered in `local/src/Controller/` (`NotACms\Local\Controller\`), so site overrides can register localized routes. The two preview toggle controllers merged into one `PreviewToggleController` (same routes); `MediaController` builds its variant map lazily (no constructor I/O).
+
+- **Hardcoded UI strings moved to translation keys** across bare (core) and demo themes. Core post template `[DRAFT]`/`[PLANNED]` banners are now `blog.draft_banner`/`blog.scheduled_banner` trans keys; coming-soon publishing date uses a `%date%` placeholder in `coming_soon.publishing`. Core navigation null-safety improved: `content_item()` return values are cached and checked before calling `.menuLabel()`, with `nav.label.*` trans keys as fallbacks. Demo template hardcoded strings replaced: `Tags:` label, `Post navigation`/`Page navigation`/`Key stats` aria-labels, and `breadcrumb` aria-label across all theme layers. New translation keys added to core EN/PL, demo EN/DE/FR/PL, and local-holas.pl EN/PL.
+
+### Fixed
+
+- **Build resilience for malformed content**: a markdown file with broken YAML frontmatter no longer 500s every page of its locale or aborts `app:build` — the file is skipped and reported (console "Content warnings" section + log) with its path and the parse error.
+- **Homepage hijack via missing `slug`**: content files without a `slug` frontmatter key previously computed the URL `/` and silently overwrote the homepage. They are now skipped with a warning (the home page declares `slug: ""` explicitly).
+- **Draft/scheduled leak**: pages with `draft: true` (or a future date) were rendered into static builds, served via URL lookup, and listed in menus and `/llms.txt`. Pages and the URL/menu maps now honour the same draft/scheduled visibility rules as posts (preview toggles unaffected).
+- **Config hardening**: numeric `_site.yaml` settings (`posts_per_page`, `rss_limit`, `llms_limit`, `recent_posts_limit`, `related_posts_limit`, `image_quality`, `meta_description_length`) are clamped to ≥1 (`new_post_days`, `coming_soon_reveal_days` to ≥0) — `posts_per_page: 0` no longer causes a DivisionByZeroError.
+- **nginx**: the locale-prefixed contact API location regex matched a literal `{2}` (escaped braces), so `POST /<locale>/api/contact` never reached PHP — the contact form was broken for every non-default locale in the Docker runtime deployment. The regex is now quoted.
+- **Draft/scheduled translations in hreflang**: the translation map no longer advertises draft or scheduled locale variants — hreflang and language-switcher links no longer point at URLs that 404 in production.
+- **Frontmatter robustness**: non-string scalars (`title: 42`, unquoted `slug: 2024`) no longer throw TypeErrors; dates that aren't exactly `YYYY-MM-DD` (e.g. with a time) now parse via a `DateTimeImmutable` fallback instead of silently becoming undated.
+- **Build diagnostics**: duplicate URLs (two files computing the same URL), ambiguous directory keys, and media directory basename collisions now produce explicit build warnings naming the offending source paths (previously silent last-wins).
+- **Config validation**: `locales:` written as a YAML list (instead of a map) and unparseable/missing `_site.yaml` now fail with descriptive errors naming the file and the fix.
+- **Route cache freshness**: the routing cache now tracks `_site.yaml` and `_routes.yaml` as resources — adding a locale or editing route overrides takes effect in dev without a manual `cache:clear`.
+- **Empty category indexes**: category index pages whose category has no published posts are skipped during the static build (previously a guaranteed build error on every run).
+- **RSS feed correctness**: titles and excerpts inside CDATA are no longer double-encoded (`&amp;` shown literally in feed readers); a literal `]]>` in post HTML can no longer truncate the feed; `lastBuildDate` now uses the newest post date instead of regressing to a pinned post's date.
+- **Missing `blog.title` translation**: added to core EN/PL catalogs — the blog-list title fallback rendered the raw key when no blog index page existed.
+- **Home template null-safety**: the about-page action button is guarded — a site without an about page no longer crashes the homepage.
+- **`turnstile_site_key` is now a Twig global** (configured in `twig.yaml`) instead of a per-render context key — same variable name, available everywhere; custom contact templates are unaffected.
+- **Preview toggle return-redirect**: the draft/scheduled toolbar toggles now return to the page you were on (browsers send absolute Referer URLs, which the old same-site check always rejected — every toggle bounced to `/`). Same-origin validation kept.
+- **Language switcher on year archives**: year-only archive pages now link to the other locale's year archive instead of its home page.
+- **Uncategorized posts no longer "related"**: two posts with no category no longer score a category match in related-posts selection.
+- **`app:build --force` guard**: the build refuses to clear an output directory other than the configured static dir unless `--force` is passed (previously `-o public` would silently wipe the whole public directory); the pagefind hint also reports the resolved output dir.
+- **Empty archives 404**: `/archive/<year>/` and `/archive/<year>/<month>/` with no posts return 404 instead of an empty 200 listing (consistent with tag/category pages).
+- **Media variant fallback**: a real source file named like a variant (`photo-640w.webp`) is served as-is when no `photo.webp` original exists, instead of 404ing.
+- **Non-WebP image safety**: srcset generation (PHP service + the responsive_img component) is skipped for non-`.webp` sources instead of producing mangled variant URLs.
+- **Multi-segment page slugs warn**: a non-blog page with `slug: docs/intro` now produces a build warning (the static-page route only matches single segments, so such pages 404).
+- **Contact form misconfiguration surfaced**: when `contact_form.from`/`email` are missing from `_site.yaml`, the page shows a translated "form unavailable" notice and submissions return 503 with a logged error (previously a generic 500 on first real submission).
+- **No `base_url`, no broken link attrs**: with an empty `base_url` the markdown external-link extension is skipped, instead of marking every absolute link to your own site as `nofollow external` + new-window.
+- **Undated posts**: post pages no longer emit the current timestamp as `article:published_time`/JSON-LD `datePublished` when a post has no date.
+
+- **locale-redirect no-cookie redirect**: visiting a non-default locale URL (e.g. `/pl/`) for the first time with no `lang` cookie no longer bounces the visitor to the browser-language equivalent — the explicit URL is treated as the preference, the cookie is set to match, and no redirect fires. The `Secure` cookie flag is now conditional on `https:` so the mechanism works in HTTP dev environments (DDEV `http://`) without weakening production behaviour. Affects core and demo copies.
+- **search excerpt highlight tags**: `search.js` was passing pagefind excerpts through `esc()`, escaping `<mark>` highlight tags to literal `&lt;mark&gt;` text. Excerpts are now inserted as raw HTML — pagefind content is trusted, author-controlled static HTML. Affects core and demo copies.
+- **bare `_site.yaml` missing `contact_form`**: the bare starter theme lacked `contact_form.email`/`from` entries, producing a logged error on every build. Placeholder values added.
+
+### Added
+
+- **`/llms.txt` feed**: new `GET /llms.txt` route included in the static build — one file per locale listing the most recent posts in a machine-readable format for LLM context use. Configurable via `llms_limit` in `_site.yaml` (default 5). The core template is overridable per-instance via the `@base` Twig namespace. `notacms_project_url` Twig global added for cross-theme reference.
+- **`docs/THEME_BUILDING.md`** — the theme API reference: per-route template context contracts, Twig globals/functions/filters, the ContentItem API, required translation keys, request attributes, the assets contract, and theme portability rules. AGENTS.md now requires reviewing it whenever controller contexts, Twig extensions, or globals change.
+- **Translated contact notification email** — new `contact.email.*` keys (EN/PL); the owner-facing email renders in the submission locale instead of hardcoded English.
+
+### Removed
+
+- **`docs/customization/old-template/`** (the 1.0→1.1 compatibility package) — copy it from a v1.1.x tag if you still need it; all docs references updated with that guidance.
+- **Dead core translation keys** `blog.category`, `blog.archive`, `sidebar.archive`, `about.cta_text` — used by no shipped template (holas.pl/old-template themes define their own copies). Custom themes referencing these keys via core fallback must define them in `local/translations/`.
+
+### Internal
+
+- **ImageMagick via `Symfony\Process`**: `ImageResizer` builds argv arrays instead of shell strings (`exec()` removed).
+- **Constants over magic values**: directory keys (`blog`/`home`), config filenames (`_site.yaml`, `_tags.yaml`, `_routes.yaml`), badge names, seconds-per-day, default OG image, default template, and data-collector ids are now named constants; `FilterType` enum used instead of string literals; interface method defaults reference the `SiteConfigServiceInterface::DEFAULT_*` constants.
+- **`Breadcrumb` value object** replaces associative arrays in `BreadcrumbExtension` (templates unaffected — property access matches the old keys).
+- **`MediaFileResolver` memoizes** directory lookups (was a full recursive content scan per media request).
+- **Category index resolution** uses `findByDirectoryKey()` instead of reconstructing URLs by string concatenation.
+- **Preview service wiring** moved from `services.yaml` argument blocks to `#[Autowire]` attributes; dead `$routeOverrides` caching and the unused `locale` form option removed; styleguide fixtures de-branded to generic paths.
+- **AGENTS.md import-order rule corrected**: imports are alphabetical (enforced by PHP CS Fixer `ordered_imports`); the documented "App → PSR → Symfony" grouping was never the enforced rule.
+- **`_static_build` documented** in ARCHITECTURE.md as a supported request attribute for themes/local extensions.
+- **Template dedup & a11y**: shared `hreflang_alternates` macro (base head + sitemap), shared `page_article` component (default + projects pages), shared profiler `_toggle_item` (draft/scheduled collectors), `post_card` reuses `post_meta_line`; icon-only buttons gained `title` attributes; error template uses `error.title` key; robots.txt uses the `sitemap` route; favicon via `asset()`; base template sets `locale` once (illusory per-use guards removed); `og_image` variable no longer shadows the `og_image_url()` function; demo/bare `draft-post` demo content now actually carries `draft: true`.
+
+### Security
+
+- **Turnstile hostname validation**: `TurnstileValidator` now verifies the `hostname` returned by Cloudflare's siteverify against the configured `base_url` host (www-tolerant; skipped in debug or when `base_url` is unset), rejecting tokens minted on foreign domains.
+- **Test-key and placeholder-secret detection**: an error is logged when the committed always-pass Turnstile test keys are used outside debug mode, and a critical is logged at first request when `APP_SECRET` is still the committed `changeme` placeholder.
+- **JSON-LD hardening**: structured data is encoded with `JSON_HEX_TAG`/`JSON_HEX_AMP`/`JSON_HEX_APOS`/`JSON_HEX_QUOT`, so a `</script>` sequence in a title or description can no longer terminate the JSON-LD block.
+- **Translation catalogs no longer carry HTML**: the `contact.about_nudge` link markup moved into the template (new `contact.about_nudge_link` key); the `|raw` filter on catalog output is gone.
+- **nginx security headers on static assets**: `add_header` in the `/assets/` and `/media/` locations was suppressing all inherited server-level headers; the security header set (X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, CSP) is now emitted there too.
+- **Threat model documented**: SECURITY.md now records the static-first threat model and the deliberate design decisions (Turnstile-as-CSRF on the contact endpoint, debug-gated previews, no content execution at build time).
+
 ## [1.1.4] - 2026-05-28
 
 ### Changed

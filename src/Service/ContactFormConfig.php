@@ -13,4 +13,9 @@ final readonly class ContactFormConfig
         public string $topic,
     ) {
     }
+
+    public function isComplete(): bool
+    {
+        return '' !== $this->email && '' !== $this->from;
+    }
 }

@@ -8,6 +8,7 @@ use NotACms\Content\ValueObject\CategoryCount;
 use NotACms\Content\ValueObject\SidebarData;
 use NotACms\Content\ValueObject\TagCount;
 use NotACms\Service\Content\ContentServiceInterface;
+use NotACms\Service\Content\ContentTreeProviderInterface;
 use NotACms\Service\Content\SidebarDataProvider;
 use NotACms\Service\Content\SidebarDataProviderInterface;
 use NotACms\Service\SiteConfigServiceInterface;
@@ -20,14 +21,17 @@ final class SidebarDataProviderTest extends TestCase
 
     private ContentServiceInterface $contentService;
 
+    private ContentTreeProviderInterface $contentTreeProvider;
+
     private SiteConfigServiceInterface $siteConfigService;
 
     protected function setUp(): void
     {
         $this->contentService = $this->createStub(ContentServiceInterface::class);
+        $this->contentTreeProvider = $this->createStub(ContentTreeProviderInterface::class);
         $this->siteConfigService = $this->createStub(SiteConfigServiceInterface::class);
         $this->siteConfigService->method('getRecentPostsLimit')->willReturn(5);
-        $this->provider = new SidebarDataProvider($this->contentService, $this->siteConfigService);
+        $this->provider = new SidebarDataProvider($this->contentService, $this->contentTreeProvider, $this->siteConfigService);
     }
 
     public function testReturnsSidebarDataWithRecentPosts(): void
@@ -37,7 +41,7 @@ final class SidebarDataProviderTest extends TestCase
             ContentItemFactory::publishedPost(['date' => '2024-01-02']),
         ];
         $this->contentService->method('getRecentPosts')->willReturn($posts);
-        $this->contentService->method('getTree')->willReturn(new \NotACms\Content\ContentTree());
+        $this->contentTreeProvider->method('getTree')->willReturn(new \NotACms\Content\ContentTree());
 
         $result = $this->provider->getData('en');
 
@@ -52,7 +56,7 @@ final class SidebarDataProviderTest extends TestCase
         $tree->addPost(ContentItemFactory::withCategory('tutorials'));
         $tree->addPost(ContentItemFactory::withCategory('projects'));
 
-        $this->contentService->method('getTree')->willReturn($tree);
+        $this->contentTreeProvider->method('getTree')->willReturn($tree);
         $this->contentService->method('getRecentPosts')->willReturn([]);
 
         $result = $this->provider->getData('en');
@@ -67,7 +71,7 @@ final class SidebarDataProviderTest extends TestCase
         $tree->addPost(ContentItemFactory::withTags('php', 'symfony'));
         $tree->addPost(ContentItemFactory::withTags('php'));
 
-        $this->contentService->method('getTree')->willReturn($tree);
+        $this->contentTreeProvider->method('getTree')->willReturn($tree);
         $this->contentService->method('getRecentPosts')->willReturn([]);
 
         $result = $this->provider->getData('en');
@@ -82,7 +86,7 @@ final class SidebarDataProviderTest extends TestCase
         $tree->addPost(ContentItemFactory::publishedPost(['date' => '2024-01-15']));
         $tree->addPost(ContentItemFactory::publishedPost(['date' => '2024-02-10']));
 
-        $this->contentService->method('getTree')->willReturn($tree);
+        $this->contentTreeProvider->method('getTree')->willReturn($tree);
         $this->contentService->method('getRecentPosts')->willReturn([]);
 
         $result = $this->provider->getData('en');
@@ -96,13 +100,14 @@ final class SidebarDataProviderTest extends TestCase
         $siteConfig = $this->createStub(SiteConfigServiceInterface::class);
         $siteConfig->method('getRecentPostsLimit')->willReturn($limit);
         $contentService = $this->createMock(ContentServiceInterface::class);
-        $contentService->method('getTree')->willReturn(new \NotACms\Content\ContentTree());
+        $contentTreeProvider = $this->createStub(ContentTreeProviderInterface::class);
+        $contentTreeProvider->method('getTree')->willReturn(new \NotACms\Content\ContentTree());
         $contentService->expects(self::once())
             ->method('getRecentPosts')
             ->with('en', $limit)
             ->willReturn([]);
 
-        $provider = new SidebarDataProvider($contentService, $siteConfig);
+        $provider = new SidebarDataProvider($contentService, $contentTreeProvider, $siteConfig);
         $provider->getData('en');
     }
 }

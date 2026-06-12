@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace NotACms\Twig;
 
 use NotACms\Content\ContentItem;
+use NotACms\Content\Enum\FilterType;
+use NotACms\Content\ValueObject\Breadcrumb;
 use NotACms\Service\Content\ContentServiceInterface;
+use NotACms\Service\Content\ContentTreeBuilderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Attribute\AsTwigFunction;
 
@@ -24,85 +27,75 @@ final readonly class BreadcrumbExtension
      *                                      - filter_value: ?string       Category name or tag name for filtered list pages
      *                                      - archive_date: ?string       Pre-computed archive date label (already formatted as "May 2026" or "2026")
      *
-     * @return array<int, array{label: string, url: string|null}>
+     * @return list<Breadcrumb>
      */
     #[AsTwigFunction(name: 'breadcrumbs')]
     public function getBreadcrumbs(?ContentItem $contentItem, string $locale, array $options = []): array
     {
-        $contentTree = $this->contentService->getTree($locale);
         $crumbs = [];
 
-        $home = $contentTree->findByDirectoryKey('home');
+        $home = $this->contentService->findByDirectoryKey(ContentTreeBuilderInterface::HOME_DIRECTORY_KEY, $locale);
         $homeLabel = $options['home_label'] ?? $this->getLabel($home?->menuLabel(), 'Home');
-        $crumbs[] = [
-            'label' => $homeLabel,
-            'url' => $this->urlGenerator->generate('home_'.$locale),
-        ];
+        $crumbs[] = new Breadcrumb($homeLabel, $this->urlGenerator->generate('home_'.$locale));
 
-        if (!($contentItem instanceof ContentItem) || 'blog' === $contentItem->directoryKey()) {
+        if (!($contentItem instanceof ContentItem) || ContentTreeBuilderInterface::BLOG_DIRECTORY_KEY === $contentItem->directoryKey()) {
             return $this->blogListCrumbs($crumbs, $locale, $options, $contentItem);
         }
 
-        if ($contentItem->date() instanceof \DateTimeImmutable) {
+        if ($contentItem->isPost()) {
             return $this->blogPostCrumbs($crumbs, $contentItem, $locale);
         }
 
-        $crumbs[] = ['label' => $contentItem->title(), 'url' => null];
+        $crumbs[] = new Breadcrumb($contentItem->title(), null);
 
         return $crumbs;
     }
 
     /**
-     * @param array<int, array<string, mixed>> $crumbs
+     * @param list<Breadcrumb> $crumbs
      *
-     * @return array<int, array{label: string, url: string|null}>
+     * @return list<Breadcrumb>
      */
     private function blogPostCrumbs(array $crumbs, ContentItem $contentItem, string $locale): array
     {
-        $blog = $this->contentService->getTree($locale)->findByDirectoryKey('blog');
-        $crumbs[] = [
-            'label' => $this->getLabel($blog?->menuLabel(), 'Blog'),
-            'url' => $this->urlGenerator->generate('blog_list_'.$locale),
-        ];
+        $blog = $this->contentService->findByDirectoryKey(ContentTreeBuilderInterface::BLOG_DIRECTORY_KEY, $locale);
+        $crumbs[] = new Breadcrumb($this->getLabel($blog?->menuLabel(), 'Blog'), $this->urlGenerator->generate('blog_list_'.$locale));
 
-        if ($contentItem->category()) {
-            $crumbs[] = [
-                'label' => $contentItem->category(),
-                'url' => $this->urlGenerator->generate('blog_category_'.$locale, ['category' => $contentItem->category()]),
-            ];
+        $category = $contentItem->category();
+        if (null !== $category) {
+            $crumbs[] = new Breadcrumb($category, $this->urlGenerator->generate('blog_category_'.$locale, ['category' => $category]));
         }
 
-        $crumbs[] = ['label' => $contentItem->title(), 'url' => null];
+        $crumbs[] = new Breadcrumb($contentItem->title(), null);
 
         return $crumbs;
     }
 
     /**
-     * @param array<int, array<string, mixed>> $crumbs
-     * @param array<string, mixed>             $options
+     * @param list<Breadcrumb>     $crumbs
+     * @param array<string, mixed> $options
      *
-     * @return array<int, array{label: string, url: string|null}>
+     * @return list<Breadcrumb>
      */
     private function blogListCrumbs(array $crumbs, string $locale, array $options, ?ContentItem $contentItem): array
     {
-        $blog = $this->contentService->getTree($locale)->findByDirectoryKey('blog');
-        $crumbs[] = [
-            'label' => $contentItem instanceof ContentItem
+        $blog = $this->contentService->findByDirectoryKey(ContentTreeBuilderInterface::BLOG_DIRECTORY_KEY, $locale);
+        $crumbs[] = new Breadcrumb(
+            $contentItem instanceof ContentItem
                 ? $this->getLabel($contentItem->menuLabel(), '')
                 : $this->getLabel($blog?->menuLabel(), 'Blog'),
-            'url' => $this->urlGenerator->generate('blog_list_'.$locale),
-        ];
+            $this->urlGenerator->generate('blog_list_'.$locale),
+        );
 
         $filterType = $options['filter_type'] ?? null;
         $filterValue = $options['filter_value'] ?? null;
 
-        if ('category' === $filterType) {
-            $crumbs[] = ['label' => $filterValue, 'url' => null];
-        } elseif ('tag' === $filterType) {
-            $crumbs[] = ['label' => '#'.$filterValue, 'url' => null];
-        } elseif ('archive' === $filterType) {
-            $archiveDate = $options['archive_date'] ?? '';
-            $crumbs[] = ['label' => (string) $archiveDate, 'url' => null];
+        if (FilterType::Category->value === $filterType) {
+            $crumbs[] = new Breadcrumb((string) $filterValue, null);
+        } elseif (FilterType::Tag->value === $filterType) {
+            $crumbs[] = new Breadcrumb('#'.$filterValue, null);
+        } elseif (FilterType::Archive->value === $filterType) {
+            $crumbs[] = new Breadcrumb((string) ($options['archive_date'] ?? ''), null);
         }
 
         return $crumbs;

@@ -74,7 +74,7 @@ final class BlogFilterExtensionTest extends TestCase
         );
         $tree = new ContentTree();
         $tree->addPage($blogItem);
-        $this->contentService->method('getTree')->willReturn($tree);
+        $this->contentService->method('findByDirectoryKey')->willReturnCallback(static fn (string $directoryKey, string $locale) => $tree->findByDirectoryKey($directoryKey));
 
         $result = $this->extension->blogFilterTitle(null, null, null, null, 'en');
 
@@ -84,7 +84,7 @@ final class BlogFilterExtensionTest extends TestCase
     public function testFallsBackToTranslationWhenNoBlogPage(): void
     {
         $tree = new ContentTree();
-        $this->contentService->method('getTree')->willReturn($tree);
+        $this->contentService->method('findByDirectoryKey')->willReturnCallback(static fn (string $directoryKey, string $locale) => $tree->findByDirectoryKey($directoryKey));
         $this->translator->method('trans')->willReturn('Blog');
 
         $result = $this->extension->blogFilterTitle(null, null, null, null, 'en');

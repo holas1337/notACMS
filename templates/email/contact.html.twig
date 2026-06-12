@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Contact from {{ site_name }}</title>
+  <title>{{ 'contact.email.title'|trans({'%site_name%': site_name}, 'messages', locale) }}</title>
 </head>
 <body style="margin:0;padding:0;background:#111;font-family:Inter,'Segoe UI',system-ui,-apple-system,sans-serif;font-size:15px;color:#fff;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#111;">
@@ -12,32 +12,32 @@
         <!-- Header -->
         <tr><td style="background:#1f1f1f;padding:20px 28px;border:1px solid #333;">
           <span style="font-family:'JetBrains Mono',Consolas,monospace;font-size:18px;font-weight:700;letter-spacing:.04em;">{{ site_name }}</span>
-          <span style="color:#888;font-size:13px;margin-left:12px;">new contact message</span>
+          <span style="color:#888;font-size:13px;margin-left:12px;">{{ 'contact.email.heading'|trans({}, 'messages', locale) }}</span>
         </td></tr>
 
         <!-- Body -->
         <tr><td style="background:#1a1a1a;border:1px solid #333;border-top:none;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             <tr>
-              <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;width:90px;vertical-align:top;">Name</td>
+              <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;width:90px;vertical-align:top;">{{ 'contact.form.name'|trans({}, 'messages', locale) }}</td>
               <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;vertical-align:top;">{{ contact.name }}</td>
             </tr>
             <tr>
-              <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;vertical-align:top;">Email</td>
+              <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;vertical-align:top;">{{ 'contact.form.email'|trans({}, 'messages', locale) }}</td>
               <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;vertical-align:top;"><a href="mailto:{{ contact.email }}" style="color:#fff;">{{ contact.email }}</a></td>
             </tr>
             {% if contact.website %}
             <tr>
-              <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;vertical-align:top;">Website</td>
+              <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;vertical-align:top;">{{ 'contact.form.website'|trans({}, 'messages', locale) }}</td>
               <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;vertical-align:top;"><a href="{{ contact.website }}" style="color:#fff;">{{ contact.website }}</a></td>
             </tr>
             {% endif %}
             <tr>
-              <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;vertical-align:top;">Subject</td>
+              <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;vertical-align:top;">{{ 'contact.form.subject'|trans({}, 'messages', locale) }}</td>
               <td style="padding:12px 28px;border-bottom:1px solid #2a2a2a;vertical-align:top;">{{ contact.subject }}</td>
             </tr>
             <tr>
-              <td style="padding:16px 28px;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;vertical-align:top;">Message</td>
+              <td style="padding:16px 28px;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:.08em;vertical-align:top;">{{ 'contact.form.message'|trans({}, 'messages', locale) }}</td>
               <td style="padding:16px 28px;vertical-align:top;line-height:1.6;">{{ contact.message|nl2br }}</td>
             </tr>
           </table>
@@ -45,7 +45,7 @@
 
         <!-- Footer -->
         <tr><td style="padding:16px 28px;color:#555;font-size:12px;border:1px solid #333;border-top:none;background:#111;">
-          Sent via contact form at {{ site_name }}
+          {{ 'contact.email.footer'|trans({'%site_name%': site_name}, 'messages', locale) }}
         </td></tr>
 
       </table>

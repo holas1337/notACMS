@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace NotACms\Service\Content;
 
-use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\LocaleConfigInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Yaml\Yaml;
 
@@ -14,7 +14,7 @@ final class TagTranslationService implements TagTranslationServiceInterface
     private ?array $tagTranslations = null;
 
     public function __construct(
-        private readonly SiteConfigServiceInterface $siteConfigService,
+        private readonly LocaleConfigInterface $localeConfig,
         #[Autowire('%notacms_content%')]
         private readonly string $contentDir,
     ) {
@@ -27,7 +27,7 @@ final class TagTranslationService implements TagTranslationServiceInterface
         }
 
         $map = $this->loadTagTranslations();
-        $defaultLocale = $this->siteConfigService->getDefaultLocale();
+        $defaultLocale = $this->localeConfig->getDefaultLocale();
 
         if ($defaultLocale === $fromLocale) {
             return $map[$tag][$toLocale] ?? $tag;
@@ -55,7 +55,7 @@ final class TagTranslationService implements TagTranslationServiceInterface
             return $this->tagTranslations;
         }
 
-        $path = $this->contentDir.'/_tags.yaml';
+        $path = $this->contentDir.'/'.self::TAGS_FILENAME;
         if (!file_exists($path)) {
             return $this->tagTranslations = [];
         }

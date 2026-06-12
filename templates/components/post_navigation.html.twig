@@ -1,4 +1,4 @@
-{% if prev_post or next_post %}
+{% if (prev_post is defined and prev_post) or (next_post is defined and next_post) %}
 <nav class="post-navigation flex-between border-top pt-4" aria-label="{{ 'blog.post_navigation'|trans }}" data-pagefind-ignore>
     {% if prev_post %}
         <a href="{{ prev_post.url() }}">

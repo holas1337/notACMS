@@ -15,9 +15,12 @@
         <h1>{{ site_name }}</h1>
     {% endif %}
 
+    {% set about_item = content_item('about', locale) %}
     <ul class="home-actions">
         <li><a href="{{ path('blog_list_' ~ locale) }}" class="btn btn-primary">{{ 'blog.all_posts'|trans }}</a></li>
-        <li><a href="{{ content_url('about', locale) }}" class="btn btn-outline">{{ content_item('about', locale).menuLabel() }}</a></li>
+        {% if about_item %}
+        <li><a href="{{ about_item.url() }}" class="btn btn-outline">{{ about_item.menuLabel() }}</a></li>
+        {% endif %}
     </ul>
 </section>
 

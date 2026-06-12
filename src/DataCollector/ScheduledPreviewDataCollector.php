@@ -10,9 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
-#[AutoconfigureTag('data_collector', ['template' => 'data_collector/scheduled_preview.html.twig', 'id' => 'app.scheduled_preview'])]
+#[AutoconfigureTag('data_collector', ['template' => 'data_collector/scheduled_preview.html.twig', 'id' => ScheduledPreviewDataCollector::NAME])]
 final class ScheduledPreviewDataCollector extends DataCollector
 {
+    public const string NAME = 'app.scheduled_preview';
+
     public function __construct(private readonly ScheduledPreviewServiceInterface $scheduledPreviewService)
     {
     }
@@ -31,7 +33,7 @@ final class ScheduledPreviewDataCollector extends DataCollector
 
     public function getName(): string
     {
-        return 'app.scheduled_preview';
+        return self::NAME;
     }
 
     #[\Override]

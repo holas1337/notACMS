@@ -6,6 +6,7 @@ namespace NotACms\Service\Content;
 
 use NotACms\Content\ContentItem;
 use NotACms\Content\ContentTree;
+use NotACms\Service\LocaleConfigInterface;
 use NotACms\Service\Preview\DraftPreviewServiceInterface;
 use NotACms\Service\Preview\ScheduledPreviewServiceInterface;
 use NotACms\Service\SiteConfigServiceInterface;
@@ -13,7 +14,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
-final class ContentService implements ContentServiceInterface, ContentCacheInterface
+final class ContentService implements ContentServiceInterface, ContentCacheInterface, ContentTreeProviderInterface
 {
     /** @var array<string, ContentTree> */
     private array $trees = [];
@@ -28,7 +29,7 @@ final class ContentService implements ContentServiceInterface, ContentCacheInter
         private readonly TranslationMapBuilderInterface $translationMapBuilder,
         private readonly DraftPreviewServiceInterface $draftPreviewService,
         private readonly ScheduledPreviewServiceInterface $scheduledPreviewService,
-        private readonly SiteConfigServiceInterface $siteConfigService,
+        private readonly LocaleConfigInterface $localeConfig,
     ) {
     }
 
@@ -64,6 +65,43 @@ final class ContentService implements ContentServiceInterface, ContentCacheInter
         return $this->getTree($locale)->findByUrl($url);
     }
 
+    public function findByDirectoryKey(string $directoryKey, string $locale): ?ContentItem
+    {
+        return $this->getTree($locale)->findByDirectoryKey($directoryKey);
+    }
+
+    /**
+     * @return ContentItem[]
+     */
+    public function getPostsByCategory(string $category, string $locale): array
+    {
+        return $this->getTree($locale)->getPostsByCategory($category);
+    }
+
+    /**
+     * @return ContentItem[]
+     */
+    public function getPostsByTag(string $tag, string $locale): array
+    {
+        return $this->getTree($locale)->getPostsByTag($tag);
+    }
+
+    /**
+     * @return ContentItem[]
+     */
+    public function getPostsByYearMonth(int $year, int $month, string $locale): array
+    {
+        return $this->getTree($locale)->getPostsByYearMonth($year, $month);
+    }
+
+    /**
+     * @return ContentItem[]
+     */
+    public function getPostsByYear(int $year, string $locale): array
+    {
+        return $this->getTree($locale)->getPostsByYear($year);
+    }
+
     public function findPostBySlug(string $slug, string $locale): ?ContentItem
     {
         return $this->getTree($locale)->findPostBySlug($slug);
@@ -77,7 +115,7 @@ final class ContentService implements ContentServiceInterface, ContentCacheInter
     /**
      * @return ContentItem[]
      */
-    public function getPosts(string $locale, int $page = 1, int $perPage = 10): array
+    public function getPosts(string $locale, int $page = 1, int $perPage = SiteConfigServiceInterface::DEFAULT_POSTS_PER_PAGE): array
     {
         $all = $this->getTree($locale)->getAllPosts();
 
@@ -92,7 +130,7 @@ final class ContentService implements ContentServiceInterface, ContentCacheInter
     /**
      * @return ContentItem[]
      */
-    public function getRecentPosts(string $locale, int $limit = 5): array
+    public function getRecentPosts(string $locale, int $limit = SiteConfigServiceInterface::DEFAULT_RECENT_POSTS_LIMIT): array
     {
         return array_slice($this->getTree($locale)->getAllPosts(), 0, $limit);
     }
@@ -104,7 +142,7 @@ final class ContentService implements ContentServiceInterface, ContentCacheInter
     {
         if (null === $this->translationMap) {
             $trees = [];
-            foreach ($this->siteConfigService->getLocales() as $locale) {
+            foreach ($this->localeConfig->getLocales() as $locale) {
                 $trees[$locale] = $this->getTree($locale);
             }
 

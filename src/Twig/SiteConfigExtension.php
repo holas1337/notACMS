@@ -21,7 +21,7 @@ final class SiteConfigExtension extends AbstractExtension implements GlobalsInte
 
         return [
             'site_name' => (string) ($site['name'] ?? ''),
-            'site_base_url' => (string) ($site['base_url'] ?? ''),
+            'site_base_url' => $this->siteConfigService->getBaseUrl(),
             'site_description' => (string) ($site['description'] ?? ''),
             'site_social' => $site['social'] ?? [],
             'site_author' => $site['author'] ?? [],

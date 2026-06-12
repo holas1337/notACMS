@@ -1,8 +1,6 @@
 header:
-  tagline: blog demo
 nav:
   skip_to_content: Przejdź do treści
-  search: Szukaj
   menu: menu
   main: Nawigacja główna
   theme_toggle: Przełącz motyw
@@ -10,15 +8,13 @@ nav:
   theme_to_dark: Przełącz na ciemny motyw
   language_switcher: Język (%locale%)
 blog:
+  title: Blog
   read_more: Czytaj dalej
-  published_on: Opublikowano
   updated_on: Zaktualizowano
   category: Kategoria
   tags: Tagi
   no_posts: Brak wpisów w tej kategorii.
-  archive: Archiwum
   all_posts: Wszystkie wpisy
-  comments_disabled: Komentarze są wyłączone.
   share: Udostępnij
   share_on_x: Udostępnij na X
   share_on_linkedin: Udostępnij na LinkedIn
@@ -35,36 +31,32 @@ blog:
     archive_month: Wpisy z %date%.
     archive_year: Wpisy z roku %year%.
   post_navigation: Nawigacja między wpisami
-  nav_prev: ← Poprzedni
-  nav_next: Następny →
   series_part: Część %part% z %total%
   series_nav_label: Seria artykułów
 sidebar:
   recent_posts: Ostatnie wpisy
   categories: Kategorie
   tags: Tagi
-  archive: Archiwum
   search: Szukaj
-  contact: kontakt
-  contact_intro: Budujesz coś z PHP lub Symfony?
-  contact_cta: → skontaktuj się
 search:
   title: Szukaj
   close: Zamknij wyszukiwanie
   placeholder: Szukaj na stronie...
   no_results: Nie znaleziono wyników dla "%query%".
-  results_for: 'Wyniki dla: "%query%"'
   hint_navigate: nawiguj
   hint_open: otwórz
   hint_close: zamknij
   hint_anywhere: gdziekolwiek
 contact:
+  email:
+    title: "Kontakt z %site_name%"
+    heading: "nowa wiadomość kontaktowa"
+    footer: "Wysłano przez formularz kontaktowy na %site_name%"
   title: Kontakt
   meta_description: Skontaktuj się z zespołem notACMS. Użyj formularza kontaktowego, aby zadać pytania lub rozpocząć rozmowę.
   connection_error: Błąd połączenia. Spróbuj ponownie.
-  intro: Skontaktuj się ze mną
-  about_nudge: Chcesz wiedzieć więcej? <a href="%about_url%">Przeczytaj o notACMS
-    i jak działa</a>
+  about_nudge: 'Chcesz wiedzieć więcej?'
+  about_nudge_link: 'Dowiedz się o notACMS'
   form:
     name: Imię i nazwisko
     email: Adres e-mail
@@ -72,7 +64,6 @@ contact:
     subject: Temat
     message: Wiadomość
     send: Wyślij
-    sending: Wysyłanie...
     success: Wiadomość została wysłana. Dziękuję!
     error: Coś poszło nie tak. Sprawdź swoje dane i spróbuj ponownie.
 breadcrumb:
@@ -84,7 +75,6 @@ pagination:
   page: Strona
   of: z
 language:
-  switcher: Język (%locale%)
   choose: Wybierz język
 cookie:
   banner_text: Ta strona używa jednego funkcjonalnego pliku cookie do zapamiętania
@@ -101,7 +91,6 @@ about:
   recommendation_via: przez LinkedIn
   recommendation_expand: czytaj całe polecenie →
   recommendation_collapse: zwiń ↑
-  tech_stack: Technologie
   skills.Language: Język
   skills.Framework: Framework
   skills.Frontend: Frontend
@@ -109,8 +98,6 @@ about:
 projects:
   view_all: Zobacz wszystkie %count% realizacje
 footer:
-  copyright: Wszelkie prawa zastrzeżone
-  built_with: Zbudowane z
 error:
   title: Błąd
   go_home: Wróć na stronę główną
@@ -118,7 +105,7 @@ coming_soon:
   title: Już wkrótce
   heading: Już wkrótce
   description: Ten wpis nie został jeszcze opublikowany.
-  publishing: Publikacja
+  publishing: 'Publikacja: %date%'
 code:
   copy: kopiuj
   copied: skopiowano!
@@ -143,12 +130,14 @@ site:
   nav_prev: Poprzedni
   nav_next: Następny
   open_navigation: Otwórz nawigację
+  page_navigation: Nawigacja między stronami
 home:
   hero_badge: Open Source · PHP / Symfony
   hero_heading: Generator stron statycznych, który<br><em>po prostu nie przeszkadza.</em>
   hero_sub: Pisz w Markdown. Definiuj strukturę w YAML. Uruchom jedno polecenie. Uzyskaj
     czysty statyczny HTML — brak bazy danych, brak serwera, brak niespodzianek.
   hero_cta: Zacznij
+  stats_label: Kluczowe statystyki
   stat_db: Tabel w bazie danych
   stat_static: Statyczny wynik
   stat_ai: Przyjazna struktura

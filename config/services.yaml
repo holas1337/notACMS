@@ -25,11 +25,3 @@ services:
         class: NotACms\Service\Preview\SessionToggleService
         arguments:
             $sessionKey: !php/const NotACms\Service\Preview\ScheduledPreviewServiceInterface::SESSION_KEY
-
-    NotACms\Service\Preview\DraftPreviewService:
-        arguments:
-            $sessionToggleService: '@app.session_toggle.draft'
-
-    NotACms\Service\Preview\ScheduledPreviewService:
-        arguments:
-            $sessionToggleService: '@app.session_toggle.scheduled'

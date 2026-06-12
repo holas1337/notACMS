@@ -7,6 +7,7 @@ namespace NotACms\Controller;
 use NotACms\Attribute\LocalizedRoute;
 use NotACms\Content\ContentItem;
 use NotACms\Service\Content\ContentServiceInterface;
+use NotACms\Service\Content\ContentTreeProviderInterface;
 use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +17,35 @@ final class PageController extends AbstractController
 {
     public function __construct(
         private readonly ContentServiceInterface $contentService,
+        private readonly ContentTreeProviderInterface $contentTreeProvider,
         private readonly SiteConfigServiceInterface $siteConfigService,
     ) {
+    }
+
+    #[Route('/llms.txt', name: 'llms_txt')]
+    public function llmsTxt(): Response
+    {
+        $llmsLimit = $this->siteConfigService->getLlmsLimit();
+        $postsByLocale = [];
+        foreach ($this->siteConfigService->getLocales() as $locale) {
+            $postsByLocale[$locale] = array_slice($this->contentTreeProvider->getTree($locale)->getAllPosts(), 0, $llmsLimit);
+        }
+
+        $defaultLocale = $this->siteConfigService->getDefaultLocale();
+        $contentTree = $this->contentTreeProvider->getTree($defaultLocale);
+        $homeUrl = $this->generateUrl('home_'.$defaultLocale);
+        $pages = array_values(array_filter(
+            $contentTree->getAllPages(),
+            fn (ContentItem $contentItem): bool => !$contentItem->isDynamic() && '' !== $contentItem->url() && $homeUrl !== $contentItem->url(),
+        ));
+
+        $response = $this->render('feed/llms.txt.twig', [
+            'posts_by_locale' => $postsByLocale,
+            'pages' => $pages,
+        ]);
+        $response->headers->set('Content-Type', 'text/plain; charset=UTF-8');
+
+        return $response;
     }
 
     #[Route('/robots.txt', name: 'robots')]
@@ -34,7 +62,7 @@ final class PageController extends AbstractController
     {
         $itemsByLocale = [];
         foreach ($this->siteConfigService->getLocales() as $locale) {
-            $tree = $this->contentService->getTree($locale);
+            $tree = $this->contentTreeProvider->getTree($locale);
             $itemsByLocale[$locale] = array_merge($tree->getAllPosts(), $tree->getAllPages());
         }
 

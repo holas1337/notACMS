@@ -3,11 +3,14 @@
 # Each entry maps the canonical tag to its equivalents in other locales.
 # Tags identical across all locales are omitted.
 release:
-  de: veröffentlichung
+  de: veroeffentlichung
   pl: wydanie
+  fr: version
 announcement:
-  de: ankündigung
-  pl: ogłoszenie
+  de: ankuendigung
+  pl: ogloszenie
+  fr: annonce
 open-source:
-  de: Open-Source
-  pl: otwarto-źródłowe
+  de: open-source
+  pl: otwarte-oprogramowanie
+  fr: open-source

@@ -10,7 +10,7 @@
                 {% set page_url = content_url(page.dir, locale) %}
                 <li>
                     <a href="{{ page_url }}"
-                       {% if current_path starts with page_url %} class="is-active" aria-current="page"{% endif %}>
+                       {% if page_url is not same as('/') and current_path starts with page_url %} class="is-active" aria-current="page"{% endif %}>
                         <span class="sidebar-icon"><i class="ph {{ page.icon }}" aria-hidden="true"></i></span>
                         {{ page.label }}
                     </a>
@@ -26,7 +26,7 @@
                 <a href="{{ path('blog_list_' ~ locale) }}"
                    {% if current_path starts with path('blog_list_' ~ locale) %} class="is-active" aria-current="page"{% endif %}>
                     <span class="sidebar-icon"><i class="ph ph-rocket" aria-hidden="true"></i></span>
-                    {{ content_item('blog', locale).menuLabel() }}
+                    {{ content_item('blog', locale).menuLabel() ?? 'blog.title'|trans }}
                 </a>
             </li>
             <li>
@@ -50,7 +50,7 @@
 </button>
 
 {# ── Mobile sidebar drawer ── #}
-<div class="docs-sidebar--mobile" id="docs-sidebar-mobile" aria-hidden="true">
+<div class="docs-sidebar--mobile" id="docs-sidebar-mobile">
     <div class="sidebar-section">
         <span class="sidebar-label">{{ 'site.documentation'|trans }}</span>
         <ul class="sidebar-nav">
@@ -58,7 +58,7 @@
                 {% set page_url = content_url(page.dir, locale) %}
                 <li>
                     <a href="{{ page_url }}"
-                       {% if current_path starts with page_url %} class="is-active" aria-current="page"{% endif %}>
+                       {% if page_url is not same as('/') and current_path starts with page_url %} class="is-active" aria-current="page"{% endif %}>
                         <span class="sidebar-icon"><i class="ph {{ page.icon }}" aria-hidden="true"></i></span>
                         {{ page.label }}
                     </a>
@@ -74,7 +74,7 @@
                 <a href="{{ path('blog_list_' ~ locale) }}"
                    {% if current_path starts with path('blog_list_' ~ locale) %} class="is-active" aria-current="page"{% endif %}>
                     <span class="sidebar-icon"><i class="ph ph-rocket" aria-hidden="true"></i></span>
-                    {{ content_item('blog', locale).menuLabel() }}
+                    {{ content_item('blog', locale).menuLabel() ?? 'blog.title'|trans }}
                 </a>
             </li>
             <li>

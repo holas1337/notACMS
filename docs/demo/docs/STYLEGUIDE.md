@@ -58,7 +58,7 @@ DESIGN.md tokens map to SCSS compile-time variables in `_variables.scss`:
 | SCSS variable | Value | Usage |
 |---|---|---|
 | `$shadow-sm` | `0 1px 2px rgba(0,0,0,0.06)` | Subtle lift on hover |
-| `$shadow` | `0 2px 8px rgba(0,0,0,0.08)` | Cards, dropdowns |
+| `$shadow-lg — dropdowns (docs nav, language switcher); $shadow-xl — search overlay; $shadow-sm/$shadow unused
 | `$shadow-lg` | `0 8px 24px rgba(0,0,0,0.12)` | Popovers, nav dropdowns |
 | `$shadow-xl` | `0 24px 80px rgba(0,0,0,0.35)` | Modal-level elevation (search overlay) |
 
@@ -83,3 +83,23 @@ When adding new tokens to DESIGN.md, add the corresponding SCSS variable to keep
 - **Do** keep Inter and JetBrains Mono strictly separated — one for body, one for code/labels
 - **Don't** use `$fs-*` SCSS variables in component templates — they compile to static values; use `rem` equivalents if needed in local SCSS
 - **Don't** create new CSS classes in local overrides that duplicate existing component patterns
+
+## Twig Component Inventory
+
+All files in `templates/components/` (kept in sync with the directory — update this table when adding/removing a component):
+
+| Component | Include path | Purpose |
+|---|---|---|
+| `about_profile` | `components/about_profile.html.twig` | About page header (name, headline, role) |
+| `breadcrumb` | `components/breadcrumb.html.twig` | Breadcrumb nav from `breadcrumbs()` objects |
+| `cookie_banner` | `components/cookie_banner.html.twig` | Cookie consent banner |
+| `docs_sidebar` | `components/docs_sidebar.html.twig` | Docs sidebar (desktop + mobile drawer); expects `doc_pages`, `current_path` |
+| `language_switcher` | `components/language_switcher.html.twig` | Locale switcher via `lang_switch_urls()` |
+| `navigation` | `components/navigation.html.twig` | Main nav incl. docs dropdown, theme toggle, search trigger |
+| `pagination` | `components/pagination.html.twig` | Prev/next pagination; expects `base_url`, `paginated_route`, `current_page`, `total_pages` |
+| `prev_next_nav` | `components/prev_next_nav.html.twig` | Prev/next cards (docs + blog posts); expects `prev`, `next`, `aria_label` |
+| `recommendation_card` | `components/recommendation_card.html.twig` | Expandable recommendation quote; expects `rec`, `expand_label`, `collapse_label` |
+| `release_card` | `components/release_card.html.twig` | Release/post card; expects `post`, optional `role` |
+| `responsive_img` | `components/responsive_img.html.twig` | `<img>` with WebP srcset; expects `src`, `alt`, optional `sizes`/`width`/`height`/`loading`/`fetchpriority`/`pagefind` |
+
+Removed in v1.2.0 (orphaned, unstyled): `post_card`, `post_card_mini`, `post_meta_line`, `share_buttons`, `sidebar_top`, `sidebar_bottom`, `featured_image`, and the `data_collector/` copies (core's profiler templates apply).

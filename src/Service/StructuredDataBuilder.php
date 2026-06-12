@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace NotACms\Service;
 
+use NotACms\Content\ValueObject\BlogPostingData;
+
 final class StructuredDataBuilder implements StructuredDataBuilderInterface
 {
     /**
@@ -48,30 +50,31 @@ final class StructuredDataBuilder implements StructuredDataBuilderInterface
     }
 
     /**
-     * @param array<int, string>        $keywords
-     * @param array<string, mixed>|null $image
-     * @param array<string, mixed>|null $author
-     * @param array<string, mixed>|null $publisher
+     * @param BlogPostingData|array<string, mixed> $blogPostingData
      *
      * @return array<string, mixed>
      */
-    public function blogPosting(string $headline, string $url, string $inLanguage, string $datePublished, ?string $dateModified = null, ?string $description = null, int $wordCount = 0, ?string $articleSection = null, array $keywords = [], ?array $image = null, ?array $author = null, ?array $publisher = null, ?string $mainEntityOfPage = null): array
+    public function blogPosting(BlogPostingData|array $blogPostingData): array
     {
+        if (is_array($blogPostingData)) {
+            $blogPostingData = new BlogPostingData(...$blogPostingData);
+        }
+
         $data = [
             '@type' => 'BlogPosting',
-            'headline' => $headline,
-            'url' => $url,
-            'inLanguage' => $inLanguage,
-            'datePublished' => $datePublished,
-            'dateModified' => $dateModified,
-            'description' => $description,
-            'wordCount' => $wordCount,
-            'articleSection' => $articleSection,
-            'keywords' => $keywords,
-            'image' => $image,
-            'author' => $author,
-            'publisher' => $publisher,
-            'mainEntityOfPage' => $mainEntityOfPage ?? $url,
+            'headline' => $blogPostingData->headline,
+            'url' => $blogPostingData->url,
+            'inLanguage' => $blogPostingData->inLanguage,
+            'datePublished' => $blogPostingData->datePublished,
+            'dateModified' => $blogPostingData->dateModified,
+            'description' => $blogPostingData->description,
+            'wordCount' => $blogPostingData->wordCount,
+            'articleSection' => $blogPostingData->articleSection,
+            'keywords' => $blogPostingData->keywords,
+            'image' => $blogPostingData->image,
+            'author' => $blogPostingData->author,
+            'publisher' => $blogPostingData->publisher,
+            'mainEntityOfPage' => $blogPostingData->mainEntityOfPage ?? $blogPostingData->url,
         ];
 
         return $this->filter($data);

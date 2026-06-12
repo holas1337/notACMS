@@ -19,8 +19,11 @@
             <div class="contact-intro page-body prose">{{ content.htmlContent|srcset_media|raw }}</div>
         {% endif %}
 
-        <p class="mb-3">{{ ('contact.about_nudge'|trans({'%about_url%': content_url('about', locale)}))|raw }}</p>
+        <p class="mb-3">{{ 'contact.about_nudge'|trans }} <a href="{{ content_url('about', locale) }}">{{ 'contact.about_nudge_link'|trans }}</a></p>
 
+        {% if not (contact_form_available ?? true) %}
+        <div class="alert alert-danger"><div class="alert-body">{{ 'contact.form.unavailable'|trans }}</div></div>
+        {% else %}
         <div id="contact-success" class="alert alert-success is-hidden"><div class="alert-body"></div></div>
         <div id="contact-error" class="alert alert-danger is-hidden"><div class="alert-body"></div></div>
 
@@ -70,6 +73,7 @@
         </div>
 
         {{ form_end(form) }}
+        {% endif %}
     </div>
 </article>
 {% endblock %}

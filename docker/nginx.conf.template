@@ -36,7 +36,7 @@ server {
     # Requires RUNTIME_PHP_ENABLED=true to start the php container; otherwise
     # /api/ requests return 502 (lazy DNS resolution via the resolver above keeps
     # nginx starting cleanly even when the upstream is absent).
-    location ~ ^/([a-z]\{2\}/)?api/ {
+    location ~ "^/([a-z]{2}/)?api/" {
         fastcgi_pass $php_upstream;
         fastcgi_index index.php;
         include fastcgi_params;
@@ -53,14 +53,26 @@ server {
 
     # Hashed assets (CSS, JS, fonts) — safe to cache for 1 year (hash in filename changes on deploy)
     # Assets are at public/assets/ (not public/static/assets/), so use $uri not /static$uri
+    # NOTE: add_header in a location block suppresses ALL inherited server-level
+    # add_header directives, so the security headers must be repeated here.
     location ^~ /assets/ {
         add_header Cache-Control "public, max-age=31536000, immutable" always;
+        add_header X-Frame-Options           "SAMEORIGIN"                       always;
+        add_header X-Content-Type-Options    "nosniff"                          always;
+        add_header Referrer-Policy           "strict-origin-when-cross-origin"  always;
+        add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy   $csp always;
         try_files $uri =404;
     }
 
-    # Media images — not hashed, 30-day cache
+    # Media images — not hashed, 30-day cache (same add_header inheritance note as above)
     location ^~ /media/ {
         add_header Cache-Control "public, max-age=2592000" always;
+        add_header X-Frame-Options           "SAMEORIGIN"                       always;
+        add_header X-Content-Type-Options    "nosniff"                          always;
+        add_header Referrer-Policy           "strict-origin-when-cross-origin"  always;
+        add_header Permissions-Policy        "camera=(), microphone=(), geolocation=()" always;
+        add_header Content-Security-Policy   $csp always;
         try_files /static$uri =404;
     }
 

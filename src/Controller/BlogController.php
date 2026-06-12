@@ -8,9 +8,11 @@ use NotACms\Attribute\LocalizedRoute;
 use NotACms\Content\ContentItem;
 use NotACms\Content\Enum\CardLayout;
 use NotACms\Content\Enum\FilterType;
+use NotACms\Content\ValueObject\LangSwitchContext;
 use NotACms\Service\Content\ContentServiceInterface;
+use NotACms\Service\Content\ContentTreeProviderInterface;
 use NotACms\Service\Content\RelatedPostsServiceInterface;
-use NotACms\Service\Content\TagTranslationServiceInterface;
+use NotACms\Service\Content\TagLangSwitchResolverInterface;
 use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,9 +21,10 @@ final class BlogController extends AbstractController
 {
     public function __construct(
         private readonly ContentServiceInterface $contentService,
+        private readonly ContentTreeProviderInterface $contentTreeProvider,
         private readonly RelatedPostsServiceInterface $relatedPostsService,
         private readonly SiteConfigServiceInterface $siteConfigService,
-        private readonly TagTranslationServiceInterface $tagTranslationService,
+        private readonly TagLangSwitchResolverInterface $tagLangSwitchResolver,
     ) {
     }
 
@@ -33,16 +36,17 @@ final class BlogController extends AbstractController
         $totalPages = (int) ceil($total / $this->siteConfigService->getPostsPerPage());
         $page = max(1, min($page, max(1, $totalPages)));
 
-        $ctx = $this->buildContext($locale);
-        $ctx['posts'] = $this->contentService->getPosts($locale, $page, $this->siteConfigService->getPostsPerPage());
-        $ctx['current_page'] = $page;
-        $ctx['total_pages'] = $totalPages;
-        $ctx['total_posts'] = $total;
-        $ctx['filter_type'] = null;
-        $ctx['filter_value'] = null;
-        $ctx['index_content'] = $this->getIndexContent($locale);
+        $context = $this->buildContext($locale);
+        $context['posts'] = $this->contentService->getPosts($locale, $page, $this->siteConfigService->getPostsPerPage());
+        $context['current_page'] = $page;
+        $context['total_pages'] = $totalPages;
+        $context['total_posts'] = $total;
+        $context['filter_type'] = null;
+        $context['filter_value'] = null;
+        $context['index_content'] = $this->getIndexContent($locale);
+        $context['lang_switch'] = new LangSwitchContext(currentPage: $page);
 
-        return $this->render('blog/list.html.twig', $ctx);
+        return $this->render('blog/list.html.twig', $context);
     }
 
     #[LocalizedRoute('blog_category', path: '/blog/{category}/', requirements: ['category' => '[a-z0-9-]+'])]
@@ -64,64 +68,65 @@ final class BlogController extends AbstractController
     #[LocalizedRoute('blog_tag', path: '/tag/{tag}/', requirements: ['tag' => '[a-z0-9-]+'])]
     public function tag(string $locale, string $tag): Response
     {
-        $posts = $this->contentService->getTree($locale)->getPostsByTag($tag);
+        $posts = $this->contentService->getPostsByTag($tag, $locale);
         if ([] === $posts) {
             throw $this->createNotFoundException('Tag not found: '.$tag);
         }
 
-        $locales = $this->siteConfigService->getLocales();
-        $otherLocales = array_values(array_filter($locales, fn (string $l): bool => $l !== $locale));
-        $otherLocale = $otherLocales[0] ?? $locale;
+        $context = $this->buildContext($locale);
+        $context['posts'] = $posts;
+        $context['filter_type'] = FilterType::Tag->value;
+        $context['filter_value'] = $tag;
+        $context['current_page'] = 1;
+        $context['total_pages'] = 1;
+        $context['index_content'] = null;
+        $context['lang_switch'] = new LangSwitchContext(
+            urlOverrides: $this->tagLangSwitchResolver->resolve($tag, $locale),
+            filterType: FilterType::Tag->value,
+        );
 
-        $otherTag = $this->tagTranslationService->translate($tag, $locale, $otherLocale);
-        $otherTagPosts = $this->contentService->getTree($otherLocale)->getPostsByTag($otherTag);
-        $langSwitchUrl = [] === $otherTagPosts
-            ? $this->generateUrl('blog_list_'.$otherLocale)
-            : $this->generateUrl('blog_tag_'.$otherLocale, ['tag' => $otherTag]);
-
-        $ctx = $this->buildContext($locale);
-        $ctx['posts'] = $posts;
-        $ctx['filter_type'] = FilterType::Tag->value;
-        $ctx['filter_value'] = $tag;
-        $ctx['current_page'] = 1;
-        $ctx['total_pages'] = 1;
-        $ctx['index_content'] = null;
-        $ctx['lang_switch_url'] = $langSwitchUrl;
-
-        return $this->render('blog/list.html.twig', $ctx);
+        return $this->render('blog/list.html.twig', $context);
     }
 
     #[LocalizedRoute('blog_archive', path: '/archive/{year}/{month}/', requirements: ['year' => '\d{4}', 'month' => '\d{2}'])]
     public function archive(string $locale, int $year, int $month): Response
     {
-        $posts = $this->contentService->getTree($locale)->getPostsByYearMonth($year, $month);
+        $posts = $this->contentService->getPostsByYearMonth($year, $month, $locale);
+        if ([] === $posts) {
+            throw $this->createNotFoundException(sprintf('No posts in archive %04d/%02d', $year, $month));
+        }
 
-        $ctx = $this->buildContext($locale);
-        $ctx['posts'] = $posts;
-        $ctx['filter_type'] = FilterType::Archive->value;
-        $ctx['archive_year'] = $year;
-        $ctx['archive_month'] = $month;
-        $ctx['current_page'] = 1;
-        $ctx['total_pages'] = 1;
-        $ctx['index_content'] = null;
+        $context = $this->buildContext($locale);
+        $context['posts'] = $posts;
+        $context['filter_type'] = FilterType::Archive->value;
+        $context['archive_year'] = $year;
+        $context['archive_month'] = $month;
+        $context['current_page'] = 1;
+        $context['total_pages'] = 1;
+        $context['index_content'] = null;
+        $context['lang_switch'] = new LangSwitchContext(filterType: FilterType::Archive->value, archiveYear: $year, archiveMonth: $month);
 
-        return $this->render('blog/list.html.twig', $ctx);
+        return $this->render('blog/list.html.twig', $context);
     }
 
     #[LocalizedRoute('blog_archive_year', path: '/archive/{year}/', requirements: ['year' => '\d{4}'])]
     public function archiveYear(string $locale, int $year): Response
     {
-        $posts = $this->contentService->getTree($locale)->getPostsByYear($year);
+        $posts = $this->contentService->getPostsByYear($year, $locale);
+        if ([] === $posts) {
+            throw $this->createNotFoundException(sprintf('No posts in archive %04d', $year));
+        }
 
-        $ctx = $this->buildContext($locale);
-        $ctx['posts'] = $posts;
-        $ctx['filter_type'] = FilterType::Archive->value;
-        $ctx['archive_year'] = $year;
-        $ctx['current_page'] = 1;
-        $ctx['total_pages'] = 1;
-        $ctx['index_content'] = null;
+        $context = $this->buildContext($locale);
+        $context['posts'] = $posts;
+        $context['filter_type'] = FilterType::Archive->value;
+        $context['archive_year'] = $year;
+        $context['current_page'] = 1;
+        $context['total_pages'] = 1;
+        $context['index_content'] = null;
+        $context['lang_switch'] = new LangSwitchContext(filterType: FilterType::Archive->value, archiveYear: $year);
 
-        return $this->render('blog/list.html.twig', $ctx);
+        return $this->render('blog/list.html.twig', $context);
     }
 
     #[LocalizedRoute('rss', path: '/feed/')]
@@ -151,64 +156,58 @@ final class BlogController extends AbstractController
 
     private function renderCategory(string $locale, string $category): Response
     {
-        $posts = $this->contentService->getTree($locale)->getPostsByCategory($category);
+        $posts = $this->contentService->getPostsByCategory($category, $locale);
         if ([] === $posts) {
             throw $this->createNotFoundException('Category not found: '.$category);
         }
 
-        $ctx = $this->buildContext($locale);
-        $ctx['posts'] = $posts;
-        $ctx['filter_type'] = FilterType::Category->value;
-        $ctx['filter_value'] = $category;
-        $ctx['current_page'] = 1;
-        $ctx['total_pages'] = 1;
-        $ctx['index_content'] = $this->getIndexContent($locale, $category);
+        $context = $this->buildContext($locale);
+        $context['posts'] = $posts;
+        $context['filter_type'] = FilterType::Category->value;
+        $context['filter_value'] = $category;
+        $context['current_page'] = 1;
+        $context['total_pages'] = 1;
+        $context['index_content'] = $this->getIndexContent($locale, $category);
+        $context['lang_switch'] = new LangSwitchContext(filterType: FilterType::Category->value);
 
-        return $this->render('blog/list.html.twig', $ctx);
+        return $this->render('blog/list.html.twig', $context);
     }
 
     private function renderPost(string $locale, ContentItem $contentItem): Response
     {
-        $ctx = $this->buildContext($locale);
-        $ctx['content'] = $contentItem;
-        $contentTree = $this->contentService->getTree($locale);
-        $ctx['related_posts'] = $this->relatedPostsService->getRelatedPosts($contentTree, $contentItem, $this->siteConfigService->getRelatedPostsLimit());
+        $context = $this->buildContext($locale);
+        $context['content'] = $contentItem;
+        $contentTree = $this->contentTreeProvider->getTree($locale);
+        $context['related_posts'] = $this->relatedPostsService->getRelatedPosts($contentTree, $contentItem, $this->siteConfigService->getRelatedPostsLimit());
         $adjacentPosts = $contentTree->getAdjacentPosts($contentItem);
-        $ctx['prev_post'] = $adjacentPosts->prev;
-        $ctx['next_post'] = $adjacentPosts->next;
+        $context['prev_post'] = $adjacentPosts->prev;
+        $context['next_post'] = $adjacentPosts->next;
 
-        $seriesPosts = [];
-        $seriesCurrentPart = 1;
-        if (null !== $contentItem->series()) {
-            $seriesPosts = $contentTree->getSeriesPosts($contentItem->series());
-            foreach ($seriesPosts as $i => $seriesPost) {
-                if ($seriesPost->url() === $contentItem->url()) {
-                    $seriesCurrentPart = $i + 1;
+        $seriesPosts = null !== $contentItem->series() ? $contentTree->getSeriesPosts($contentItem->series()) : [];
+        $seriesCurrentPart = $contentTree->getSeriesPosition($contentItem);
 
-                    break;
-                }
-            }
-        }
+        $context['series_posts'] = $seriesPosts;
+        $context['series_current_part'] = $seriesCurrentPart;
 
-        $ctx['series_posts'] = $seriesPosts;
-        $ctx['series_current_part'] = $seriesCurrentPart;
-
-        return $this->render('blog/post.html.twig', $ctx);
+        return $this->render('blog/post.html.twig', $context);
     }
 
     private function renderComingSoon(string $locale, ContentItem $contentItem): Response
     {
-        $ctx = $this->buildContext($locale);
-        $ctx['post'] = $contentItem;
+        $context = $this->buildContext($locale);
+        $context['post'] = $contentItem;
 
-        return $this->render('page/coming-soon.html.twig', $ctx);
+        return $this->render('page/coming-soon.html.twig', $context);
     }
 
     private function getIndexContent(string $locale, ?string $categorySlug = null): ?ContentItem
     {
         $listUrl = $this->generateUrl('blog_list_'.$locale);
-        $url = null === $categorySlug ? $listUrl : $listUrl.$categorySlug.'/';
 
-        return $this->contentService->getTree($locale)->findByUrl($url);
+        if (null === $categorySlug) {
+            return $this->contentService->findByUrl($listUrl, $locale);
+        }
+
+        return $this->contentService->findByUrl($listUrl.$categorySlug.'/', $locale);
     }
 }

@@ -141,7 +141,7 @@ menu:
 ```yaml
 ---
 title: "Moja strona"
-slug: "pl/moja-strona"
+slug: "moja-strona"
 description: "O czym jest ta strona."
 template: page/default
 menu:

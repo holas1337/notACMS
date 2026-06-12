@@ -14,14 +14,14 @@ use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\MarkdownConverter;
 use NotACms\Content\ValueObject\ParsedMarkdown;
-use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\SiteSettingsInterface;
 
 final class MarkdownParser implements MarkdownParserInterface
 {
     private ?MarkdownConverter $markdownConverter = null;
 
     public function __construct(
-        private readonly SiteConfigServiceInterface $siteConfigService,
+        private readonly SiteSettingsInterface $siteSettings,
     ) {
     }
 
@@ -47,17 +47,9 @@ final class MarkdownParser implements MarkdownParserInterface
     private function getConverter(): MarkdownConverter
     {
         if (!$this->markdownConverter instanceof MarkdownConverter) {
-            $host = (string) parse_url($this->siteConfigService->getBaseUrl(), PHP_URL_HOST);
+            $host = (string) parse_url($this->siteSettings->getBaseUrl(), PHP_URL_HOST);
 
-            $environment = new Environment([
-                'external_link' => [
-                    'internal_hosts' => [$host, 'www.'.$host],
-                    'open_in_new_window' => true,
-                    'html_class' => '',
-                    'nofollow' => 'external',
-                    'noopener' => 'external',
-                    'noreferrer' => 'external',
-                ],
+            $config = [
                 'heading_permalink' => [
                     'html_class' => 'heading-anchor',
                     'id_prefix' => '',
@@ -65,14 +57,29 @@ final class MarkdownParser implements MarkdownParserInterface
                     'symbol' => '#',
                     'insert' => 'after',
                 ],
-            ]);
+            ];
+
+            if ('' !== $host) {
+                $config['external_link'] = [
+                    'internal_hosts' => [$host, 'www.'.$host],
+                    'open_in_new_window' => true,
+                    'html_class' => '',
+                    'nofollow' => 'external',
+                    'noopener' => 'external',
+                    'noreferrer' => 'external',
+                ];
+            }
+
+            $environment = new Environment($config);
 
             $environment->addExtension(new CommonMarkCoreExtension());
             $environment->addExtension(new GithubFlavoredMarkdownExtension());
             $environment->addExtension(new FrontMatterExtension());
             $environment->addExtension(new HeadingPermalinkExtension());
             $environment->addExtension(new AttributesExtension());
-            $environment->addExtension(new ExternalLinkExtension());
+            if ('' !== $host) {
+                $environment->addExtension(new ExternalLinkExtension());
+            }
 
             $this->markdownConverter = new MarkdownConverter($environment);
         }

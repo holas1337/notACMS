@@ -7,11 +7,12 @@ The default templates, styles, and assets have been significantly redesigned. If
 **If you want to keep the old look**, use the compatibility package included in this release:
 
 ```bash
+# NOTE: the old-template package shipped through v1.1.x only — copy it from a v1.1.x tag.
 cp -r docs/customization/old-template/. local/
 ddev build
 ```
 
-See `docs/customization/old-template/README.md` for details, including how to merge any previous customisations you had on top of the old template.
+See the package README (in the v1.1.x tag) for details, including how to merge any previous customisations you had on top of the old template.
 
 ---
 
@@ -107,7 +108,7 @@ If your `local/assets/styles/app_local.scss` imports all core partials manually 
 
 The old `docs/examples/` tree has been removed. Its content was reorganised as follows:
 
-- Demo content, templates, and translations → `docs/customization/old-template/` (use it as the compatibility package above).
+- Demo content, templates, and translations → the `old-template` compatibility package (shipped through v1.1.x; copy from a v1.1.x tag).
 - Scratch template-override examples (`block-override`, `full-override`, `material-cards`, `starter-extend`, `starter-full-override`) → removed; use the bare core as the baseline and copy `docs/demo/` files into `local/` selectively instead.
 
 Update any bookmarks or scripts pointing at `docs/examples/` accordingly.

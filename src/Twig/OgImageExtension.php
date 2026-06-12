@@ -9,6 +9,8 @@ use Twig\Attribute\AsTwigFunction;
 
 final readonly class OgImageExtension
 {
+    private const string DEFAULT_OG_IMAGE = '/build/images/og-default.jpg';
+
     #[AsTwigFunction(name: 'og_image_url')]
     public function ogImageUrl(?ContentItem $contentItem, string $siteBaseUrl): string
     {
@@ -16,6 +18,6 @@ final readonly class OgImageExtension
             return $siteBaseUrl.$contentItem->image();
         }
 
-        return $siteBaseUrl.'/build/images/og-default.jpg';
+        return $siteBaseUrl.self::DEFAULT_OG_IMAGE;
     }
 }

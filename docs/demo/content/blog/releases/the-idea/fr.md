@@ -1,7 +1,7 @@
 ---
-title: "L'idée"
+title: "Pourquoi j'ai créé notACMS"
 slug: "articles/the-idea"
-description: "Comment l'idée de notACMS est née — et pourquoi le monde n'a pas besoin d'un autre CMS."
+description: "L'histoire d'origine de notACMS — pourquoi encore un générateur de site statique, la philosophie AI-friendly et la décision zéro base de données."
 date: 2026-02-01
 category: releases
 tags: [announcement, open-source]

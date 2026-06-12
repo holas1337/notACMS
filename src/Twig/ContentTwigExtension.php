@@ -18,8 +18,7 @@ final readonly class ContentTwigExtension
     #[AsTwigFunction(name: 'content_url')]
     public function contentUrl(string $directoryKey, string $locale): string
     {
-        $contentTree = $this->contentService->getTree($locale);
-        $item = $contentTree->findByDirectoryKey($directoryKey);
+        $item = $this->contentService->findByDirectoryKey($directoryKey, $locale);
 
         return $item?->url() ?? '/';
     }
@@ -27,8 +26,6 @@ final readonly class ContentTwigExtension
     #[AsTwigFunction(name: 'content_item')]
     public function contentItem(string $directoryKey, string $locale): ?ContentItem
     {
-        $contentTree = $this->contentService->getTree($locale);
-
-        return $contentTree->findByDirectoryKey($directoryKey);
+        return $this->contentService->findByDirectoryKey($directoryKey, $locale);
     }
 }

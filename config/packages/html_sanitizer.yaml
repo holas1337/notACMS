@@ -1,0 +1,11 @@
+framework:
+    html_sanitizer:
+        sanitizers:
+            # Inline-markup allowlist for translation-catalog copy (marketing
+            # headings/paragraphs in themes). No attributes, no block elements.
+            app.trans_inline:
+                allow_elements:
+                    strong: []
+                    em: []
+                    code: []
+                    br: []

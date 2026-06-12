@@ -1,6 +1,6 @@
 ---
 title: "Demo"
-slug: "blog/demo"
+slug: "wpisy/demo"
 description: "Wpisy demonstracyjne pokazujące funkcje notACMS."
 template: blog/list
 ---

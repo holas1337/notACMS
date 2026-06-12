@@ -1,0 +1,45 @@
+# {{ site_name|replace({'# ': ''}) }}
+
+> {{ site_description }}
+
+{% block details %}
+{% set lines = [] %}
+{% set _author_name = (site_author.name|default(''))|replace({'# ': ''}) %}
+{% set _site_clean = site_name|replace({'# ': ''}) %}
+{% if _author_name and _author_name is not same as(_site_clean) %}
+{% set _author_link = (site_author.url is defined and site_author.url) ? ' (' ~ site_author.url ~ ')' : '' %}
+{% set lines = lines|merge(['Author: ' ~ _author_name ~ _author_link ~ '.']) %}
+{% endif %}
+{% if site_author.skills is defined and site_author.skills %}
+{% set _tags = [] %}
+{% for group, items in site_author.skills %}{% set _tags = _tags|merge(items) %}{% endfor %}
+{% if _tags %}{% set _tags = _tags|reduce((carry, v) => v in carry ? carry : carry|merge([v]), []) %}{% set lines = lines|merge([_tags|join(', ') ~ '.']) %}{% endif %}
+{% endif %}
+{% if site_social is not empty %}
+{% set lines = lines|merge(['']) %}
+{% for sname, surl in site_social %}{% set lines = lines|merge(['- [' ~ sname ~ '](' ~ surl ~ ')']) %}{% endfor %}
+{% endif %}
+{{ lines|join("\n") }}
+{% endblock %}
+
+{% block open_source %}{% endblock %}
+
+{% for locale, locale_posts in posts_by_locale %}
+{% if locale_posts is not empty %}
+## Blog{{ posts_by_locale|length > 1 ? ' (' ~ locale ~ ')' : '' }}
+
+{% for post in locale_posts -%}
+- [{{ post.title() }}]({{ site_base_url }}{{ post.url() }}){{ post.description() ? ': ' ~ post.description() : '' }}
+{% endfor %}
+
+{% endif %}
+{% endfor %}
+## Optional
+
+{% for page in pages -%}
+- [{{ page.title() }}]({{ site_base_url }}{{ page.url() }}){{ page.description() ? ': ' ~ page.description() : '' }}
+{% endfor %}
+{% for locale in site_locales_list -%}
+- [RSS{{ site_locales_list|length > 1 ? ' (' ~ locale ~ ')' : '' }}]({{ site_base_url }}{{ path('rss_' ~ locale) }}): Subscribe for updates
+{% endfor %}
+- [Built with notACMS]({{ notacms_project_url }})

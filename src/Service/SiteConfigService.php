@@ -24,8 +24,12 @@ final class SiteConfigService implements SiteConfigServiceInterface
     public function getLocales(): array
     {
         if (null === $this->locales) {
-            $config = $this->load();
-            $this->locales = array_keys($config['locales'] ?? []);
+            $locales = $this->load()['locales'] ?? [];
+            if (!is_array($locales) || ([] !== $locales && array_is_list($locales))) {
+                throw new \RuntimeException('_site.yaml: "locales" must be a map of locale code => settings (e.g. "en: { label: English }"), not a list');
+            }
+
+            $this->locales = array_map(strval(...), array_keys($locales));
         }
 
         return $this->locales;
@@ -79,22 +83,27 @@ final class SiteConfigService implements SiteConfigServiceInterface
 
     public function getPostsPerPage(): int
     {
-        return (int) ($this->load()['posts_per_page'] ?? self::DEFAULT_POSTS_PER_PAGE);
+        return max(1, (int) ($this->load()['posts_per_page'] ?? self::DEFAULT_POSTS_PER_PAGE));
     }
 
     public function getRssLimit(): int
     {
-        return (int) ($this->load()['rss_limit'] ?? self::DEFAULT_RSS_LIMIT);
+        return max(1, (int) ($this->load()['rss_limit'] ?? self::DEFAULT_RSS_LIMIT));
+    }
+
+    public function getLlmsLimit(): int
+    {
+        return max(1, (int) ($this->load()['llms_limit'] ?? self::DEFAULT_LLMS_LIMIT));
     }
 
     public function getRecentPostsLimit(): int
     {
-        return (int) ($this->load()['recent_posts_limit'] ?? self::DEFAULT_RECENT_POSTS_LIMIT);
+        return max(1, (int) ($this->load()['recent_posts_limit'] ?? self::DEFAULT_RECENT_POSTS_LIMIT));
     }
 
     public function getRelatedPostsLimit(): int
     {
-        return (int) ($this->load()['related_posts_limit'] ?? self::DEFAULT_RELATED_POSTS_LIMIT);
+        return max(1, (int) ($this->load()['related_posts_limit'] ?? self::DEFAULT_RELATED_POSTS_LIMIT));
     }
 
     public function getImageVariantWidths(): array
@@ -106,7 +115,7 @@ final class SiteConfigService implements SiteConfigServiceInterface
 
     public function getImageQuality(): int
     {
-        return (int) ($this->load()['image_quality'] ?? self::DEFAULT_IMAGE_QUALITY);
+        return max(1, (int) ($this->load()['image_quality'] ?? self::DEFAULT_IMAGE_QUALITY));
     }
 
     public function getImageMagickFlags(): string
@@ -116,28 +125,28 @@ final class SiteConfigService implements SiteConfigServiceInterface
 
     public function getNewPostDays(): int
     {
-        return (int) ($this->load()['new_post_days'] ?? self::DEFAULT_NEW_POST_DAYS);
+        return max(0, (int) ($this->load()['new_post_days'] ?? self::DEFAULT_NEW_POST_DAYS));
     }
 
     public function getComingSoonRevealDays(): int
     {
-        return (int) ($this->load()['coming_soon_reveal_days'] ?? self::DEFAULT_COMING_SOON_REVEAL_DAYS);
+        return max(0, (int) ($this->load()['coming_soon_reveal_days'] ?? self::DEFAULT_COMING_SOON_REVEAL_DAYS));
     }
 
     public function getMetaDescriptionLength(): int
     {
-        return (int) ($this->load()['meta_description_length'] ?? self::DEFAULT_META_DESCRIPTION_LENGTH);
+        return max(1, (int) ($this->load()['meta_description_length'] ?? self::DEFAULT_META_DESCRIPTION_LENGTH));
     }
 
     public function getContactFormConfig(): ContactFormConfig
     {
-        $cf = $this->load()['contact_form'] ?? [];
+        $contactFormSettings = $this->load()['contact_form'] ?? [];
 
         return new ContactFormConfig(
-            email: (string) ($cf['email'] ?? ''),
-            from: (string) ($cf['from'] ?? ''),
-            fromName: (string) ($cf['from_name'] ?? ''),
-            topic: (string) ($cf['topic'] ?? ''),
+            email: (string) ($contactFormSettings['email'] ?? ''),
+            from: (string) ($contactFormSettings['from'] ?? ''),
+            fromName: (string) ($contactFormSettings['from_name'] ?? ''),
+            topic: (string) ($contactFormSettings['topic'] ?? ''),
         );
     }
 
@@ -147,8 +156,15 @@ final class SiteConfigService implements SiteConfigServiceInterface
     private function load(): array
     {
         if (null === $this->config) {
-            $raw = Yaml::parseFile($this->contentDir.'/_site.yaml');
-            $this->config = $raw['site'] ?? [];
+            $path = $this->contentDir.'/'.self::SITE_CONFIG_FILENAME;
+
+            try {
+                $raw = Yaml::parseFile($path);
+            } catch (\Throwable $throwable) {
+                throw new \RuntimeException(sprintf('Cannot load site config "%s": %s', $path, $throwable->getMessage()), 0, $throwable);
+            }
+
+            $this->config = is_array($raw) ? ($raw['site'] ?? []) : [];
         }
 
         return $this->config;

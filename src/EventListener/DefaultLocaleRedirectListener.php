@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace NotACms\EventListener;
 
-use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\LocaleConfigInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 final readonly class DefaultLocaleRedirectListener
 {
     public function __construct(
-        private SiteConfigServiceInterface $siteConfigService,
+        private LocaleConfigInterface $localeConfig,
     ) {
     }
 
@@ -29,7 +29,7 @@ final readonly class DefaultLocaleRedirectListener
 
         $request = $requestEvent->getRequest();
         $path = $request->getPathInfo();
-        $default = $this->siteConfigService->getDefaultLocale();
+        $default = $this->localeConfig->getDefaultLocale();
         $prefix = '/'.$default;
 
         if ($path !== $prefix && !str_starts_with($path, $prefix.'/')) {

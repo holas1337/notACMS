@@ -3,7 +3,6 @@ site:
   name: "notACMS"
   description: "A static-first CMS that generates plain HTML from Markdown"
   base_url: "https://notacms.holas.pl"
-  default_locale: en
   locales:
     en:
       label: "English"
@@ -33,6 +32,7 @@ site:
   # See SiteConfigServiceInterface for default values
   posts_per_page: 10
   rss_limit: 20                # items in RSS feed
+  llms_limit: 5                # posts listed in /llms.txt per locale
   recent_posts_limit: 6        # posts shown in sidebar "Recent"
   related_posts_limit: 3       # posts shown in "Related Posts"
   new_post_days: 14            # age at which "[NEW]" badge appears
@@ -41,3 +41,8 @@ site:
   image_variant_widths: [640, 960]
   image_quality: 82            # JPEG/WebP quality (0-100)
   image_magick_flags: "-strip" # extra flags passed to ImageMagick
+  contact_form:
+    email: "hello@example.com"   # address that receives contact form submissions
+    from: "noreply@example.com"  # sender address for notification emails
+    from_name: "Your Site"
+    topic: "[Contact]"
