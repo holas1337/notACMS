@@ -10,9 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
-#[AutoconfigureTag('data_collector', ['template' => 'data_collector/draft_preview.html.twig', 'id' => 'app.draft_preview'])]
+#[AutoconfigureTag('data_collector', ['template' => 'data_collector/draft_preview.html.twig', 'id' => DraftPreviewDataCollector::NAME])]
 final class DraftPreviewDataCollector extends DataCollector
 {
+    public const string NAME = 'app.draft_preview';
+
     public function __construct(private readonly DraftPreviewServiceInterface $draftPreviewService)
     {
     }
@@ -31,7 +33,7 @@ final class DraftPreviewDataCollector extends DataCollector
 
     public function getName(): string
     {
-        return 'app.draft_preview';
+        return self::NAME;
     }
 
     #[\Override]

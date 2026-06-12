@@ -10,12 +10,11 @@ nav:
     about: About
     contact: Contact
 blog:
+  title: Blog
   read_more: Read more
   updated_on: Updated on
-  category: Category
   tags: Tags
   no_posts: No posts found.
-  archive: Archive
   draft_banner: '[DRAFT] This post is not published'
   scheduled_banner: '[PLANNED] Scheduled for %date%'
   all_posts: All posts
@@ -29,8 +28,8 @@ blog:
   reading_time: '%count% min read'
   related_posts: Related Posts
   meta:
-    index: Articles and posts.
     category: Posts in the %category% category.
+    index: Articles and posts.
     tag: 'Posts tagged #%tag%.'
     archive_month: Posts from %date%.
     archive_year: Posts from %year%.
@@ -41,7 +40,6 @@ sidebar:
   recent_posts: Recent posts
   categories: Categories
   tags: Tags
-  archive: Archive
   search: Search
 search:
   title: Search
@@ -49,7 +47,12 @@ search:
   no_results: 'No results found for "%query%".'
 contact:
   title: Contact
-  about_nudge: 'Not sure yet? <a href="%about_url%">Learn more about notACMS</a>'
+  about_nudge: 'Not sure yet?'
+  email:
+    title: "Contact from %site_name%"
+    heading: "new contact message"
+    footer: "Sent via the contact form at %site_name%"
+  about_nudge_link: 'Learn more about notACMS'
   form:
     name: Full name
     email: Email address
@@ -57,6 +60,7 @@ contact:
     subject: Subject
     message: Message
     send: Send
+    unavailable: "The contact form is not configured yet — please check back later."
     success: Message sent. Thank you!
     error: Something went wrong. Please check your details and try again.
 breadcrumb:
@@ -76,7 +80,6 @@ about:
   headline: AI-friendly static site generator built on Symfony
   skills_title: Expertise
   cta_link: Get in touch
-  cta_text: "Want to work together?"
   recommendations_title: Recommendations
   recommendation_via: via LinkedIn
   recommendation_expand: read full recommendation →

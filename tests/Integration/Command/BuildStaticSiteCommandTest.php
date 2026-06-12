@@ -10,7 +10,7 @@ use NotACms\Content\ValueObject\ArchiveMonth;
 use NotACms\Content\ValueObject\CategoryCount;
 use NotACms\Content\ValueObject\TagCount;
 use NotACms\Service\Content\ContentCacheInterface;
-use NotACms\Service\Content\ContentServiceInterface;
+use NotACms\Service\Content\ContentTreeProviderInterface;
 use NotACms\Service\Image\ImageResizerInterface;
 use NotACms\Service\Image\ResponsiveImageServiceInterface;
 use NotACms\Service\SiteConfigServiceInterface;
@@ -44,7 +44,7 @@ final class BuildStaticSiteCommandTest extends TestCase
         $tree->addPost(ContentItemFactory::publishedPost(['slug' => 'test-post'], 'test-post', '/test-post/'));
         $tree->addPage(ContentItemFactory::page([], 'about', '/about/'));
 
-        $contentService = $this->createStub(ContentServiceInterface::class);
+        $contentService = $this->createStub(ContentTreeProviderInterface::class);
         $contentService->method('getTree')->willReturn($tree);
 
         $cache = $this->createStub(ContentCacheInterface::class);
@@ -83,14 +83,13 @@ final class BuildStaticSiteCommandTest extends TestCase
         mkdir($contentDir, 0755, true);
 
         $command = new BuildStaticSiteCommand(
-            $httpKernel,
             $contentService,
             $cache,
-            $imageResizer,
-            $responsiveImageService,
             $siteConfig,
             $urlGenerator,
-            $contentDir,
+            new \NotACms\Service\StaticBuild\StaticUrlCollector($contentService, $siteConfig, $urlGenerator),
+            new \NotACms\Service\StaticBuild\StaticPageRenderer($httpKernel),
+            new \NotACms\Service\StaticBuild\MediaPublisher($imageResizer, $responsiveImageService, $siteConfig, $contentDir),
             $this->tmpOutputDir,
         );
 

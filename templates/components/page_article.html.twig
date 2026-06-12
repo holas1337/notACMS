@@ -1,0 +1,24 @@
+{# Shared page article — header (optional image, title, description) + prose body.
+   Expects: content (ContentItem); optional: show_image (bool, default true) #}
+<article data-pagefind-body>
+    <header class="page-header">
+        {% if (show_image ?? true) and content.image() %}
+        <div class="page-header-image">
+            {{ include('components/responsive_img.html.twig', {
+                src: content.image(),
+                alt: content.imageAlt(),
+                sizes: '(max-width: 768px) 100vw, 800px',
+                loading: 'eager',
+                fetchpriority: 'high'
+            }) }}
+        </div>
+        {% endif %}
+        <h1 data-pagefind-meta="title">{{ content.title() }}</h1>
+        {% if content.description() %}
+            <p class="page-header-desc">{{ content.description() }}</p>
+        {% endif %}
+    </header>
+    <div class="page-body prose">
+        {{ content.htmlContent|srcset_media|raw }}
+    </div>
+</article>

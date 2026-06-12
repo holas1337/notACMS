@@ -10,5 +10,9 @@ interface ContentTreeBuilderInterface
 {
     public const string BLOG_CONTENT_PREFIX = 'blog/';
 
+    public const string BLOG_DIRECTORY_KEY = 'blog';
+
+    public const string HOME_DIRECTORY_KEY = 'home';
+
     public function build(string $locale, bool $includeDrafts = false, bool $includeScheduled = false): ContentTree;
 }

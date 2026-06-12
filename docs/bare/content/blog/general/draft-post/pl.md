@@ -5,6 +5,7 @@ description: "Ten wpis jest szkicem i w trybie deweloperskim powinien pokazać b
 category: general
 tags: [general]
 template: blog/post
+draft: true
 ---
 
 ## Wpis w szkicu

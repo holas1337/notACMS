@@ -6,7 +6,9 @@
 {% block og_title %}{{ content.title() }}{% endblock %}
 
 {% block og_article_meta %}
+{% if content.date() %}
 <meta property="article:published_time" content="{{ content.date()|date('c') }}">
+{% endif %}
 {% if content.updatedDate() %}
 <meta property="article:modified_time" content="{{ content.updatedDate()|date('c') }}">
 {% endif %}
@@ -19,20 +21,19 @@
 {% endfor %}
 {% endblock %}
 
-{% block structured_data %}{{ json_ld(structured_data().blogPosting(
-    content.title(),
-    site_base_url ~ app.request.pathInfo,
-    locale,
-    content.date()|date('c'),
-    content.updatedDate() ? content.updatedDate()|date('c') : content.date()|date('c'),
-    content.description() ?: content.excerpt(meta_description_length),
-    content.wordCount(),
-    content.category() ?: null,
-    content.tags(),
-    null,
-    structured_data().person(site_author.name|default(site_name), site_base_url ~ content_url('about', locale)),
-    structured_data().organization(site_name, site_base_url)
-)) }}{% endblock %}
+{% block structured_data %}{{ json_ld(structured_data().blogPosting({
+    headline: content.title(),
+    url: site_base_url ~ app.request.pathInfo,
+    inLanguage: locale,
+    datePublished: content.date() ? content.date()|date('c') : '',
+    dateModified: content.updatedDate() ? content.updatedDate()|date('c') : (content.date() ? content.date()|date('c') : null),
+    description: content.description() ?: content.excerpt(meta_description_length),
+    wordCount: content.wordCount(),
+    articleSection: content.category() ?: null,
+    keywords: content.tags(),
+    author: structured_data().person(site_author.name|default(site_name), site_base_url ~ content_url('about', locale)),
+    publisher: structured_data().organization(site_name, site_base_url)
+})) }}{% endblock %}
 
 {% block body %}
 <div class="container container--post">

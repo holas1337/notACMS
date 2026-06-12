@@ -5,22 +5,23 @@ declare(strict_types=1);
 namespace NotACms\Service\Content;
 
 use NotACms\Content\ValueObject\SidebarData;
-use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\SiteSettingsInterface;
 
 final readonly class SidebarDataProvider implements SidebarDataProviderInterface
 {
     public function __construct(
         private ContentServiceInterface $contentService,
-        private SiteConfigServiceInterface $siteConfigService,
+        private ContentTreeProviderInterface $contentTreeProvider,
+        private SiteSettingsInterface $siteSettings,
     ) {
     }
 
     public function getData(string $locale): SidebarData
     {
-        $contentTree = $this->contentService->getTree($locale);
+        $contentTree = $this->contentTreeProvider->getTree($locale);
 
         return new SidebarData(
-            recentPosts: $this->contentService->getRecentPosts($locale, $this->siteConfigService->getRecentPostsLimit()),
+            recentPosts: $this->contentService->getRecentPosts($locale, $this->siteSettings->getRecentPostsLimit()),
             categories: $contentTree->getAllCategories(),
             tags: $contentTree->getAllTags(),
             archiveMonths: $contentTree->getArchiveMonths(),

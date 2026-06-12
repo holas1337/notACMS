@@ -6,11 +6,12 @@ namespace NotACms\Service\Content;
 
 use NotACms\Content\ContentItem;
 use NotACms\Content\ContentTree;
+use NotACms\Service\SiteConfigServiceInterface;
 
 final class RelatedPostsService implements RelatedPostsServiceInterface
 {
     /** @return ContentItem[] */
-    public function getRelatedPosts(ContentTree $contentTree, ContentItem $contentItem, int $limit = 3): array
+    public function getRelatedPosts(ContentTree $contentTree, ContentItem $contentItem, int $limit = SiteConfigServiceInterface::DEFAULT_RELATED_POSTS_LIMIT): array
     {
         $posts = $contentTree->getAllPosts();
 
@@ -34,8 +35,8 @@ final class RelatedPostsService implements RelatedPostsServiceInterface
 
         $scores = [];
 
-        foreach ($posts as $i => $post) {
-            if ($post->url() === $contentItem->url()) {
+        foreach ($posts as $postIndex => $post) {
+            if ($post->isSame($contentItem)) {
                 continue;
             }
 
@@ -45,14 +46,14 @@ final class RelatedPostsService implements RelatedPostsServiceInterface
 
             $score = 0;
 
-            if ($post->category() === $contentItem->category()) {
+            if (null !== $contentItem->category() && $post->category() === $contentItem->category()) {
                 $score += 2;
             }
 
             $score += count(array_intersect($post->tags(), $contentItem->tags()));
 
             if (0 < $score) {
-                $scores[$i] = $score;
+                $scores[$postIndex] = $score;
             }
         }
 
@@ -60,8 +61,8 @@ final class RelatedPostsService implements RelatedPostsServiceInterface
 
         $remaining = $limit - count($related);
 
-        foreach (array_keys(array_slice($scores, 0, $remaining, true)) as $i) {
-            $related[] = $posts[$i];
+        foreach (array_keys(array_slice($scores, 0, $remaining, true)) as $postIndex) {
+            $related[] = $posts[$postIndex];
         }
 
         if ($limit > count($related)) {
@@ -70,7 +71,7 @@ final class RelatedPostsService implements RelatedPostsServiceInterface
                     break;
                 }
 
-                if ($post->url() === $contentItem->url()) {
+                if ($post->isSame($contentItem)) {
                     continue;
                 }
 

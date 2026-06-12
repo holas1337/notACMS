@@ -7,7 +7,7 @@
 {% block structured_data %}{{ json_ld(structured_data().contactPage(
     'contact.title'|trans,
     site_base_url ~ app.request.pathInfo,
-    structured_data().person(site_author.name, site_base_url)
+    structured_data().person(site_author.name|default(site_name), site_base_url)
 )) }}{% endblock %}
 
 {% block body %}
@@ -22,7 +22,7 @@
             <div class="contact-intro prose">{{ content.htmlContent|raw }}</div>
         {% endif %}
 
-        <p class="contact-nudge">{{ ('contact.about_nudge'|trans({'%about_url%': content_url('about', locale)}))|raw }}</p>
+        <p class="contact-nudge">{{ 'contact.about_nudge'|trans }} <a href="{{ content_url('about', locale) }}">{{ 'contact.about_nudge_link'|trans }}</a></p>
 
         <div id="contact-success" class="alert alert-success is-hidden" aria-live="polite" aria-atomic="true">
             <i class="ph ph-check-circle" aria-hidden="true"></i>

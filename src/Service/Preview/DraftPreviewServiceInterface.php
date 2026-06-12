@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace NotACms\Service\Preview;
 
-interface DraftPreviewServiceInterface
+interface DraftPreviewServiceInterface extends SessionToggleServiceInterface
 {
-    public const SESSION_KEY = 'draft_preview';
-
-    public function isEnabled(): bool;
-
-    public function toggle(): void;
+    public const string SESSION_KEY = 'draft_preview';
 }

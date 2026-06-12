@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Error {{ status_code }} | {{ site_name }}{% endblock %}
-{% block meta_description %}Error {{ status_code }}: {{ status_text }}{% endblock %}
+{% block title %}{{ 'error.title'|trans }} {{ status_code }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ 'error.title'|trans }} {{ status_code }}: {{ status_text }}{% endblock %}
 
 {% block body %}
 <div class="error-page">
     <div class="error-page__card">
-        <div class="error-page__code">{{ status_code ?? '404' }}</div>
+        <div class="error-page__code">{{ status_code }}</div>
         <h1 class="error-page__title">{{ 'error.title'|trans }}</h1>
         <p class="error-page__message">{{ status_text }}</p>
         <a href="{{ path('home_' ~ locale) }}" class="btn btn-primary">{{ 'error.go_home'|trans }}</a>

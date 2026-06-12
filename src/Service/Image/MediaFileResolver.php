@@ -7,15 +7,18 @@ namespace NotACms\Service\Image;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\Finder;
 
-final readonly class MediaFileResolver implements MediaFileResolverInterface
+final class MediaFileResolver implements MediaFileResolverInterface
 {
+    /** @var array<string, list<string>> */
+    private array $directoryCache = [];
+
     public function __construct(
         #[Autowire('%notacms_content%')]
-        private string $contentDir,
+        private readonly string $contentDir,
     ) {
     }
 
-    public function resolve(string $dirKey, string $filename): ?string
+    public function resolve(string $directoryKey, string $filename): ?string
     {
         $allowedBase = realpath($this->contentDir);
 
@@ -23,10 +26,8 @@ final readonly class MediaFileResolver implements MediaFileResolverInterface
             return null;
         }
 
-        $finder = new Finder()->directories()->in($this->contentDir)->name($dirKey);
-
-        foreach ($finder as $dir) {
-            $filePath = $dir->getRealPath().'/files/'.$filename;
+        foreach ($this->directoriesFor($directoryKey) as $directoryPath) {
+            $filePath = $directoryPath.'/files/'.$filename;
 
             if (!is_file($filePath)) {
                 continue;
@@ -42,5 +43,26 @@ final readonly class MediaFileResolver implements MediaFileResolverInterface
         }
 
         return null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function directoriesFor(string $directoryKey): array
+    {
+        if (!array_key_exists($directoryKey, $this->directoryCache)) {
+            $directories = [];
+            $finder = new Finder()->directories()->in($this->contentDir)->name($directoryKey);
+            foreach ($finder as $directory) {
+                $realPath = $directory->getRealPath();
+                if (false !== $realPath) {
+                    $directories[] = $realPath;
+                }
+            }
+
+            $this->directoryCache[$directoryKey] = $directories;
+        }
+
+        return $this->directoryCache[$directoryKey];
     }
 }

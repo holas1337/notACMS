@@ -1,8 +1,6 @@
 header:
-  tagline: Demo-Blog
 nav:
   skip_to_content: Zum Inhalt springen
-  search: Suche
   menu: Menü
   main: Hauptnavigation
   theme_toggle: Farbschema wechseln
@@ -10,15 +8,13 @@ nav:
   theme_to_dark: Zu dunklem Design wechseln
   language_switcher: Sprache (%locale%)
 blog:
+  title: Blog
   read_more: Weiterlesen
-  published_on: Veröffentlicht am
   updated_on: Aktualisiert am
   category: Kategorie
   tags: Tags
   no_posts: Keine Beiträge in dieser Kategorie.
-  archive: Archiv
   all_posts: Alle Beiträge
-  comments_disabled: Kommentare sind deaktiviert.
   share: Teilen
   share_on_x: Auf X teilen
   share_on_linkedin: Auf LinkedIn teilen
@@ -35,36 +31,32 @@ blog:
     archive_month: Beiträge vom %date%.
     archive_year: Beiträge aus dem Jahr %year%.
   post_navigation: Beitragsnavigation
-  nav_prev: ← Vorheriger
-  nav_next: Nächster →
   series_part: Teil %part% von %total%
   series_nav_label: Artikelserie
 sidebar:
   recent_posts: Aktuelle Beiträge
   categories: Kategorien
   tags: Tags
-  archive: Archiv
   search: Suche
-  contact: Kontakt
-  contact_intro: Bauen Sie etwas mit PHP oder Symfony?
-  contact_cta: → Kontakt aufnehmen
 search:
   title: Suche
   close: Suche schließen
   placeholder: Seite durchsuchen...
   no_results: Keine Ergebnisse für "%query%" gefunden.
-  results_for: 'Ergebnisse für: "%query%"'
   hint_navigate: navigieren
   hint_open: öffnen
   hint_close: schließen
   hint_anywhere: überall
 contact:
+  email:
+    title: "Kontakt von %site_name%"
+    heading: "neue Kontaktnachricht"
+    footer: "Gesendet über das Kontaktformular auf %site_name%"
   title: Kontakt
   meta_description: Nehmen Sie Kontakt mit dem notACMS-Team auf. Stellen Sie Fragen oder beginnen Sie ein Gespräch über das Kontaktformular.
   connection_error: Verbindungsfehler. Bitte versuchen Sie es erneut.
-  intro: Nehmen Sie Kontakt auf
-  about_nudge: Noch unsicher? <a href="%about_url%">Mehr über notACMS und wie es
-    funktioniert</a>
+  about_nudge: 'Noch unsicher?'
+  about_nudge_link: 'Mehr über notACMS erfahren'
   form:
     name: Vollständiger Name
     email: E-Mail-Adresse
@@ -72,7 +64,6 @@ contact:
     subject: Betreff
     message: Nachricht
     send: Senden
-    sending: Wird gesendet...
     success: Nachricht gesendet. Vielen Dank!
     error: Etwas ist schiefgelaufen. Bitte überprüfen Sie Ihre Angaben und versuchen
       Sie es erneut.
@@ -85,7 +76,6 @@ pagination:
   page: Seite
   of: von
 language:
-  switcher: Sprache (%locale%)
   choose: Sprache wählen
 cookie:
   banner_text: Diese Seite verwendet ein funktionales Cookie, um Ihre Einwilligung
@@ -102,7 +92,6 @@ about:
   recommendation_via: via LinkedIn
   recommendation_expand: Vollständige Empfehlung lesen →
   recommendation_collapse: Einklappen ↑
-  tech_stack: Tech-Stack
   skills.Language: Sprache
   skills.Framework: Framework
   skills.Frontend: Frontend
@@ -110,8 +99,6 @@ about:
 projects:
   view_all: Alle %count% Projekte ansehen
 footer:
-  copyright: Alle Rechte vorbehalten
-  built_with: Erstellt mit
 error:
   title: Fehler
   go_home: Zur Startseite
@@ -145,7 +132,6 @@ site:
   nav_next: Weiter
   open_navigation: Navigation öffnen
   page_navigation: Seitennavigation
-  contact: Kontakt
 home:
   hero_badge: Open Source · PHP / Symfony
   hero_heading: Der Static Site Generator, der<br><em>einfach nicht stört.</em>
@@ -175,7 +161,7 @@ home:
   stat_locales_desc: Füge eine Zeile in <code>_site.yaml</code> hinzu. Inhalte pro
     Locale co-lokalisiert.
   stat_license_label: Lizenziert
-  stat_license_desc: Fork it, extend it, make it yours. Kein Vendor-Lock-in.
+  stat_license_desc: Forke es, erweitere es, mach es zu deinem. Kein Vendor-Lock-in.
   features_label: Features
   features_heading: Alles was du brauchst.<br>Nichts was du nicht brauchst.
   features_sub: Aufgebaut auf Symfony 7.4 und PHP 8.5. Vertraute Werkzeuge, minimale

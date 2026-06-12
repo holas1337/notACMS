@@ -10,12 +10,11 @@ nav:
     about: O mnie
     contact: Kontakt
 blog:
+  title: Blog
   read_more: Czytaj dalej
   updated_on: Zaktualizowano
-  category: Kategoria
   tags: Tagi
   no_posts: Brak wpisów.
-  archive: Archiwum
   draft_banner: '[SZKIC] Ten wpis nie jest opublikowany'
   scheduled_banner: '[ZAPLANOWANY] Zaplanowany na %date%'
   all_posts: Wszystkie wpisy
@@ -29,8 +28,8 @@ blog:
   reading_time: '%count% min czytania'
   related_posts: Powiązane wpisy
   meta:
-    index: Artykuły i wpisy.
     category: Wpisy w kategorii %category%.
+    index: Artykuły i wpisy.
     tag: 'Wpisy z tagiem #%tag%.'
     archive_month: Wpisy z %date%.
     archive_year: Wpisy z roku %year%.
@@ -41,7 +40,6 @@ sidebar:
   recent_posts: Ostatnie wpisy
   categories: Kategorie
   tags: Tagi
-  archive: Archiwum
   search: Szukaj
 search:
   title: Szukaj
@@ -49,7 +47,12 @@ search:
   no_results: 'Nie znaleziono wyników dla "%query%".'
 contact:
   title: Kontakt
-  about_nudge: 'Chcesz wiedzieć więcej? <a href="%about_url%">Dowiedz się o notACMS</a>'
+  about_nudge: 'Chcesz wiedzieć więcej?'
+  email:
+    title: "Kontakt z %site_name%"
+    heading: "nowa wiadomość kontaktowa"
+    footer: "Wysłano przez formularz kontaktowy na %site_name%"
+  about_nudge_link: 'Dowiedz się o notACMS'
   form:
     name: Imię i nazwisko
     email: Adres e-mail
@@ -57,6 +60,7 @@ contact:
     subject: Temat
     message: Wiadomość
     send: Wyślij
+    unavailable: "Formularz kontaktowy nie został jeszcze skonfigurowany — zajrzyj później."
     success: Wiadomość została wysłana. Dziękujemy!
     error: Coś poszło nie tak. Sprawdź dane i spróbuj ponownie.
 breadcrumb:
@@ -76,7 +80,6 @@ about:
   headline: Przyjazny dla AI generator stron statycznych oparty na Symfony
   skills_title: Specjalizacja
   cta_link: Napisz do nas
-  cta_text: "Chcesz współpracować?"
   recommendations_title: Polecenia
   recommendation_via: przez LinkedIn
   recommendation_expand: czytaj całe polecenie →

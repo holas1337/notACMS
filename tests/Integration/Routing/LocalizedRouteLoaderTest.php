@@ -37,6 +37,7 @@ final class LocalizedRouteLoaderTest extends TestCase
             $this->siteConfigService,
             dirname(__DIR__, 3),
             $this->tmpContentDir,
+            'local',
         );
     }
 

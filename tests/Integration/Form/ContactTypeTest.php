@@ -42,7 +42,7 @@ final class ContactTypeTest extends TestCase
             'turnstile_token' => 'test-token',
         ];
 
-        $form = $factory->create(ContactType::class, null, ['locale' => 'en']);
+        $form = $factory->create(ContactType::class);
         $form->submit($formData);
 
         self::assertTrue($form->isSynchronized());
@@ -51,7 +51,7 @@ final class ContactTypeTest extends TestCase
     public function testNameIsRequired(): void
     {
         $factory = $this->getFactory();
-        $form = $factory->create(ContactType::class, null, ['locale' => 'en']);
+        $form = $factory->create(ContactType::class);
         $form->submit([
             'name' => '',
             'email' => 'john@example.com',
@@ -66,7 +66,7 @@ final class ContactTypeTest extends TestCase
     public function testEmailIsRequired(): void
     {
         $factory = $this->getFactory();
-        $form = $factory->create(ContactType::class, null, ['locale' => 'en']);
+        $form = $factory->create(ContactType::class);
         $form->submit([
             'name' => 'John',
             'email' => '',
@@ -81,7 +81,7 @@ final class ContactTypeTest extends TestCase
     public function testEmailMustBeValid(): void
     {
         $factory = $this->getFactory();
-        $form = $factory->create(ContactType::class, null, ['locale' => 'en']);
+        $form = $factory->create(ContactType::class);
         $form->submit([
             'name' => 'John',
             'email' => 'not-an-email',
@@ -96,7 +96,7 @@ final class ContactTypeTest extends TestCase
     public function testMessageIsRequired(): void
     {
         $factory = $this->getFactory();
-        $form = $factory->create(ContactType::class, null, ['locale' => 'en']);
+        $form = $factory->create(ContactType::class);
         $form->submit([
             'name' => 'John',
             'email' => 'john@example.com',
@@ -111,7 +111,7 @@ final class ContactTypeTest extends TestCase
     public function testSubjectIsRequired(): void
     {
         $factory = $this->getFactory();
-        $form = $factory->create(ContactType::class, null, ['locale' => 'en']);
+        $form = $factory->create(ContactType::class);
         $form->submit([
             'name' => 'John',
             'email' => 'john@example.com',

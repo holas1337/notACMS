@@ -6,6 +6,7 @@ twig:
     globals:
         cf_analytics_token: '%env(CF_ANALYTICS_TOKEN)%'
         notacms_project_url: 'https://github.com/holas1337/notACMS'
+        turnstile_site_key: '%env(TURNSTILE_SITE_KEY)%'
 
 when@test:
     twig:

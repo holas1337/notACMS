@@ -25,7 +25,7 @@ This page is separate from the `/design-reference/` user-facing content page: `/
 | File | Purpose |
 |---|---|
 | `src/Controller/StyleguideController.php` | Dev-only controller gated by `kernel.debug`; constructs dummy `ContentItem` objects for component demos |
-| `templates/page/styleguide.html.twig` | Styleguide template extending `base.html.twig`; overrides `sidebar` block for full-width layout |
+| `templates/page/styleguide.html.twig` | Bare-theme placeholder page extending `base.html.twig` (points at the demo theme for the full styleguide); overrides no blocks |
 | `assets/styles/_styleguide.scss` | Styleguide-specific layout styles (swatches, spacing bars, section separators) |
 
 ---

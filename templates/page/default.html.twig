@@ -14,28 +14,7 @@
 {{ include('components/breadcrumb.html.twig', { breadcrumbs: breadcrumbs(content, locale, {home_label: site_name}) }) }}
 
 <div class="container container--prose">
-<article data-pagefind-body>
-    <header class="page-header">
-        {% if content.image() %}
-        <div class="page-header-image">
-            {{ include('components/responsive_img.html.twig', {
-                src: content.image(),
-                alt: content.imageAlt(),
-                sizes: '(max-width: 768px) 100vw, 800px',
-                loading: 'eager',
-                fetchpriority: 'high'
-            }) }}
-        </div>
-        {% endif %}
-        <h1 data-pagefind-meta="title">{{ content.title() }}</h1>
-        {% if content.description() %}
-            <p class="page-header-desc">{{ content.description() }}</p>
-        {% endif %}
-    </header>
-    <div class="page-body prose">
-        {{ content.htmlContent|srcset_media|raw }}
-    </div>
-</article>
+{{ include('components/page_article.html.twig') }}
 </div>
 {% endblock %}
 

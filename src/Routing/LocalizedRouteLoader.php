@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace NotACms\Routing;
 
 use NotACms\Attribute\LocalizedRoute;
-use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\LocaleConfigInterface;
+use NotACms\Service\SiteSettingsInterface;
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\Finder;
@@ -19,17 +21,18 @@ final class LocalizedRouteLoader extends Loader
 {
     public const string TYPE = 'localized';
 
+    public const string ROUTES_FILENAME = '_routes.yaml';
+
     private bool $loaded = false;
 
-    /** @var array<string, array<string, string>>|null */
-    private ?array $routeOverrides = null;
-
     public function __construct(
-        private readonly SiteConfigServiceInterface $siteConfigService,
+        private readonly LocaleConfigInterface $localeConfig,
         #[Autowire('%kernel.project_dir%')]
         private readonly string $projectDir,
         #[Autowire('%notacms_content%')]
         private readonly string $contentDir,
+        #[Autowire('%notacms.local_dir%')]
+        private readonly string $localDir,
     ) {
         parent::__construct();
     }
@@ -42,24 +45,52 @@ final class LocalizedRouteLoader extends Loader
 
         $this->loaded = true;
         $routeCollection = new RouteCollection();
-        $locales = $this->siteConfigService->getLocales();
-        $defaultLocale = $this->siteConfigService->getDefaultLocale();
+
+        foreach ([$this->contentDir.'/'.SiteSettingsInterface::SITE_CONFIG_FILENAME, $this->contentDir.'/'.self::ROUTES_FILENAME] as $configFile) {
+            if (file_exists($configFile)) {
+                $routeCollection->addResource(new FileResource($configFile));
+            }
+        }
+
+        $locales = $this->localeConfig->getLocales();
+        $defaultLocale = $this->localeConfig->getDefaultLocale();
         $overrides = $this->loadOverrides();
 
-        $controllerDir = $this->projectDir.'/src/Controller';
-        $finder = new Finder();
-        $finder->files()->in($controllerDir)->name('*Controller.php');
+        $controllerNamespaces = [
+            $this->projectDir.'/src/Controller' => 'NotACms\\Controller\\',
+            $this->projectDir.'/'.$this->localDir.'/src/Controller' => 'NotACms\\Local\\Controller\\',
+        ];
 
+        foreach ($controllerNamespaces as $controllerDir => $controllerNamespace) {
+            if (!is_dir($controllerDir)) {
+                continue;
+            }
+
+            $finder = new Finder();
+            $finder->files()->in($controllerDir)->name('*Controller.php');
+
+            $this->registerControllerRoutes($routeCollection, $finder, $controllerNamespace, $locales, $defaultLocale, $overrides);
+        }
+
+        return $routeCollection;
+    }
+
+    /**
+     * @param string[]                             $locales
+     * @param array<string, array<string, string>> $overrides
+     */
+    private function registerControllerRoutes(RouteCollection $routeCollection, Finder $finder, string $controllerNamespace, array $locales, string $defaultLocale, array $overrides): void
+    {
         foreach ($finder as $file) {
-            $className = 'NotACms\\Controller\\'.$file->getFilenameWithoutExtension();
+            $className = $controllerNamespace.$file->getFilenameWithoutExtension();
 
             if (!class_exists($className)) {
                 continue;
             }
 
-            $refClass = new \ReflectionClass($className);
+            $reflectionClass = new \ReflectionClass($className);
 
-            foreach ($refClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
                 $attributes = $method->getAttributes(LocalizedRoute::class);
 
                 if ([] === $attributes) {
@@ -67,29 +98,27 @@ final class LocalizedRouteLoader extends Loader
                 }
 
                 foreach ($attributes as $attribute) {
-                    /** @var LocalizedRoute $attr */
-                    $attr = $attribute->newInstance();
+                    /** @var LocalizedRoute $localizedRoute */
+                    $localizedRoute = $attribute->newInstance();
 
                     foreach ($locales as $locale) {
-                        $routeName = $attr->name.'_'.$locale;
-                        $path = $this->resolvePath($attr->name, $attr->path, $locale, $defaultLocale, $overrides);
+                        $routeName = $localizedRoute->name.'_'.$locale;
+                        $path = $this->resolvePath($localizedRoute->name, $localizedRoute->path, $locale, $defaultLocale, $overrides);
 
                         $route = new Route($path);
                         $route->setDefault('_controller', $className.'::'.$method->getName());
                         $route->setDefault('locale', $locale);
-                        $route->setRequirements($attr->requirements);
+                        $route->setRequirements($localizedRoute->requirements);
 
-                        if ([] !== $attr->methods) {
-                            $route->setMethods($attr->methods);
+                        if ([] !== $localizedRoute->methods) {
+                            $route->setMethods($localizedRoute->methods);
                         }
 
-                        $routeCollection->add($routeName, $route, $attr->priority);
+                        $routeCollection->add($routeName, $route, $localizedRoute->priority);
                     }
                 }
             }
         }
-
-        return $routeCollection;
     }
 
     public function supports(mixed $resource, ?string $type = null): bool
@@ -118,18 +147,14 @@ final class LocalizedRouteLoader extends Loader
      */
     private function loadOverrides(): array
     {
-        if (null !== $this->routeOverrides) {
-            return $this->routeOverrides;
-        }
-
-        $path = $this->contentDir.'/_routes.yaml';
+        $path = $this->contentDir.'/'.self::ROUTES_FILENAME;
 
         if (!file_exists($path)) {
-            return $this->routeOverrides = [];
+            return [];
         }
 
         $data = Yaml::parseFile($path);
 
-        return $this->routeOverrides = $data['routes'] ?? [];
+        return $data['routes'] ?? [];
     }
 }

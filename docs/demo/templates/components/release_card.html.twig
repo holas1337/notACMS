@@ -1,6 +1,6 @@
 {# Release card — blog list and homepage.
-   Expects: post (ContentItem), attrs (string, optional extra attributes) #}
-<a href="{{ post.url() }}" class="release-card"{{ attrs is defined ? ' ' ~ attrs : '' }}>
+   Expects: post (ContentItem), role (string, optional ARIA role) #}
+<a href="{{ post.url() }}" class="release-card"{% if role is defined %} role="{{ role }}"{% endif %}>
     <div class="release-card-meta">
         {% if post.category() %}
         <span class="release-badge">{{ post.category() }}</span>

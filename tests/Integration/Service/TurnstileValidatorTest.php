@@ -107,6 +107,37 @@ final class TurnstileValidatorTest extends TestCase
         self::assertTrue($validator->verify('valid-token'));
     }
 
+    public function testLogsErrorWhenTestKeysActiveInProduction(): void
+    {
+        $this->stubResponse(['success' => true, 'hostname' => 'example.com']);
+
+        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $logger->expects(self::once())->method('error')
+            ->with(self::stringContains('test keys are active in production'));
+
+        $siteConfigService = $this->createStub(SiteConfigServiceInterface::class);
+        $siteConfigService->method('getBaseUrl')->willReturn('https://example.com');
+
+        $validator = new TurnstileValidator($this->httpClient, '1x0000000000000000000000000000000AA', $logger, $siteConfigService, false);
+
+        self::assertTrue($validator->verify('valid-token'));
+    }
+
+    public function testDoesNotLogTestKeyErrorInDebugMode(): void
+    {
+        $this->stubResponse(['success' => true, 'hostname' => 'example.com']);
+
+        $logger = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $logger->expects(self::never())->method('error');
+
+        $siteConfigService = $this->createStub(SiteConfigServiceInterface::class);
+        $siteConfigService->method('getBaseUrl')->willReturn('https://example.com');
+
+        $validator = new TurnstileValidator($this->httpClient, '1x0000000000000000000000000000000AA', $logger, $siteConfigService, true);
+
+        self::assertTrue($validator->verify('valid-token'));
+    }
+
     public function testSkipsHostnameCheckWhenBaseUrlIsMalformed(): void
     {
         $this->stubResponse(['success' => true, 'hostname' => 'anything.com']);

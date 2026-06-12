@@ -6,11 +6,11 @@
 
 {% set current_path = app.request.pathInfo %}
 {% set doc_pages = [
-    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: content_item('manual', locale).menuLabel() },
-    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: content_item('architecture', locale).menuLabel() },
-    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: content_item('customization', locale).menuLabel() },
-    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: content_item('locales', locale).menuLabel() },
-    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: content_item('styleguide', locale).menuLabel() },
+    { dir: 'manual',        slug: 'manual',           icon: 'ph-book-open',      label: content_item('manual', locale).menuLabel() ?? 'Manual' },
+    { dir: 'architecture',  slug: 'architecture',     icon: 'ph-tree-structure', label: content_item('architecture', locale).menuLabel() ?? 'Architecture' },
+    { dir: 'customization', slug: 'customization',    icon: 'ph-sliders',        label: content_item('customization', locale).menuLabel() ?? 'Customization' },
+    { dir: 'locales',       slug: 'locales',          icon: 'ph-globe',          label: content_item('locales', locale).menuLabel() ?? 'Locales' },
+    { dir: 'styleguide',    slug: 'design-reference', icon: 'ph-palette',        label: content_item('styleguide', locale).menuLabel() ?? 'Design Reference' },
 ] %}
 
 {% block body %}
@@ -29,7 +29,7 @@
             {# ================================================================
                COLOR TOKENS
             ================================================================= #}
-            <h2 id="color-tokens">Color Tokens<a href="#color-tokens" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="color-tokens">Color Tokens<a href="#color-tokens" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>CSS custom properties defined in <code>assets/styles/_tokens.scss</code>. Override any token in <code>local/assets/styles/</code> to retheme the entire site.</p>
             <div class="sg-swatches">
                 {% set swatches = [
@@ -59,7 +59,7 @@
             {# ================================================================
                TYPOGRAPHY
             ================================================================= #}
-            <h2 id="typography">Typography<a href="#typography" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="typography">Typography<a href="#typography" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p><strong>Inter</strong> for UI and body text. <strong>JetBrains Mono</strong> for code, labels, and metadata. Type scale defined in <code>assets/styles/_variables.scss</code>.</p>
             <div class="sg-specimen">
                 <div style="font-size:2.25rem;font-weight:800;letter-spacing:-.04em;line-height:1.1;color:var(--text);margin-bottom:1.5rem">
@@ -86,7 +86,7 @@
             {# ================================================================
                BUTTONS
             ================================================================= #}
-            <h2 id="buttons">Buttons<a href="#buttons" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="buttons">Buttons<a href="#buttons" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>Classes: <code>.btn</code> base + <code>.btn-primary</code> or <code>.btn-outline</code>. Designed for dark-background contexts (hero, CTA sections).</p>
             <div class="sg-canvas sg-canvas--dark sg-row">
                 <a href="#" class="btn btn-primary" onclick="return false">
@@ -100,7 +100,7 @@
             {# ================================================================
                LABELS & BADGES
             ================================================================= #}
-            <h2 id="labels">Labels &amp; Badges<a href="#labels" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="labels">Labels &amp; Badges<a href="#labels" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <div class="sg-specimen sg-row sg-row--col">
                 <div class="sg-label-row">
                     <span class="section-label">Features</span>
@@ -129,7 +129,7 @@
             {# ================================================================
                CALLOUT
             ================================================================= #}
-            <h2 id="callout">Callout<a href="#callout" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="callout">Callout<a href="#callout" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>Class: <code>.callout</code> + <code>.callout-icon</code> + <code>.callout-text</code>. Rendered from Markdown blockquotes via <code>_prose.scss</code>.</p>
             <div class="callout">
                 <span class="callout-icon"><i class="ph ph-lightbulb" aria-hidden="true"></i></span>
@@ -139,7 +139,7 @@
             {# ================================================================
                PROSE
             ================================================================= #}
-            <h2 id="prose">Prose<a href="#prose" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="prose">Prose<a href="#prose" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>Markdown output is wrapped in <code>.prose</code>. Styles in <code>assets/styles/_prose.scss</code>.</p>
             <div class="prose" style="max-width:none">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. notACMS renders content through a four-step pipeline: <strong>scan → parse → render → emit</strong>. Each step is an independent service.</p>
@@ -170,7 +170,7 @@
             {# ================================================================
                FEATURE CARD
             ================================================================= #}
-            <h2 id="feature-card">Feature Card<a href="#feature-card" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="feature-card">Feature Card<a href="#feature-card" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>Classes: <code>.feature-card</code> + <code>.feature-icon</code> + <code>.feature-title</code> + <code>.feature-desc</code></p>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem">
                 <div class="feature-card">
@@ -198,7 +198,7 @@
             {# ================================================================
                STAT CARD
             ================================================================= #}
-            <h2 id="stat-card">Stat Card<a href="#stat-card" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="stat-card">Stat Card<a href="#stat-card" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>Classes: <code>.stat-card</code> + <code>.stat-card-num</code> + <code>.stat-card-label</code> + <code>.stat-card-desc</code></p>
             <div class="stats-grid">
                 <div class="stat-card">
@@ -226,7 +226,7 @@
             {# ================================================================
                RELEASE CARD
             ================================================================= #}
-            <h2 id="release-card">Release Card<a href="#release-card" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="release-card">Release Card<a href="#release-card" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>Classes: <code>.release-card</code> + <code>.release-card-meta</code> + <code>.release-badge</code> + <code>.release-date</code></p>
             <a href="#" class="release-card" onclick="return false">
                 <div class="release-card-meta">
@@ -241,23 +241,23 @@
             {# ================================================================
                PREV / NEXT NAV
             ================================================================= #}
-            <h2 id="prev-next-nav">Prev / Next Nav<a href="#prev-next-nav" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="prev-next-nav">Prev / Next Nav<a href="#prev-next-nav" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>Classes: <code>.prev-next-nav</code> + <code>.prev-next-card</code> / <code>.prev-next-card--next</code> + <code>.prev-next-dir</code> + <code>.prev-next-title</code></p>
             <nav class="prev-next-nav" aria-label="Example navigation">
                 <a href="#" class="prev-next-card" onclick="return false">
                     <span class="prev-next-dir"><i class="ph ph-arrow-left" aria-hidden="true"></i> {{ 'site.nav_prev'|trans }}</span>
-                    <span class="prev-next-title">{{ content_item('architecture', locale).menuLabel() }}</span>
+                    <span class="prev-next-title">{{ content_item('architecture', locale).menuLabel() ?? 'Architecture' }}</span>
                 </a>
                 <a href="#" class="prev-next-card prev-next-card--next" onclick="return false">
                     <span class="prev-next-dir">{{ 'site.nav_next'|trans }} <i class="ph ph-arrow-right" aria-hidden="true"></i></span>
-                    <span class="prev-next-title">{{ content_item('locales', locale).menuLabel() }}</span>
+                    <span class="prev-next-title">{{ content_item('locales', locale).menuLabel() ?? 'Locales' }}</span>
                 </a>
             </nav>
 
             {# ================================================================
                SEARCH OVERLAY
             ================================================================= #}
-            <h2 id="search-overlay">Search Overlay<a href="#search-overlay" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="search-overlay">Search Overlay<a href="#search-overlay" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>A full-screen overlay powered by <a href="https://pagefind.app" target="_blank" rel="noopener noreferrer">Pagefind</a>. Open via the <i class="ph ph-magnifying-glass" aria-hidden="true"></i> icon in the nav or press <kbd style="font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem">⌘K</kbd> / <kbd style="font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem">Ctrl+K</kbd> from anywhere.</p>
             <div class="sg-specimen sg-row">
                 <button class="search-trigger" aria-controls="site-search" style="width:auto;padding:.6rem 1rem;gap:.5rem;border-radius:8px;font-size:.875rem;color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.06)">
@@ -271,7 +271,7 @@
             {# ================================================================
                PHOSPHOR ICONS
             ================================================================= #}
-            <h2 id="icons">Phosphor Icons<a href="#icons" class="heading-anchor" aria-hidden="true" title="Permalink">#</a></h2>
+            <h2 id="icons">Phosphor Icons<a href="#icons" class="heading-anchor" aria-hidden="true" tabindex="-1" title="Permalink">#</a></h2>
             <p>Loaded via CDN. Usage: <code>&lt;i class="ph ph-{name}"&gt;&lt;/i&gt;</code></p>
             {% set icons = [
                 { name: 'ph-book-open',        label: 'Manual' },

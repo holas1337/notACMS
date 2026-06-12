@@ -25,7 +25,7 @@ This repo contains multiple template trees. When auditing, fixing bugs, or imple
 | **Demo** | `docs/demo/templates/` | Amber-phosphor reference theme shown at notacms.holas.pl. Copied to `local/` via `--demo` deploy. |
 | **User custom** | `local/templates/` | Active site-specific overrides (populated by `--demo` deploy or manual setup). Only applies if `local/` is a real directory, not a symlink (symlinked `local/` → `docs/demo/` means the demo layer already covers it). |
 | **User sites** | `local-*/templates/` | Additional pre-bundled or gitignored site configs. Only present if explicitly created/cloned (e.g. `local-holas.pl`). |
-| **Customization examples** | `docs/customization/*/templates/` | Isolated examples used as documentation snippets (old-template, self-hosted-fonts, custom-footer). Referenced in docs but not meant for direct use. |
+| **Customization examples** | `docs/customization/*/templates/` | Isolated examples used as documentation snippets (self-hosted-fonts, custom-footer). Referenced in docs but not meant for direct use. |
 
 **Rule of thumb for template work:** If a fix applies to all themes, update core first, then check demo and any `local-*` folders for the same pattern. Demo and user sites often have independent template copies that drift from core.
 
@@ -82,7 +82,7 @@ When the user asks for a **code review** (phrases like "review the code", "audit
 **Code style (PHP)**
 - Non-yoda comparisons: `$x === $y` where `$x` is a variable — flip to `$y === $x` (literal/stable value on the left)
 - Missing blank line before `return` (except single-statement methods and returns at block start)
-- Import order: App → PSR → Symfony → third-party (League, etc.)
+- Import order: alphabetical (enforced by PHP CS Fixer `ordered_imports`)
 - `private const` in a concrete class that should be `public const` in its interface (so callers can reference it)
 
 **Security**
@@ -234,7 +234,7 @@ When a user asks to change colors, add components, or redesign a page:
 
 ## Documentation review
 
-The project has eight documentation files: `README.md` (root) and seven in `docs/`: `ARCHITECTURE.md`, `CUSTOMIZATION.md`, `EDITOR_GUIDE.md`, `LOCALES.md`, `STYLEGUIDE.md`, `TESTING.md`, `TESTS.md`.
+The project has nine documentation files: `README.md` (root) and eight in `docs/`: `ARCHITECTURE.md`, `CUSTOMIZATION.md`, `EDITOR_GUIDE.md`, `LOCALES.md`, `STYLEGUIDE.md`, `TESTING.md`, `TESTS.md`, `THEME_BUILDING.md`.
 
 **After any implementation task, review whether the change affects any of these docs and update them.** Do not leave docs out of sync with the code.
 
@@ -243,6 +243,7 @@ The project has eight documentation files: `README.md` (root) and seven in `docs
 | Changed area | Docs to review |
 |---|---|
 | Architecture, routing, services, content pipeline | `docs/ARCHITECTURE.md`, `README.md` |
+| Controller render() context, `src/Twig/` extensions, `twig.globals`, ContentItem public API | `docs/THEME_BUILDING.md` (the theme API contract) |
 | Locale config, translations, adding/removing languages | `docs/LOCALES.md`, `docs/ARCHITECTURE.md` |
 | Content authoring, frontmatter, images, slugs | `docs/EDITOR_GUIDE.md` |
 | SCSS, design tokens, Twig components | `local/docs/DESIGN.md` (rationale / tokens), `local/docs/STYLEGUIDE.md` (components / mixins), `docs/STYLEGUIDE.md` (mechanics) |
@@ -308,7 +309,7 @@ Brief notes on internal refactors that have no user action required.
 - Lead each breaking section with `**Breaking if you have …**` so users can skip irrelevant sections quickly.
 - Include before/after code blocks for any rename, config change, or API change.
 - List removed and added translation keys in a table.
-- If an `old-template` compatibility package is provided, reference it at the top under a "Core template redesign" section.
+- If a compatibility package is provided for the release, reference it at the top under a "Core template redesign" section. (The 1.0→1.1 `old-template` package shipped through v1.1.x only and was removed in v1.2.0.)
 - Non-breaking internal changes go in a separate `## Non-breaking changes` section at the bottom.
 
 ---
@@ -374,10 +375,9 @@ declare(strict_types=1);
 
 namespace NotACms\Service;
 
-use NotACms\Content\ContentItem;  // Own namespace imports first
-use Psr\...;                  // External interfaces
-use Symfony\...;              // Framework imports
-use League\...;               // Third-party
+use NotACms\Content\ContentItem;  // Imports ordered alphabetically (CS Fixer enforced)
+use Psr\...;
+use Symfony\...;
 
 final class ContentService implements ContentServiceInterface
 {
@@ -530,17 +530,15 @@ final readonly class TagCount
   ```
 
 ### Import Organization
+
+Imports are ordered **alphabetically** — this is enforced by PHP CS Fixer (`@Symfony` ruleset, `ordered_imports`); do not hand-order them by group. In practice alphabetical order usually yields League → NotACms → Psr → Symfony.
+
 ```php
-// 1. App namespace imports
+use League\CommonMark\MarkdownConverter;
 use NotACms\Content\ContentItem;
 use NotACms\Service\ContentService;
-// 2. PSR interfaces
 use Psr\Log\LoggerInterface;
-// 3. Symfony components
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-// 4. Third-party libraries
-use League\CommonMark\MarkdownConverter;
 ```
 
 ### Value Objects

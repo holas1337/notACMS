@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace NotACms\Service\Preview;
 
-interface ScheduledPreviewServiceInterface
+interface ScheduledPreviewServiceInterface extends SessionToggleServiceInterface
 {
-    public const SESSION_KEY = 'scheduled_preview';
-
-    public function isEnabled(): bool;
-
-    public function toggle(): void;
+    public const string SESSION_KEY = 'scheduled_preview';
 }

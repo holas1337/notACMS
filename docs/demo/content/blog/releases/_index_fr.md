@@ -1,6 +1,6 @@
 ---
 title: "Versions"
-slug: "articles"
+slug: "articles/releases"
 description: "Notes de version pour notACMS."
 template: blog/list
 ---

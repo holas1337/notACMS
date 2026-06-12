@@ -1,8 +1,8 @@
-{% set _base = src[0:-5] %}
+{% set _base = src ends with '.webp' ? src[0:-5] : null %}
 <img src="{{ src }}"
-     srcset="{% for w in image_variant_widths %}{{ _base }}-{{ w }}w.webp {{ w }}w, {% endfor %}{{ src }} {{ width|default(1280) }}w"
+     {% if _base %}srcset="{% for w in image_variant_widths %}{{ _base }}-{{ w }}w.webp {{ w }}w, {% endfor %}{{ src }} {{ width|default(1280) }}w"
      sizes="{{ sizes|default('(max-width: 48em) 100vw, 720px') }}"
-     alt="{{ alt }}"
+     {% endif %}alt="{{ alt }}"
      width="{{ width|default(1280) }}"
      height="{{ height|default(720) }}"
      loading="{{ loading|default('lazy') }}"

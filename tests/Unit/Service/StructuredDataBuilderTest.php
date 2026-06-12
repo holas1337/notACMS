@@ -84,21 +84,21 @@ final class StructuredDataBuilderTest extends TestCase
         $author = $this->builder->person('John', 'https://example.com');
         $publisher = $this->builder->organization('My Org', 'https://example.com');
 
-        $result = $this->builder->blogPosting(
-            'My Post',
-            'https://example.com/posts/my-post',
-            'en',
-            '2024-01-15T10:00:00+00:00',
-            '2024-01-16T12:00:00+00:00',
-            'A description',
-            1500,
-            'Technology',
-            ['php', 'symfony'],
-            $this->builder->imageObject('https://example.com/img.webp', 1280, 720),
-            $author,
-            $publisher,
-            'https://example.com/posts/my-post'
-        );
+        $result = $this->builder->blogPosting([
+            'headline' => 'My Post',
+            'url' => 'https://example.com/posts/my-post',
+            'inLanguage' => 'en',
+            'datePublished' => '2024-01-15T10:00:00+00:00',
+            'dateModified' => '2024-01-16T12:00:00+00:00',
+            'description' => 'A description',
+            'wordCount' => 1500,
+            'articleSection' => 'Technology',
+            'keywords' => ['php', 'symfony'],
+            'image' => $this->builder->imageObject('https://example.com/img.webp', 1280, 720),
+            'author' => $author,
+            'publisher' => $publisher,
+            'mainEntityOfPage' => 'https://example.com/posts/my-post',
+        ]);
 
         self::assertSame('BlogPosting', $result['@type']);
         self::assertSame('My Post', $result['headline']);
@@ -117,20 +117,12 @@ final class StructuredDataBuilderTest extends TestCase
 
     public function testBlogPosting_FiltersEmptyConditionalFields(): void
     {
-        $result = $this->builder->blogPosting(
-            'Title',
-            'https://example.com/title',
-            'en',
-            '2024-01-15T10:00:00+00:00',
-            null,
-            null,
-            0,
-            null,
-            [],
-            null,
-            null,
-            null
-        );
+        $result = $this->builder->blogPosting([
+            'headline' => 'Title',
+            'url' => 'https://example.com/title',
+            'inLanguage' => 'en',
+            'datePublished' => '2024-01-15T10:00:00+00:00',
+        ]);
 
         self::assertArrayNotHasKey('dateModified', $result);
         self::assertArrayNotHasKey('description', $result);
@@ -143,33 +135,25 @@ final class StructuredDataBuilderTest extends TestCase
 
     public function testBlogPosting_AutoSetsMainEntityOfPage(): void
     {
-        $result = $this->builder->blogPosting(
-            'Title',
-            'https://example.com/title',
-            'en',
-            '2024-01-15T10:00:00+00:00'
-        );
+        $result = $this->builder->blogPosting([
+            'headline' => 'Title',
+            'url' => 'https://example.com/title',
+            'inLanguage' => 'en',
+            'datePublished' => '2024-01-15T10:00:00+00:00',
+        ]);
 
         self::assertSame('https://example.com/title', $result['mainEntityOfPage']);
     }
 
     public function testBlogPosting_ExplicitMainEntityOfPage(): void
     {
-        $result = $this->builder->blogPosting(
-            'Title',
-            'https://example.com/title',
-            'en',
-            '2024-01-15T10:00:00+00:00',
-            null,
-            null,
-            0,
-            null,
-            [],
-            null,
-            null,
-            null,
-            'https://example.com/custom'
-        );
+        $result = $this->builder->blogPosting([
+            'headline' => 'Title',
+            'url' => 'https://example.com/title',
+            'inLanguage' => 'en',
+            'datePublished' => '2024-01-15T10:00:00+00:00',
+            'mainEntityOfPage' => 'https://example.com/custom',
+        ]);
 
         self::assertSame('https://example.com/custom', $result['mainEntityOfPage']);
     }

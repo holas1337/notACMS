@@ -5,6 +5,7 @@ description: "This post is a draft and should show a draft banner in development
 category: general
 tags: [general]
 template: blog/post
+draft: true
 ---
 
 ## Draft Post

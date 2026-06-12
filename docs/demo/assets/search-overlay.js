@@ -119,7 +119,8 @@
         pagefind.search(query).then(function (search) {
             var top = search.results.slice(0, 8);
             if (!top.length) {
-                results.innerHTML = '<p class="search-overlay__empty">No results for <strong>' + esc(query) + '</strong></p>';
+                var zeroTpl = overlay.dataset.zeroResults || 'No results for "[SEARCH_TERM]"';
+                results.innerHTML = '<p class="search-overlay__empty">' + esc(zeroTpl).replace('[SEARCH_TERM]', '<strong>' + esc(query) + '</strong>') + '</p>';
                 return;
             }
             Promise.all(top.map(function (r) { return r.data(); })).then(function (items) {

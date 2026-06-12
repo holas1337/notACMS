@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }} | {{ site_name }}{% endblock %}
+{% block title %}{{ index_content ? index_content.menuLabel() : (content_item('blog', locale).menuLabel() ?? 'blog.title'|trans) }} | {{ site_name }}{% endblock %}
 {% block meta_description %}{% if filter_type is same as('tag') %}{{ 'releases.meta_tagged'|trans({'%tag%': filter_value, '%site_name%': site_name}) }}{% else %}{{ 'releases.meta_description'|trans({'%site_name%': site_name}) }}{% endif %}{% endblock %}
-{% block og_title %}{{ index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }}{% endblock %}
+{% block og_title %}{{ index_content ? index_content.menuLabel() : (content_item('blog', locale).menuLabel() ?? 'blog.title'|trans) }}{% endblock %}
 
 {% block body %}
 
@@ -15,7 +15,7 @@
             {% if filter_type is same as('tag') %}
                 {{ 'releases.tagged_heading'|trans }} <span class="text-accent">#{{ filter_value }}</span>
             {% else %}
-                {{ index_content ? index_content.menuLabel() : content_item('blog', locale).menuLabel() }}
+                {{ index_content ? index_content.menuLabel() : (content_item('blog', locale).menuLabel() ?? 'blog.title'|trans) }}
             {% endif %}
         </h1>
         <p class="page-header-desc">
@@ -31,7 +31,7 @@
     {% if posts is not empty %}
     <div class="releases-list" role="list">
         {% for post in posts %}
-        {{ include('components/release_card.html.twig', { post: post, attrs: 'role="listitem"' }) }}
+        {{ include('components/release_card.html.twig', { post: post, role: 'listitem' }) }}
         {% endfor %}
     </div>
 

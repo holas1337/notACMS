@@ -73,7 +73,7 @@
     --terminal-dot-min: #ffbd2e;
     --terminal-dot-max: #28c840;
 
-    // Hero — always dark (but glow/grid adapt to theme)
+    // Hero — always dark (but always dark — intentionally theme-independent)
     --hero-bg: #0e0d0b;
     --hero-text: #f8f9fa;
     --hero-muted: rgba(248, 249, 250, 0.65);

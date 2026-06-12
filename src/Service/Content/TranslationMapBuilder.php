@@ -19,6 +19,14 @@ final class TranslationMapBuilder implements TranslationMapBuilderInterface
 
         foreach ($trees as $locale => $tree) {
             foreach ($tree->getAllItems() as $item) {
+                if ($item->isDraft()) {
+                    continue;
+                }
+
+                if ($item->isScheduled()) {
+                    continue;
+                }
+
                 $key = $item->directoryKey();
                 if (null === $key) {
                     continue;

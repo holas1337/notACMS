@@ -52,12 +52,12 @@ HTTP Request
 | `date` | date | Publication date |
 | `updated` | date | Last modified date |
 | `tags` | array | Tag list |
-| `slug` | string | URL path from frontmatter (e.g. `blog/my-post`). The last segment is used as the directory key. `url()` returns the full resolved URL path including locale prefix |
+| `slug` | string | URL path from frontmatter (e.g. `blog/my-post`). The containing directory's relative path is used as the directory key. `url()` returns the full resolved URL path including locale prefix |
 | `category` | string | Localized category slug (e.g. `tips-and-tricks` or `ciekawostki`) |
 | `image` | string | Featured image path (e.g. `/media/my-post/photo.jpg`) |
 | `image_alt` | string | Alt text for featured image |
 | `draft` | bool | Exclude from build if true |
-| `pinned` | string (date) | Posts only. Sort to top of all listings until this date (e.g. `2026-06-01`); featured card style on homepage. `isPinned()` returns true while `pinned > today` |
+| `pinned` | string (date) | Posts only. Sort to top of all listings until this date (e.g. `2026-06-01`); featured card style on homepage. `isPinned()` returns true while `pinned >= today` (inclusive); `pinned: true` pins indefinitely |
 | `featured` | bool | Projects only. If `true`, the post appears in the curated grid on `/projects/` |
 | `dynamic` | bool | Skip static pre-rendering; always served by Symfony |
 | `template` | string | Custom Twig template (default: `page/default`) |
@@ -83,13 +83,13 @@ HTTP Request
 | `TagCount` | `src/Content/ValueObject/TagCount.php` | Value object: tag slug + count |
 | `ArchiveMonth` | `src/Content/ValueObject/ArchiveMonth.php` | Value object: year + month for archive listings |
 | `RenderResult` | `src/Content/ValueObject/RenderResult.php` | Value object returned by `renderPages()`: pages rendered, skipped, errors |
-| `ContentService` | `src/Service/Content/ContentService.php` | Facade: `findByUrl()`, `findPostBySlug()`, `findScheduledPostBySlug()`, `getTree()`, `getRecentPosts()`, `getTranslationMap()` |
+| `ContentService` | `src/Service/Content/ContentService.php` | Implements two interfaces: `ContentServiceInterface` (the query facade — `findByUrl()`, `findByDirectoryKey()`, `findPostBySlug()`, `findScheduledPostBySlug()`, `getPosts()`, `getPostsByTag/Category/YearMonth/Year()`, `getRecentPosts()`, `getTranslationMap()`) and `ContentTreeProviderInterface` (`getTree()` — for tree-level consumers: the static build, sidebar provider) |
 | `SrcsetExtension` | `src/Twig/SrcsetExtension.php` | Twig filter `srcset_media` — post-processes rendered HTML to inject `srcset`/`sizes` attributes into `<img src="/media/...webp">` tags for inline content images |
 | `TranslationMapTwigExtension` | `src/Twig/TranslationMapTwigExtension.php` | Twig global `translation_map` — `{directoryKey: {locale: url}}` mapping for language switcher and hreflang tags |
 | `ContentTwigExtension` | `src/Twig/ContentTwigExtension.php` | Twig functions `content_url(directoryKey, locale)` and `content_item(directoryKey, locale)` — resolve URL or full `ContentItem` by directory key |
-| `LangSwitcherExtension` | `src/Twig/LangSwitcherExtension.php` | Twig function `lang_switch_urls(otherLocales)` — resolves language switcher URLs per locale using translation map, controller overrides, and route-based fallbacks (archive → paginated → blog list → home) |
-| `StructuredDataExtension` | `src/Twig/StructuredDataExtension.php` | Twig functions `json_ld(data)` — renders array as `<script type="application/ld+json">` with `JSON_PRETTY_PRINT \| JSON_UNESCAPED_SLASHES`; and `structured_data()` — returns `StructuredDataBuilderInterface` for method chaining (e.g. `structured_data().person(...)`) |
-| `SidebarExtension` | `src/Twig/SidebarExtension.php` | Twig function `sidebar_data(locale)` — lazily builds `SidebarData` (recent posts, categories, tags, archive months) only when sidebar is rendered; gracefully returns `null` on error |
+| `LangSwitcherExtension` | `src/Twig/LangSwitcherExtension.php` | Thin Twig adapter for `lang_switch_urls(otherLocales)` — delegates to `LangSwitchUrlResolver` with a typed `LangSwitchContext` (controller-provided), resolving per-locale URLs from the translation map, per-locale overrides (e.g. translated tag pages via `TagLangSwitchResolver`), and route fallbacks |
+| `StructuredDataExtension` | `src/Twig/StructuredDataExtension.php` | Twig functions `json_ld(data)` — renders array as `<script type="application/ld+json">` with `JSON_PRETTY_PRINT \| JSON_UNESCAPED_SLASHES \| JSON_HEX_*` escaping; and `structured_data()` — returns `StructuredDataBuilderInterface` for method chaining (e.g. `structured_data().person(...)`) |
+| `SidebarExtension` | `src/Twig/SidebarExtension.php` | Twig function `sidebar_data(locale)` — lazily builds `SidebarData` (recent posts, categories, tags, archive months) only when the sidebar is rendered |
 | `BreadcrumbExtension` | `src/Twig/BreadcrumbExtension.php` | Twig function `breadcrumbs(contentItem, locale, options)` — returns breadcrumb array for any page type (home, blog list/post, archive, category, tag, static page) |
 
 **Global metadata:** `local/content/_site.yaml` — site name, base URL, locales config (first key = default), social links, and all site-level numeric/string settings (see Key Configuration Files). Loaded by `SiteConfigService` and exposed to templates via Twig extensions: `SiteConfigExtension` (Twig globals: `site_name`, `site_base_url`, `site_description`, `site_social`, `site_author`, `site_locales`, `site_locales_list`, `site_default_locale`, `image_variant_widths`, `new_post_days`, `coming_soon_reveal_days`, `meta_description_length`), `TranslationMapTwigExtension` (Twig global: `translation_map`), `ContentTwigExtension` (Twig functions: `content_url()`, `content_item()`), `LangSwitcherExtension`, `SidebarExtension`, and `BreadcrumbExtension`. Additionally, `cf_analytics_token` and `notacms_project_url` are registered as Twig globals in `config/packages/twig.yaml`; `cf_analytics_token` is bound to the `CF_ANALYTICS_TOKEN` environment variable and used in `base.html.twig` to conditionally load the Cloudflare Web Analytics beacon script; `notacms_project_url` holds the notACMS GitHub URL used in `feed/llms.txt.twig`.
@@ -117,7 +117,7 @@ All services are behind interfaces for testability. Controllers depend only on i
 | Service | Interface | Purpose |
 |---|---|---|
 | `ImageResizer` | `ImageResizerInterface` | ImageMagick wrapper: `resize()` generates responsive variants; `optimize()` recompresses in-place |
-| `MediaFileResolver` | `MediaFileResolverInterface` | Resolves a content media file path by `dirKey` + `filename` with `realpath()` path-traversal guard; returns `?string` (null on not-found or traversal) |
+| `MediaFileResolver` | `MediaFileResolverInterface` | Resolves a content media file path by `directoryKey` + `filename` with `realpath()` path-traversal guard; returns `?string` (null on not-found or traversal) |
 | `ResponsiveImageService` | `ResponsiveImageServiceInterface` | Computes variant widths and builds `srcset` attribute values |
 
 **`src/Service/Preview/`** — dev preview toggles:
@@ -132,7 +132,7 @@ All services are behind interfaces for testability. Controllers depend only on i
 
 | Service | Interface | Purpose |
 |---|---|---|
-| `SiteConfigService` | `SiteConfigServiceInterface` | Central locale authority and config source: `getLocales()`, `getDefaultLocale()`, `getLocaleConfig()`, `getSiteConfig()`, `detectLocaleFromPath()`, `getUrlPrefix()`, `getBaseUrl()`, `getPostsPerPage()`, `getRssLimit()`, `getLlmsLimit()`, `getRecentPostsLimit()`, `getRelatedPostsLimit()`, `getImageVariantWidths()`, `getImageQuality()`, `getImageMagickFlags()`, `getNewPostDays()`, `getComingSoonRevealDays()`. Reads `local/content/_site.yaml`; locale list derived from `array_keys(site.locales)`, first key = default |
+| `SiteConfigService` | `SiteConfigServiceInterface` | Central locale authority and config source (implements `SiteConfigServiceInterface`, which composes `LocaleConfigInterface` + `SiteSettingsInterface` + `ImageConfigInterface` — narrow consumers inject the slice they need): `getLocales()`, `getDefaultLocale()`, `getSiteConfig()`, `detectLocaleFromPath()`, `getUrlPrefix()`, `getBaseUrl()`, `getPostsPerPage()`, `getRssLimit()`, `getLlmsLimit()`, `getRecentPostsLimit()`, `getRelatedPostsLimit()`, `getImageVariantWidths()`, `getImageQuality()`, `getImageMagickFlags()`, `getNewPostDays()`, `getComingSoonRevealDays()`, `getMetaDescriptionLength()`, `getContactFormConfig()`. Reads `local/content/_site.yaml`; locale list derived from `array_keys(site.locales)`, first key = default |
 | `TurnstileValidator` | `TurnstileValidatorInterface` | Verifies Cloudflare Turnstile CAPTCHA tokens against siteverify API |
 | `StructuredDataBuilder` | `StructuredDataBuilderInterface` | Builds typed PHP arrays for JSON-LD structured data (WebSite, Person, BlogPosting, CollectionPage, BreadcrumbList, ContactPage, WebPage, Organization, ImageObject); automatic empty-value stripping |
 | `ContactFormConfig` | — (value object) | Holds contact form config from `_site.yaml`: `email`, `from`, `fromName`, `topic` |
@@ -166,7 +166,7 @@ Each generated route gets a `locale` default parameter, so controller methods re
 |---|---|---|---|
 | `HomeController` | `GET /` | `GET /pl/` | `GET /de/` |
 | `BlogController` | `GET /blog/`, `/blog/page/{page}/`, `/blog/{category}/`, `/tag/{tag}/`, `/archive/{year}/{month}/`, `/archive/{year}/`, `/feed/` | `/pl/wpisy/`, `/pl/wpisy/strona/{page}/`, `/pl/wpisy/{category}/`, `/pl/wpisy/tag/{tag}/`, `/pl/archiwum/{year}/{month}/`, `/pl/archiwum/{year}/`, `/pl/feed/` | `/de/beitraege/`, `/de/beitraege/seite/{page}/`, `/de/beitraege/{category}/`, `/de/beitraege/tag/{tag}/`, `/de/archiv/{year}/{month}/`, `/de/archiv/{year}/`, `/de/feed/` |
-| `MediaController` | `GET /media/{dirKey}/{filename}` | Same (no locale prefix) | Same |
+| `MediaController` | `GET /media/{directoryKey}/{filename}` | Same (no locale prefix) | Same |
 | `ContactController` | `GET /contact/`, `POST /api/contact` | `GET /pl/kontakt/`, `POST /pl/api/contact` | `GET /de/kontakt/`, `POST /de/api/contact` |
 | `ProjectsController` | `GET /projects/` | `GET /pl/realizacje/` | `GET /de/projekte/` |
 | `SearchController` | `GET /search/` | `GET /pl/szukaj/` | `GET /de/suchen/` |
@@ -191,7 +191,9 @@ Route naming convention: `<name>_pl` / `<name>_en` (e.g. `home_pl`, `blog_list_e
 
 ## Static Build Internals
 
-**`BuildStaticSiteCommand`** (`src/Command/BuildStaticSiteCommand.php`):
+Every build sub-request carries the request attribute `_static_build` (set to `true`). Themes and `local/src` extensions may branch on it (`app.request.attributes.get('_static_build')` in Twig) to vary output between live serving and the static build.
+
+**`BuildStaticSiteCommand`** (`src/Command/BuildStaticSiteCommand.php`) — orchestration only; the work lives in three services under `src/Service/StaticBuild/`: `StaticUrlCollector` (route/URL discovery incl. empty-category-index skipping), `StaticPageRenderer` (sub-request rendering + HTML/feed/file writing), and `MediaPublisher` (media copy, ImageMagick optimization, responsive variants):
 - Invalidates the content cache so content changes are always picked up
 - Collects URLs using `UrlGeneratorInterface` to generate all route URLs dynamically — no hardcoded paths
 - Also renders scheduled (future-dated, non-draft) post URLs as Coming Soon pages — `BlogController` detects the post is scheduled and returns `page/coming-soon.html.twig` with `noindex`
@@ -217,7 +219,7 @@ notACMS ships as a thin **bare** core plus an optional **demo** theme. Customiza
 - **Core** (`templates/`, `assets/`, `translations/`): the bare wireframe theme. System fonts, light mode only, minimal CSS. Every feature works without any override.
 - **Demo seed** (`docs/demo/`): the amber-phosphor theme shown on notacms.holas.pl. Copied into `local/` by the deploy/build scripts when `--demo` is chosen.
 - **Bare seed** (`docs/bare/`): minimal starter content (pages, posts, tags, routes) used when `--bare` is chosen.
-- **Compatibility package** (`docs/customization/old-template/`): a one-command restore of the pre-1.1.0 look for users upgrading from 1.0.0.
+- **Compatibility package**: the pre-1.1.0 `old-template` restore package shipped through v1.1.x (available from the v1.1.x tags; removed in v1.2.0).
 
 ### Resolution order
 

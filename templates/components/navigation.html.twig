@@ -3,6 +3,8 @@
 {% set blog_url = path('blog_list_' ~ locale) %}
 {% set about_url = content_url('about', locale) %}
 {% set contact_url = path('contact_' ~ locale) %}
+{# Post URLs are date-first (not /blog/-prefixed), and list pages carry no `content`,
+   so the blog section is detected from the URL shape. Revisit once ContentItem::isPost lands. #}
 {% set is_blog = current_path starts with blog_url or current_path matches '#^/([a-z]{2}/)?\\d{4}/#' %}
 
 {% set _home_item    = content_item('home',    locale) %}
@@ -17,7 +19,7 @@
 ] %}
 
 <nav aria-label="{{ 'nav.main'|trans }}">
-    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="{{ 'nav.menu'|trans }}">
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="{{ 'nav.menu'|trans }}" title="{{ 'nav.menu'|trans }}">
         <span class="nav-toggle__bar"></span>
         <span class="nav-toggle__bar"></span>
         <span class="nav-toggle__bar"></span>

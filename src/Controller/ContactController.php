@@ -7,7 +7,7 @@ namespace NotACms\Controller;
 use NotACms\Attribute\LocalizedRoute;
 use NotACms\Form\ContactType;
 use NotACms\Service\Content\ContentServiceInterface;
-use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\SiteSettingsInterface;
 use NotACms\Service\TurnstileValidatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -24,14 +24,12 @@ final class ContactController extends AbstractController
 {
     public function __construct(
         private readonly ContentServiceInterface $contentService,
-        private readonly SiteConfigServiceInterface $siteConfigService,
+        private readonly SiteSettingsInterface $siteSettings,
         private readonly TurnstileValidatorInterface $turnstileValidator,
         private readonly MailerInterface $mailer,
         private readonly TranslatorInterface $translator,
         #[Autowire(service: 'monolog.logger.contact')]
         private readonly LoggerInterface $logger,
-        #[Autowire('%env(TURNSTILE_SITE_KEY)%')]
-        private readonly string $turnstileSiteKey,
     ) {
     }
 
@@ -41,20 +39,25 @@ final class ContactController extends AbstractController
         $url = $this->generateUrl('contact_'.$locale);
         $page = $this->contentService->findByUrl($url, $locale);
 
-        $form = $this->createForm(ContactType::class, null, ['locale' => $locale]);
+        $form = $this->createForm(ContactType::class);
+
+        $contactFormAvailable = $this->siteSettings->getContactFormConfig()->isComplete();
+        if (!$contactFormAvailable) {
+            $this->logger->error('Contact form misconfigured: contact_form.email and contact_form.from must be set in _site.yaml');
+        }
 
         return $this->render('page/contact.html.twig', [
             'content' => $page,
             'form' => $form,
             'locale' => $locale,
-            'turnstile_site_key' => $this->turnstileSiteKey,
+            'contact_form_available' => $contactFormAvailable,
         ]);
     }
 
     #[LocalizedRoute('api_contact', path: '/api/contact', methods: ['POST'])]
     public function submit(Request $request, string $locale): JsonResponse
     {
-        $form = $this->createForm(ContactType::class, null, ['locale' => $locale]);
+        $form = $this->createForm(ContactType::class);
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
@@ -91,13 +94,21 @@ final class ContactController extends AbstractController
 
         $data = $form->getData();
 
+        $contactFormConfig = $this->siteSettings->getContactFormConfig();
+        if (!$contactFormConfig->isComplete()) {
+            $this->logger->error('Contact form submission rejected: contact_form.email and contact_form.from must be set in _site.yaml');
+
+            return new JsonResponse([
+                'error' => $this->translator->trans('contact.form.error', locale: $locale),
+            ], Response::HTTP_SERVICE_UNAVAILABLE);
+        }
+
         try {
-            $contactForm = $this->siteConfigService->getContactFormConfig();
             $email = new TemplatedEmail()
-                ->from(new Address($contactForm->from, $contactForm->fromName))
+                ->from(new Address($contactFormConfig->from, $contactFormConfig->fromName))
                 ->replyTo(new Address($data['email'], $data['name']))
-                ->to($contactForm->email)
-                ->subject($contactForm->topic.' '.$data['subject'])
+                ->to($contactFormConfig->email)
+                ->subject($contactFormConfig->topic.' '.$data['subject'])
                 ->htmlTemplate('email/contact.html.twig')
                 ->context(['contact' => $data, 'locale' => $locale]);
 

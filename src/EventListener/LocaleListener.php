@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace NotACms\EventListener;
 
-use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\LocaleConfigInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -17,7 +17,7 @@ final readonly class LocaleListener
 {
     public function __construct(
         private LocaleAwareInterface $localeAware,
-        private SiteConfigServiceInterface $siteConfigService,
+        private LocaleConfigInterface $localeConfig,
     ) {
     }
 
@@ -26,7 +26,7 @@ final readonly class LocaleListener
         $request = $requestEvent->getRequest();
         $path = $request->getPathInfo();
 
-        $locale = $this->siteConfigService->detectLocaleFromPath($path);
+        $locale = $this->localeConfig->detectLocaleFromPath($path);
 
         $request->setLocale($locale);
         $this->localeAware->setLocale($locale);

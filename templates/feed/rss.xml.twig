@@ -9,19 +9,20 @@
         <description>{{ site_description }}</description>
         <language>{{ locale }}</language>
         <atom:link href="{{ site_base_url }}{{ path('rss_' ~ locale) }}" rel="self" type="application/rss+xml"/>
-        {% if posts is not empty %}
-        <lastBuildDate>{{ posts[0].date()|date('D, d M Y H:i:s +0000') }}</lastBuildDate>
+        {% set dated_posts = posts|filter(post => post.date())|sort((a, b) => a.date() <=> b.date()) %}
+        {% if dated_posts is not empty %}
+        <lastBuildDate>{{ (dated_posts|last).date()|date('D, d M Y H:i:s +0000') }}</lastBuildDate>
         {% endif %}
         {% for post in posts %}
         <item>
-            <title><![CDATA[{{ post.title() }}]]></title>
+            <title><![CDATA[{{ post.title()|replace({']]>': ']]]]><![CDATA[>'})|raw }}]]></title>
             <link>{{ site_base_url }}{{ post.url() }}</link>
             <guid isPermaLink="true">{{ site_base_url }}{{ post.url() }}</guid>
             {% if post.date() %}
             <pubDate>{{ post.date()|date('D, d M Y H:i:s +0000') }}</pubDate>
             {% endif %}
-            <description><![CDATA[{{ post.excerpt(400) }}]]></description>
-            <content:encoded><![CDATA[{{ post.htmlContent|raw }}]]></content:encoded>
+            <description><![CDATA[{{ post.excerpt(400)|replace({']]>': ']]]]><![CDATA[>'})|raw }}]]></description>
+            <content:encoded><![CDATA[{{ post.htmlContent|replace({']]>': ']]]]><![CDATA[>'})|raw }}]]></content:encoded>
             {% if post.image() %}
             <media:content url="{{ site_base_url }}{{ post.image() }}" medium="image" type="image/webp" width="1280" height="720"/>
             {% endif %}

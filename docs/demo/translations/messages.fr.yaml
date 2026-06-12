@@ -1,8 +1,6 @@
 header:
-  tagline: Blog démo
 nav:
   skip_to_content: Aller au contenu
-  search: Recherche
   menu: Menu
   main: Navigation principale
   theme_toggle: Changer le thème
@@ -10,15 +8,13 @@ nav:
   theme_to_dark: Passer au thème sombre
   language_switcher: Langue (%locale%)
 blog:
+  title: Blog
   read_more: Lire la suite
-  published_on: Publié le
   updated_on: Mis à jour le
   category: Catégorie
   tags: Tags
   no_posts: Aucun article dans cette catégorie.
-  archive: Archives
   all_posts: Tous les articles
-  comments_disabled: Les commentaires sont désactivés.
   share: Partager
   share_on_x: Partager sur X
   share_on_linkedin: Partager sur LinkedIn
@@ -35,35 +31,32 @@ blog:
     archive_month: Articles de %date%.
     archive_year: Articles de l'année %year%.
   post_navigation: Navigation entre les articles
-  nav_prev: ← Précédent
-  nav_next: Suivant →
   series_part: Partie %part% sur %total%
   series_nav_label: Série d'articles
 sidebar:
   recent_posts: Articles récents
   categories: Catégories
   tags: Tags
-  archive: Archives
   search: Recherche
-  contact: Contact
-  contact_intro: Vous construisez quelque chose avec PHP ou Symfony ?
-  contact_cta: → Me contacter
 search:
   title: Recherche
   close: Fermer la recherche
   placeholder: Rechercher sur le site...
   no_results: Aucun résultat pour « %query% ».
-  results_for: 'Résultats pour : « %query% »'
   hint_navigate: naviguer
   hint_open: ouvrir
   hint_close: fermer
   hint_anywhere: partout
 contact:
+  email:
+    title: "Contact depuis %site_name%"
+    heading: "nouveau message de contact"
+    footer: "Envoyé via le formulaire de contact de %site_name%"
   title: Contact
   meta_description: Prenez contact avec l'équipe notACMS. Utilisez le formulaire de contact pour poser vos questions ou entamer une conversation.
   connection_error: Erreur de connexion. Veuillez réessayer.
-  intro: Prenez contact
-  about_nudge: Pas encore sûr ? <a href="%about_url%">En savoir plus sur notACMS et son fonctionnement</a>
+  about_nudge: 'Pas encore convaincu ?'
+  about_nudge_link: 'En savoir plus sur notACMS'
   form:
     name: Nom complet
     email: Adresse e-mail
@@ -71,7 +64,6 @@ contact:
     subject: Sujet
     message: Message
     send: Envoyer
-    sending: Envoi en cours...
     success: Message envoyé. Merci !
     error: Une erreur s'est produite. Veuillez vérifier vos informations et réessayer.
 breadcrumb:
@@ -83,7 +75,6 @@ pagination:
   page: Page
   of: sur
 language:
-  switcher: Langue (%locale%)
   choose: Choisir la langue
 cookie:
   banner_text: Ce site utilise un cookie fonctionnel pour mémoriser votre choix de consentement.
@@ -99,16 +90,13 @@ about:
   recommendation_via: via LinkedIn
   recommendation_expand: Lire la recommandation complète →
   recommendation_collapse: Réduire ↑
-  tech_stack: Stack technique
   skills.Language: Langage
   skills.Framework: Framework
   skills.Frontend: Frontend
   skills.Infra: Infrastructure
 projects:
-  view_all: Voir les %count% projets
+  view_all: Voir tous les %count% projets
 footer:
-  copyright: Tous droits réservés
-  built_with: Construit avec
 error:
   title: Erreur
   go_home: Retour à l'accueil
@@ -124,7 +112,7 @@ code:
 toc:
   title: Table des matières
 badge:
-  draft: '[BOUILLON]'
+  draft: '[BROUILLON]'
   planned: '[PRÉVU]'
   pinned: '[ÉPINGLÉ]'
   new: '[NOUVEAU]'
@@ -171,7 +159,7 @@ home:
   stat_locales_desc: Ajoutez une langue avec une ligne dans <code>_site.yaml</code>.
     Contenu co-localisé par langue.
   stat_license_label: Licence
-  stat_license_desc: Forkez, étendez, personnalise. Pas de verrouillage éditeur.
+  stat_license_desc: Forkez, étendez, personnalisez. Pas de verrouillage éditeur.
   features_label: Fonctionnalités
   features_heading: Tout ce dont vous avez besoin.<br>Rien de superflu.
   features_sub: Basé sur Symfony 7.4 et PHP 8.5. Des outils familiers, un minimum

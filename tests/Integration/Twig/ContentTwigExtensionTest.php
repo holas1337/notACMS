@@ -19,7 +19,7 @@ final class ContentTwigExtensionTest extends TestCase
         $tree->addPage(ContentItemFactory::page([], 'about', '/about/'));
 
         $contentService = $this->createStub(ContentServiceInterface::class);
-        $contentService->method('getTree')->willReturn($tree);
+        $contentService->method('findByDirectoryKey')->willReturnCallback(static fn (string $directoryKey, string $locale) => $tree->findByDirectoryKey($directoryKey));
 
         $extension = new ContentTwigExtension($contentService);
 
@@ -31,7 +31,7 @@ final class ContentTwigExtensionTest extends TestCase
         $tree = new ContentTree();
 
         $contentService = $this->createStub(ContentServiceInterface::class);
-        $contentService->method('getTree')->willReturn($tree);
+        $contentService->method('findByDirectoryKey')->willReturnCallback(static fn (string $directoryKey, string $locale) => $tree->findByDirectoryKey($directoryKey));
 
         $extension = new ContentTwigExtension($contentService);
 

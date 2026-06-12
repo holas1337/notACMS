@@ -12,6 +12,8 @@ final readonly class ContentItem
 
     private const int DEFAULT_MENU_WEIGHT = 50;
 
+    private const string DEFAULT_TEMPLATE = 'page/default';
+
     /**
      * @param array<string, mixed> $frontMatter
      */
@@ -23,18 +25,19 @@ final readonly class ContentItem
         public ?string $sourcePath = null,
         private bool $isIndexItem = false,
         private ?string $directoryKey = null,
+        private bool $isPostItem = false,
     ) {
     }
 
     public function title(): string
     {
-        return $this->frontMatter['title'] ?? '';
+        return $this->scalarToString($this->frontMatter['title'] ?? '');
     }
 
     public function slug(): string
     {
         if (isset($this->frontMatter['slug'])) {
-            $slug = $this->frontMatter['slug'];
+            $slug = $this->scalarToString($this->frontMatter['slug']);
             $parts = explode('/', rtrim($slug, '/'));
 
             return end($parts) ?: '';
@@ -63,7 +66,7 @@ final readonly class ContentItem
 
     public function description(): string
     {
-        return $this->frontMatter['description'] ?? '';
+        return $this->scalarToString($this->frontMatter['description'] ?? '');
     }
 
     /**
@@ -72,8 +75,14 @@ final readonly class ContentItem
     public function tags(): array
     {
         $tags = $this->frontMatter['tags'] ?? [];
+        if (!is_array($tags)) {
+            return [];
+        }
 
-        return is_array($tags) ? $tags : [];
+        return array_values(array_filter(array_map(
+            fn (mixed $tag): string => $this->slugifyTaxonomy($this->scalarToString($tag)),
+            $tags,
+        ), static fn (string $tag): bool => '' !== $tag));
     }
 
     /**
@@ -98,7 +107,7 @@ final readonly class ContentItem
 
     public function template(): string
     {
-        return $this->frontMatter['template'] ?? 'page/default';
+        return $this->frontMatter['template'] ?? self::DEFAULT_TEMPLATE;
     }
 
     public function isDraft(): bool
@@ -121,13 +130,17 @@ final readonly class ContentItem
             return false;
         }
 
+        if (true === $pinned) {
+            return true;
+        }
+
         $until = $this->parseDate($pinned);
 
         if (!$until instanceof \DateTimeImmutable) {
             return false;
         }
 
-        return $until > new \DateTimeImmutable('today');
+        return $until >= new \DateTimeImmutable('today');
     }
 
     public function isDynamic(): bool
@@ -177,9 +190,26 @@ final readonly class ContentItem
         return $this->isIndexItem;
     }
 
+    public function isPost(): bool
+    {
+        return $this->isPostItem;
+    }
+
+    public function isSame(self $other): bool
+    {
+        return $this->url === $other->url;
+    }
+
     public function category(): ?string
     {
-        return $this->frontMatter['category'] ?? null;
+        $category = $this->frontMatter['category'] ?? null;
+        if (null === $category) {
+            return null;
+        }
+
+        $slugified = $this->slugifyTaxonomy($this->scalarToString($category));
+
+        return '' !== $slugified ? $slugified : null;
     }
 
     public function url(): string
@@ -227,8 +257,30 @@ final readonly class ContentItem
             return new \DateTimeImmutable('@'.$date);
         }
 
+        if (!is_scalar($date)) {
+            return null;
+        }
+
         $parsed = \DateTimeImmutable::createFromFormat('Y-m-d', (string) $date);
 
-        return false !== $parsed ? $parsed->setTime(0, 0, 0) : null;
+        if (false !== $parsed) {
+            return $parsed->setTime(0, 0, 0);
+        }
+
+        try {
+            return new \DateTimeImmutable((string) $date);
+        } catch (\Exception) {
+            return null;
+        }
+    }
+
+    private function scalarToString(mixed $value): string
+    {
+        return is_scalar($value) ? (string) $value : '';
+    }
+
+    private function slugifyTaxonomy(string $value): string
+    {
+        return (string) preg_replace('/\s+/', '-', strtolower(trim($value)));
     }
 }

@@ -35,7 +35,7 @@
         {% if item.image() %}
         <image:image>
             <image:loc>{{ site_base_url }}{{ item.image() }}</image:loc>
-            {% if item.imageAlt() %}<image:title>{{ item.imageAlt()|e }}</image:title>{% endif %}
+            {% if item.imageAlt() %}<image:title>{{ item.imageAlt() }}</image:title>{% endif %}
         </image:image>
         {% endif %}
         {{ _self.hreflang(translation_map, item, site_default_locale) }}

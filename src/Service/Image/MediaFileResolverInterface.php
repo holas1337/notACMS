@@ -10,5 +10,5 @@ interface MediaFileResolverInterface
      * Returns the real absolute path to a content media file, or null if the file
      * does not exist or if a path-traversal attempt is detected.
      */
-    public function resolve(string $dirKey, string $filename): ?string;
+    public function resolve(string $directoryKey, string $filename): ?string;
 }

@@ -20,16 +20,15 @@ final class ProjectsController extends AbstractController
     #[LocalizedRoute('projects', path: '/projects/')]
     public function projects(string $locale): Response
     {
-        $contentTree = $this->contentService->getTree($locale);
         $url = $this->generateUrl('projects_'.$locale);
-        $page = $contentTree->findByUrl($url);
+        $page = $this->contentService->findByUrl($url, $locale);
 
         if (!$page instanceof ContentItem) {
             throw $this->createNotFoundException('Projects page not found');
         }
 
         $category = $page->slug();
-        $allProjects = $contentTree->getPostsByCategory($category);
+        $allProjects = $this->contentService->getPostsByCategory($category, $locale);
         $featuredProjects = array_values(array_filter($allProjects, fn (ContentItem $contentItem): bool => $contentItem->isFeatured()));
 
         return $this->render('page/projects.html.twig', [

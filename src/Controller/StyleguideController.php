@@ -9,7 +9,7 @@ use NotACms\Content\ValueObject\ArchiveMonth;
 use NotACms\Content\ValueObject\CategoryCount;
 use NotACms\Content\ValueObject\SidebarData;
 use NotACms\Content\ValueObject\TagCount;
-use NotACms\Service\SiteConfigServiceInterface;
+use NotACms\Service\LocaleConfigInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ final class StyleguideController extends AbstractController
     public function __construct(
         #[Autowire('%kernel.debug%')]
         private readonly bool $debug,
-        private readonly SiteConfigServiceInterface $siteConfigService,
+        private readonly LocaleConfigInterface $localeConfig,
     ) {
     }
 
@@ -38,13 +38,13 @@ final class StyleguideController extends AbstractController
                 'description' => 'A short description of this post for SEO and previews.',
                 'date' => new \DateTimeImmutable('2025-03-15'),
                 'tags' => ['symfony', 'php', 'docker'],
-                'image' => '/media/rpi5-migration/e6e92b62-ce18-444d-8c8e-7d2af4df2591.webp',
+                'image' => '/media/example-post/placeholder.webp',
                 'image_alt' => 'Placeholder image',
             ],
             htmlContent: '<p>Post content with <strong>bold</strong>, <em>italic</em>, <code>inline code</code>, and <a href="#">links</a>. This is a longer excerpt to demonstrate how the post card truncates text in listing views.</p>',
-            locale: $this->siteConfigService->getDefaultLocale(),
-            url: '/pl/2025/03/15/example-post/',
-            sourcePath: 'wpisy/ciekawostki/2025-03-15_example-post.md',
+            locale: $this->localeConfig->getDefaultLocale(),
+            url: '/blog/example-post/',
+            sourcePath: 'blog/tutorials/example-post/en.md',
         );
 
         $dummyPost2 = new ContentItem(
@@ -55,9 +55,9 @@ final class StyleguideController extends AbstractController
                 'tags' => ['linux', 'homelab'],
             ],
             htmlContent: '<p>Content of the second dummy post without a featured image.</p>',
-            locale: $this->siteConfigService->getDefaultLocale(),
-            url: '/pl/2025/02/10/another-post/',
-            sourcePath: 'wpisy/porady/2025-02-10_another-post.md',
+            locale: $this->localeConfig->getDefaultLocale(),
+            url: '/blog/another-post/',
+            sourcePath: 'blog/notes/another-post/en.md',
         );
 
         $dummyPostScheduled = new ContentItem(
@@ -66,21 +66,21 @@ final class StyleguideController extends AbstractController
                 'description' => 'This post is scheduled for a future date — demonstrates the planned variant.',
                 'date' => new \DateTimeImmutable('2099-12-01'),
                 'tags' => ['symfony', 'php'],
-                'image' => '/media/rpi5-migration/e6e92b62-ce18-444d-8c8e-7d2af4df2591.webp',
+                'image' => '/media/example-post/placeholder.webp',
                 'image_alt' => 'Placeholder image',
             ],
             htmlContent: '<p>Scheduled post content.</p>',
-            locale: $this->siteConfigService->getDefaultLocale(),
-            url: '/pl/2099/12/01/scheduled-post/',
-            sourcePath: 'wpisy/porady/2099-12-01_scheduled-post.md',
+            locale: $this->localeConfig->getDefaultLocale(),
+            url: '/blog/scheduled-post/',
+            sourcePath: 'blog/notes/scheduled-post/en.md',
         );
 
         $sidebarData = new SidebarData(
             recentPosts: [$dummyPost, $dummyPost2],
             categories: [
-                new CategoryCount('ciekawostki', 12),
-                new CategoryCount('porady', 8),
-                new CategoryCount('projekty', 5),
+                new CategoryCount('tutorials', 12),
+                new CategoryCount('notes', 8),
+                new CategoryCount('projects', 5),
             ],
             tags: [
                 new TagCount('symfony', 15),
@@ -102,7 +102,7 @@ final class StyleguideController extends AbstractController
         );
 
         return $this->render('page/styleguide.html.twig', [
-            'locale' => $this->siteConfigService->getDefaultLocale(),
+            'locale' => $this->localeConfig->getDefaultLocale(),
             'dummyPosts' => [$dummyPost, $dummyPost2, $dummyPostScheduled],
             'sidebarData' => $sidebarData,
         ]);

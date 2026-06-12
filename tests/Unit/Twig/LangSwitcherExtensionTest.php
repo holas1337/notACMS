@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace NotACms\Tests\Unit\Twig;
 
 use NotACms\Content\ContentItem;
+use NotACms\Content\ValueObject\LangSwitchContext;
+use NotACms\Service\Content\LangSwitchUrlResolver;
 use NotACms\Twig\LangSwitcherExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -18,7 +20,7 @@ final class LangSwitcherExtensionTest extends TestCase
     protected function setUp(): void
     {
         $this->urlGenerator = $this->createStub(UrlGeneratorInterface::class);
-        $this->extension = new LangSwitcherExtension($this->urlGenerator);
+        $this->extension = new LangSwitcherExtension(new LangSwitchUrlResolver($this->urlGenerator));
     }
 
     public function testTranslationMapHit(): void
@@ -35,11 +37,26 @@ final class LangSwitcherExtensionTest extends TestCase
         self::assertSame(['en' => '/en/blog/hello/'], $result);
     }
 
-    public function testLangSwitchUrlUsedForFirstLocaleOnly(): void
+    public function testUrlOverridesApplyPerLocale(): void
     {
         $this->urlGenerator->method('generate')->willReturn('/home/');
 
-        $context = ['lang_switch_url' => '/en/tags/foo/'];
+        $context = ['lang_switch' => new LangSwitchContext(urlOverrides: [
+            'en' => '/en/tags/foo/',
+            'de' => '/de/tags/foo/',
+        ])];
+
+        $result = $this->extension->langSwitchUrls($context, ['en', 'de']);
+
+        self::assertSame('/en/tags/foo/', $result['en']);
+        self::assertSame('/de/tags/foo/', $result['de']);
+    }
+
+    public function testMissingOverrideFallsBackToHome(): void
+    {
+        $this->urlGenerator->method('generate')->willReturn('/home/');
+
+        $context = ['lang_switch' => new LangSwitchContext(urlOverrides: ['en' => '/en/tags/foo/'])];
 
         $result = $this->extension->langSwitchUrls($context, ['en', 'de']);
 
@@ -51,22 +68,32 @@ final class LangSwitcherExtensionTest extends TestCase
     {
         $this->urlGenerator->method('generate')->willReturn('/en/archive/2025/04/');
 
-        $context = [
-            'filter_type' => 'archive',
-            'archive_year' => 2025,
-            'archive_month' => 4,
-        ];
+        $context = ['lang_switch' => new LangSwitchContext(filterType: 'archive', archiveYear: 2025, archiveMonth: 4)];
 
         $result = $this->extension->langSwitchUrls($context, ['en']);
 
         self::assertSame(['en' => '/en/archive/2025/04/'], $result);
     }
 
+    public function testYearOnlyArchiveFallback(): void
+    {
+        $this->urlGenerator->method('generate')
+            ->willReturnMap([
+                ['blog_archive_year_en', ['year' => 2025], UrlGeneratorInterface::ABSOLUTE_PATH, '/en/archive/2025/'],
+            ]);
+
+        $context = ['lang_switch' => new LangSwitchContext(filterType: 'archive', archiveYear: 2025)];
+
+        $result = $this->extension->langSwitchUrls($context, ['en']);
+
+        self::assertSame(['en' => '/en/archive/2025/'], $result);
+    }
+
     public function testPaginatedFallback(): void
     {
         $this->urlGenerator->method('generate')->willReturn('/en/blog/page/3/');
 
-        $context = ['current_page' => 3];
+        $context = ['lang_switch' => new LangSwitchContext(currentPage: 3)];
 
         $result = $this->extension->langSwitchUrls($context, ['en']);
 
@@ -77,7 +104,7 @@ final class LangSwitcherExtensionTest extends TestCase
     {
         $this->urlGenerator->method('generate')->willReturn('/en/blog/');
 
-        $context = ['current_page' => 1];
+        $context = ['lang_switch' => new LangSwitchContext(currentPage: 1)];
 
         $result = $this->extension->langSwitchUrls($context, ['en']);
 

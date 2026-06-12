@@ -195,6 +195,8 @@ Each target locale has specific conventions. Follow the guide for the locale you
 | "if missing" | "jeśli brakuje" | "jeśli nie istnieje" |
 | "Polish content" | "Polska treść" | "Treść w języku polskim" |
 | "personalisation lives in" | "personalizacje żyją w" | "personalizacje znajdują się w" |
+| "breaking changes" (heading) | "Zmiany łamiące" ❌ | Keep as `Breaking changes` (English, house style) |
+| "breaking changes" (in prose) | "zmiany łamiące" ❌ | "zmiany niekompatybilne" / "niekompatybilne zmiany" |
 | "pull request" | "pull request" | keep in backticks for technical term |
 
 **Punctuation and formatting:**
@@ -204,7 +206,9 @@ Each target locale has specific conventions. Follow the guide for the locale you
 - Keep technical terms in backticks: `--prod`, `local/`, `ddev build`
 
 **Section headers:**
+- **Before translating any heading, grep existing PL release posts for the same term.** The repo's shipped posts are the authority — never guess or translate literally if a precedent exists.
 - Match the tone of the EN original but use natural PL phrasing
+- "Breaking changes" → **keep as `Breaking changes`** (English, per house style in existing release posts; "Zmiany łamiące" is a broken literal translation)
 - "The bug" → "Błąd" (punchy is OK)
 - "The fix" → "Naprawa"
 - "Full changelog" → "Pełna lista zmian"

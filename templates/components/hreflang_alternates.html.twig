@@ -1,0 +1,12 @@
+{# Shared hreflang alternate links — used by base.html.twig (head) and feed/sitemap.xml.twig.
+   tag: 'link' (HTML head) or 'xhtml:link' (sitemap). #}
+{% macro alternates(translation_map, directory_key, base_url, default_locale, tag = 'link') %}
+{%- if directory_key and translation_map[directory_key] is defined -%}
+{% for lang, url in translation_map[directory_key] %}
+        <{{ tag }} rel="alternate" hreflang="{{ lang }}" href="{{ base_url }}{{ url }}"/>
+{% endfor %}
+{%- if translation_map[directory_key][default_locale] is defined %}
+        <{{ tag }} rel="alternate" hreflang="x-default" href="{{ base_url }}{{ translation_map[directory_key][default_locale] }}"/>
+{% endif -%}
+{%- endif -%}
+{% endmacro %}

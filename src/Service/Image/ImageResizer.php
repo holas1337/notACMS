@@ -4,64 +4,55 @@ declare(strict_types=1);
 
 namespace NotACms\Service\Image;
 
-use NotACms\Service\SiteConfigServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 
 final readonly class ImageResizer implements ImageResizerInterface
 {
     public function __construct(
-        private SiteConfigServiceInterface $siteConfigService,
+        private ImageConfigInterface $imageConfig,
     ) {
     }
 
     public function optimize(string $path, ?int $quality = null): void
     {
-        $quality ??= $this->siteConfigService->getImageQuality();
-        $output = [];
-        $returnCode = 0;
-        exec(
-            'magick '
-            .escapeshellarg($path)
-            .' -quality '.escapeshellarg((string) $quality)
-            .' '.$this->escapedFlags()
-            .' '.escapeshellarg($path).' 2>&1',
-            $output,
-            $returnCode,
-        );
+        $quality ??= $this->imageConfig->getImageQuality();
 
-        if (0 !== $returnCode) {
-            throw new \RuntimeException(sprintf('ImageMagick optimize failed for %s (exit %d): %s', $path, $returnCode, implode("\n", $output)));
-        }
+        $this->runMagick(
+            ['magick', $path, '-quality', (string) $quality, ...$this->flags(), $path],
+            sprintf('ImageMagick optimize failed for %s', $path),
+        );
     }
 
     public function resize(string $sourcePath, string $targetPath, int $width, ?int $quality = null): void
     {
-        $quality ??= $this->siteConfigService->getImageQuality();
+        $quality ??= $this->imageConfig->getImageQuality();
         new Filesystem()->mkdir(dirname($targetPath));
 
-        $output = [];
-        $returnCode = 0;
-        exec(
-            'magick '
-            .escapeshellarg($sourcePath)
-            .' -resize '.escapeshellarg($width.'x')
-            .' -quality '.escapeshellarg((string) $quality)
-            .' '.$this->escapedFlags()
-            .' '.escapeshellarg($targetPath).' 2>&1',
-            $output,
-            $returnCode,
+        $this->runMagick(
+            ['magick', $sourcePath, '-resize', $width.'x', '-quality', (string) $quality, ...$this->flags(), $targetPath],
+            sprintf('ImageMagick resize failed for %s', $sourcePath),
         );
+    }
 
-        if (0 !== $returnCode) {
-            throw new \RuntimeException(sprintf('ImageMagick resize failed for %s (exit %d): %s', $sourcePath, $returnCode, implode("\n", $output)));
+    /**
+     * @param list<string> $commandLine
+     */
+    private function runMagick(array $commandLine, string $errorPrefix): void
+    {
+        $process = new Process($commandLine);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException(sprintf('%s (exit %d): %s', $errorPrefix, (int) $process->getExitCode(), $process->getErrorOutput().$process->getOutput()));
         }
     }
 
-    private function escapedFlags(): string
+    /**
+     * @return list<string>
+     */
+    private function flags(): array
     {
-        return implode(' ', array_map(
-            escapeshellarg(...),
-            array_filter(explode(' ', $this->siteConfigService->getImageMagickFlags()))
-        ));
+        return array_values(array_filter(explode(' ', $this->imageConfig->getImageMagickFlags())));
     }
 }

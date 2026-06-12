@@ -27,7 +27,7 @@
             var params = new URLSearchParams(window.location.search);
             var q = params.get('q') || '';
             if (q) { input.value = q; doSearch(q); }
-        });
+        }).catch(function () {});
 
         var timer;
         input.addEventListener('input', function () {
@@ -42,8 +42,8 @@
                 var top = search.results.slice(0, 10);
                 Promise.all(top.map(function (r) { return r.data(); })).then(function (items) {
                     render(items, query);
-                });
-            });
+                }).catch(function () { resultsEl.innerHTML = ''; });
+            }).catch(function () { resultsEl.innerHTML = ''; });
         }
 
         function render(items, query) {
@@ -73,20 +73,19 @@
                         '</div>';
                 }
 
-                var srcset = imageWidths.map(function (w) {
+                var srcset = image.endsWith('.webp') ? imageWidths.map(function (w) {
                     return esc(image.replace('.webp', '-' + w + 'w.webp')) + ' ' + w + 'w';
-                }).join(', ') + ', ' + esc(image) + ' 1280w';
+                }).join(', ') + ', ' + esc(image) + ' 1280w' : '';
 
                 return '<article class="search-result">' +
                     (image ? '<div class="search-result__image"><a href="' + esc(r.url) + '">' +
-                        '<img src="' + esc(image) +
-                        '" srcset="' + srcset + '"' +
-                        ' sizes="(max-width: 48em) 80px, 120px"' +
+                        '<img src="' + esc(image) + '"' +
+                        (srcset ? ' srcset="' + srcset + '" sizes="(max-width: 48em) 80px, 120px"' : '') +
                         ' alt="' + esc(title) + '" loading="lazy"></a></div>' : '') +
                     '<div class="search-result__body">' +
                         '<h2 class="post-card-title"><a href="' + esc(r.url) + '">' + esc(title) + '</a></h2>' +
                         (metaParts.length ? '<p class="post-card-meta">' + metaParts.join('&nbsp;&bull;&nbsp;') + '</p>' : '') +
-                        '<p class="post-card-excerpt">' + esc(r.excerpt) + '</p>' +
+                        '<p class="post-card-excerpt">' + r.excerpt + '</p>' +
                         tagsHtml +
                         '<a href="' + esc(r.url) + '" class="read-more">' + esc(readMoreText) + ' &rarr;</a>' +
                     '</div>' +

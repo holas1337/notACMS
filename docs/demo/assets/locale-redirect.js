@@ -49,7 +49,8 @@
 
     function setCookie(value) {
         // Session cookie — no Max-Age/Expires, cleared when browser closes
-        document.cookie = COOKIE + '=' + encodeURIComponent(value) + '; path=/; SameSite=Lax; Secure';
+        var secure = window.location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = COOKIE + '=' + encodeURIComponent(value) + '; path=/; SameSite=Lax' + secure;
     }
 
     function getAlternateUrl(targetLocale) {
@@ -67,18 +68,28 @@
     var currentLocale = html.lang || defaultLocale;
     var saved = getCookie(COOKIE);
 
+    if (saved && locales.length && locales.indexOf(saved) === -1) {
+        setCookie(defaultLocale);
+        saved = null;
+    }
+
     if (!saved) {
-        var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
-        var preferred = defaultLocale;
-        for (var i = 0; i < locales.length; i++) {
-            if (browserLang.startsWith(locales[i])) {
-                preferred = locales[i];
-                break;
+        if (currentLocale !== defaultLocale) {
+            // User is already on a non-default locale URL — treat as explicit choice.
+            setCookie(currentLocale);
+        } else {
+            var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+            var preferred = defaultLocale;
+            for (var i = 0; i < locales.length; i++) {
+                if (browserLang.startsWith(locales[i])) {
+                    preferred = locales[i];
+                    break;
+                }
             }
-        }
-        setCookie(preferred);
-        if (preferred !== currentLocale) {
-            window.location.replace(getAlternateUrl(preferred));
+            setCookie(preferred);
+            if (preferred !== currentLocale) {
+                window.location.replace(getAlternateUrl(preferred));
+            }
         }
     } else if (saved !== currentLocale) {
         window.location.replace(getAlternateUrl(saved));

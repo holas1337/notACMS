@@ -12,6 +12,7 @@ use NotACms\Service\SiteConfigServiceInterface;
 use NotACms\Tests\TmpDirTrait;
 use NotACms\Tests\Unit\Fixtures\ContentItemFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class ContentTreeBuilderTest extends TestCase
 {
@@ -45,7 +46,7 @@ final class ContentTreeBuilderTest extends TestCase
             return new \NotACms\Content\ValueObject\ParsedMarkdown($frontMatter, $html);
         });
 
-        $this->builder = new ContentTreeBuilder($parser, $siteConfig, $this->tmpContentDir);
+        $this->builder = new ContentTreeBuilder($parser, $siteConfig, new NullLogger(), $this->tmpContentDir);
     }
 
     protected function tearDown(): void
@@ -61,6 +62,7 @@ final class ContentTreeBuilderTest extends TestCase
         $builder = new ContentTreeBuilder(
             $this->createStub(\NotACms\Service\Content\MarkdownParserInterface::class),
             $this->createStub(SiteConfigServiceInterface::class),
+            new NullLogger(),
             $emptyDir,
         );
 
@@ -89,13 +91,48 @@ final class ContentTreeBuilderTest extends TestCase
     {
         file_put_contents(
             $this->tmpContentDir . '/pages/about/en.md',
-            "---\ntitle: About\nmenu:\n  weight: 10\n---\n\nAbout content.",
+            "---\ntitle: About\nslug: about\nmenu:\n  weight: 10\n---\n\nAbout content.",
         );
 
         $tree = $this->builder->build('en');
 
         self::assertCount(1, $tree->getAllPages());
         self::assertSame([], $tree->getAllPosts());
+    }
+
+    public function testBuildSkipsFileWithoutSlugAndRecordsWarning(): void
+    {
+        file_put_contents(
+            $this->tmpContentDir . '/pages/about/en.md',
+            "---\ntitle: About\n---\n\nAbout content.",
+        );
+
+        $tree = $this->builder->build('en');
+
+        self::assertSame([], $tree->getAllPages());
+        self::assertCount(1, $tree->getWarnings());
+        self::assertStringContainsString('missing "slug"', $tree->getWarnings()[0]);
+    }
+
+    public function testBuildSkipsUnparseableFileAndRecordsWarning(): void
+    {
+        file_put_contents(
+            $this->tmpContentDir . '/pages/about/en.md',
+            "---\ntitle: About\nslug: about\n---\n\nContent.",
+        );
+
+        $parser = $this->createStub(\NotACms\Service\Content\MarkdownParserInterface::class);
+        $parser->method('parse')->willThrowException(new \RuntimeException('broken frontmatter'));
+
+        $siteConfig = $this->createStub(SiteConfigServiceInterface::class);
+        $siteConfig->method('getDefaultLocale')->willReturn('en');
+
+        $builder = new ContentTreeBuilder($parser, $siteConfig, new NullLogger(), $this->tmpContentDir);
+        $tree = $builder->build('en');
+
+        self::assertSame([], $tree->getAllPages());
+        self::assertCount(1, $tree->getWarnings());
+        self::assertStringContainsString('broken frontmatter', $tree->getWarnings()[0]);
     }
 
     public function testBuildExcludesDraftsByDefault(): void
@@ -182,7 +219,7 @@ final class ContentTreeBuilderTest extends TestCase
         $tree = $this->builder->build('en');
         $posts = $tree->getAllPosts();
 
-        self::assertSame('test-post', $posts[0]->directoryKey());
+        self::assertSame('blog/test-post', $posts[0]->directoryKey());
     }
 
     public function testBuildReturnsEmptyTreeForNonExistentDir(): void
@@ -190,6 +227,7 @@ final class ContentTreeBuilderTest extends TestCase
         $builder = new ContentTreeBuilder(
             $this->createStub(\NotACms\Service\Content\MarkdownParserInterface::class),
             $this->createStub(SiteConfigServiceInterface::class),
+            new NullLogger(),
             '/nonexistent/path',
         );
 
