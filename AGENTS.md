@@ -234,7 +234,7 @@ When a user asks to change colors, add components, or redesign a page:
 
 ## Documentation review
 
-The project has nine documentation files: `README.md` (root) and eight in `docs/`: `ARCHITECTURE.md`, `CUSTOMIZATION.md`, `EDITOR_GUIDE.md`, `LOCALES.md`, `STYLEGUIDE.md`, `TESTING.md`, `TESTS.md`, `THEME_BUILDING.md`.
+The project has ten documentation files: `README.md`, `SECURITY.md` (repo root) and eight in `docs/`: `ARCHITECTURE.md`, `CUSTOMIZATION.md`, `EDITOR_GUIDE.md`, `LOCALES.md`, `STYLEGUIDE.md`, `TESTING.md`, `TESTS.md`, `THEME_BUILDING.md`.
 
 **After any implementation task, review whether the change affects any of these docs and update them.** Do not leave docs out of sync with the code.
 

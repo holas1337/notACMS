@@ -33,6 +33,12 @@ final class ContentTree
     /** @var list<string> */
     private array $warnings = [];
 
+    /** @var array<string, array{string, string}> */
+    private array $ambiguousKeyConflicts = [];
+
+    /** @var array<string, true> */
+    private array $warnedAmbiguousKeys = [];
+
     public function __construct(
         private readonly bool $includeDrafts = false,
         private readonly bool $includeScheduled = false,
@@ -110,12 +116,7 @@ final class ContentTree
         }
 
         if (false !== $this->directoryKeyBasenames[$basename] && $this->directoryKeyBasenames[$basename] !== $directoryKey) {
-            $this->addWarning(sprintf(
-                'Ambiguous directory key "%s" (%s vs %s) — use the full path in content_item()/content_url()',
-                $basename,
-                $this->directoryKeyBasenames[$basename],
-                $directoryKey,
-            ));
+            $this->ambiguousKeyConflicts[$basename] = [$this->directoryKeyBasenames[$basename], $directoryKey];
             $this->directoryKeyBasenames[$basename] = false;
         }
     }
@@ -137,9 +138,27 @@ final class ContentTree
             return $this->directoryKeyMap[$directoryKey];
         }
 
-        $fullKey = $this->directoryKeyBasenames[$directoryKey] ?? null;
+        if (!array_key_exists($directoryKey, $this->directoryKeyBasenames)) {
+            return null;
+        }
 
-        return is_string($fullKey) ? ($this->directoryKeyMap[$fullKey] ?? null) : null;
+        $fullKey = $this->directoryKeyBasenames[$directoryKey];
+        if (false === $fullKey) {
+            if (!isset($this->warnedAmbiguousKeys[$directoryKey])) {
+                $this->warnedAmbiguousKeys[$directoryKey] = true;
+                $conflict = $this->ambiguousKeyConflicts[$directoryKey];
+                $this->addWarning(sprintf(
+                    'Ambiguous directory key "%s" (%s vs %s) — use the full path in content_item()/content_url()',
+                    $directoryKey,
+                    $conflict[0],
+                    $conflict[1],
+                ));
+            }
+
+            return null;
+        }
+
+        return $this->directoryKeyMap[$fullKey] ?? null;
     }
 
     /** @return ContentItem[] */

@@ -4,6 +4,7 @@ server {
     root /app/public;
     index index.html;
     server_tokens off;
+    charset utf-8;
 
     # Docker's internal resolver — resolves upstream lazily at request time
     resolver 127.0.0.11 valid=10s;

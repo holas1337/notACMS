@@ -180,6 +180,42 @@ final class ContentTreeTest extends TestCase
         self::assertSame($page, $found); // Pages checked first
     }
 
+    public function testFindByDirectoryKeyAmbiguousBasenameNoLookupProducesNoWarning(): void
+    {
+        $tree = new ContentTree();
+        $tree->addPost(ContentItemFactory::publishedPost([], 'blog/projects'));
+        $tree->addPost(ContentItemFactory::publishedPost([], 'pages/projects'));
+
+        self::assertSame([], $tree->getWarnings());
+    }
+
+    public function testFindByDirectoryKeyAmbiguousBasenameBareLookupWarnsOnce(): void
+    {
+        $tree = new ContentTree();
+        $tree->addPost(ContentItemFactory::publishedPost([], 'blog/projects'));
+        $tree->addPost(ContentItemFactory::publishedPost([], 'pages/projects'));
+
+        $tree->findByDirectoryKey('projects');
+        $tree->findByDirectoryKey('projects');
+
+        self::assertCount(1, $tree->getWarnings());
+        self::assertStringContainsString('blog/projects', $tree->getWarnings()[0]);
+        self::assertStringContainsString('pages/projects', $tree->getWarnings()[0]);
+    }
+
+    public function testFindByDirectoryKeyFullPathOnAmbiguousBasenameReturnsItemWithoutWarning(): void
+    {
+        $tree = new ContentTree();
+        $blogProjects = ContentItemFactory::publishedPost([], 'blog/projects');
+        $tree->addPost($blogProjects);
+        $tree->addPost(ContentItemFactory::publishedPost([], 'pages/projects'));
+
+        $found = $tree->findByDirectoryKey('blog/projects');
+
+        self::assertSame($blogProjects, $found);
+        self::assertSame([], $tree->getWarnings());
+    }
+
     // ===== getAllPosts - Sorting =====
 
     public function testGetAllPostsSortsByDateDesc(): void

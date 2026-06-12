@@ -4,18 +4,22 @@
 {% set about_url   = content_url('about', locale) %}
 {% set contact_url = path('contact_' ~ locale) %}
 
-{% set manual_url       = content_url('manual', locale) %}
-{% set arch_url         = content_url('architecture', locale) %}
-{% set custom_url       = content_url('customization', locale) %}
-{% set locales_url      = content_url('locales', locale) %}
-{% set styleguide_url   = content_url('styleguide', locale) %}
+{% set manual_url           = content_url('manual', locale) %}
+{% set arch_url             = content_url('architecture', locale) %}
+{% set custom_url           = content_url('customization', locale) %}
+{% set theme_building_url   = content_url('theme-building', locale) %}
+{% set locales_url          = content_url('locales', locale) %}
+{% set styleguide_url       = content_url('styleguide', locale) %}
+{% set security_url         = content_url('security', locale) %}
 
 {# content_url() returns '/' for a missing page — exclude it so the active check can't match everything #}
 {% set is_docs = (manual_url is not same as('/') and current_path starts with manual_url)
     or (arch_url is not same as('/') and current_path starts with arch_url)
     or (custom_url is not same as('/') and current_path starts with custom_url)
+    or (theme_building_url is not same as('/') and current_path starts with theme_building_url)
     or (locales_url is not same as('/') and current_path starts with locales_url)
-    or (styleguide_url is not same as('/') and current_path starts with styleguide_url) %}
+    or (styleguide_url is not same as('/') and current_path starts with styleguide_url)
+    or (security_url is not same as('/') and current_path starts with security_url) %}
 
 {# Mobile hamburger #}
 <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list" aria-label="{{ 'nav.menu'|trans }}" title="{{ 'nav.menu'|trans }}">
@@ -47,6 +51,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ theme_building_url }}"{% if current_path starts with theme_building_url %} aria-current="page"{% endif %}>
+                    <i class="ph ph-paint-brush" aria-hidden="true"></i> {{ (content_item('theme-building', locale).menuLabel() ?? 'Theme Building') }}
+                </a>
+            </li>
+            <li>
                 <a href="{{ locales_url }}"{% if current_path starts with locales_url %} aria-current="page"{% endif %}>
                     <i class="ph ph-globe" aria-hidden="true"></i> {{ (content_item('locales', locale).menuLabel() ?? 'locales'|capitalize) }}
                 </a>
@@ -54,6 +63,11 @@
             <li>
                 <a href="{{ styleguide_url }}"{% if current_path starts with styleguide_url %} aria-current="page"{% endif %}>
                     <i class="ph ph-palette" aria-hidden="true"></i> {{ (content_item('styleguide', locale).menuLabel() ?? 'styleguide'|capitalize) }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ security_url }}"{% if current_path starts with security_url %} aria-current="page"{% endif %}>
+                    <i class="ph ph-shield-check" aria-hidden="true"></i> {{ (content_item('security', locale).menuLabel() ?? 'Security') }}
                 </a>
             </li>
         </ul>
